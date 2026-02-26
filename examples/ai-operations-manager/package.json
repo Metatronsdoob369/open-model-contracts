@@ -1,0 +1,19 @@
+{
+  "name": "ai-operations-manager-example",
+  "version": "1.0.0",
+  "description": "Reference implementation for open-model-contracts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsx test.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/uuid": "^10.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
