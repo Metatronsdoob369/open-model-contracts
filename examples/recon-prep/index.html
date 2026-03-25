@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recon Prep Tool - Smart Google Dork Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0E27;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #00FFD1 0%, #00CCA3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            color: #A0AEC0;
+        }
+        
+        .tool-container {
+            background: rgba(20, 27, 61, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 209, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #A0AEC0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00FFD1;
+            box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        button {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00FFD1 0%, #00CCA3 100%);
+            color: #0A0E27;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 209, 0.3);
+        }
+        
+        button.secondary {
+            background: rgba(0, 255, 209, 0.1);
+            color: #00FFD1;
+            border: 1px solid rgba(0, 255, 209, 0.3);
+        }
+        
+        .results {
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .results-header h3 {
+            font-size: 1.25rem;
+            color: #00FFD1;
+        }
+        
+        .copy-all {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 209, 0.1);
+            color: #00FFD1;
+            border: 1px solid rgba(0, 255, 209, 0.3);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-all:hover {
+            background: rgba(0, 255, 209, 0.2);
+        }
+        
+        .dork-category {
+            margin-bottom: 2rem;
+        }
+        
+        .dork-category h4 {
+            color: #A0AEC0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .dork-item {
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 255, 209, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .dork-item:hover {
+            border-color: rgba(0, 255, 209, 0.3);
+            transform: translateX(4px);
+        }
+        
+        .dork-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #FFFFFF;
+            flex: 1;
+            word-break: break-all;
+        }
+        
+        .dork-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .icon-btn {
+            padding: 0.5rem;
+            background: rgba(0, 255, 209, 0.1);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #00FFD1;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(0, 255, 209, 0.2);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 255, 209, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00FFD1;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <div class="content">
+        <div class="header">
+            <h1>🎯 Recon Prep</h1>
+            <p>Smart Google Dork Generator with AI-Powered Operator Selection</p>
+        </div>
+        
+        <div class="tool-container">
+            <div class="input-group">
+                <label for="target">Target Domain</label>
+                <input type="text" id="target" placeholder="example.com" />
+            </div>
+            
+            <div class="input-group">
+                <label for="query">Search Query (Optional)</label>
+                <input type="text" id="query" placeholder="admin login, pdf files, SQL errors, etc." />
+            </div>
+            
+            <div class="btn-group">
+                <button onclick="generateDorks()">Generate Dorks</button>
+                <button class="secondary" onclick="generateAdvanced()">Advanced Suite</button>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="results-header">
+                    <h3 id="results-title">Generated Dorks</h3>
+                    <button class="copy-all" onclick="copyAll()">📋 Copy All</button>
+                </div>
+                
+                <div id="dorks-container"></div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">Total Dorks</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-categories">0</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="stat-operators">0</div>
+                        <div class="stat-label">Operators Used</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js animated background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+        
+        // Create particles
+        const particles = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const positions = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 100;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x00FFD1,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        camera.position.z = 50;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Dork generation logic (mock - would call Python backend)
+        const dorkTemplates = {
+            'Files': [
+                'site:{target} filetype:pdf',
+                'site:{target} filetype:doc',
+                'site:{target} filetype:xlsx',
+                'site:{target} ext:xml',
+                'site:{target} ext:conf'
+            ],
+            'Logins': [
+                'site:{target} intitle:login',
+                'site:{target} intitle:"admin login"',
+                'site:{target} inurl:admin',
+                'site:{target} inurl:signin',
+                'site:{target} intitle:"Dashboard"'
+            ],
+            'Configs': [
+                'site:{target} ext:xml intext:password',
+                'site:{target} ext:conf intext:key',
+                'site:{target} ext:config intext:token',
+                'site:{target} filetype:env',
+                'site:{target} intext:".env"'
+            ],
+            'Vulnerabilities': [
+                'site:{target} inurl:id=',
+                'site:{target} inurl:product_id=',
+                'site:{target} inurl:file=',
+                'site:{target} inurl:redirect='
+            ],
+            'Errors': [
+                'site:{target} intext:"SQL syntax"',
+                'site:{target} intext:"mysql_fetch"',
+                'site:{target} intext:"Warning:"',
+                'site:{target} intext:"Error Occurred"'
+            ],
+            'Subdomains': [
+                'site:*.{target}',
+                'site:{target} -www'
+            ],
+            'Emails': [
+                'site:{target} intext:"@{target}"',
+                'site:{target} "email" OR "contact"'
+            ],
+            'Technology': [
+                'site:{target} intext:"powered by"',
+                'site:{target} intext:"WordPress"',
+                'site:{target} intext:"built with"'
+            ]
+        };
+        
+        function generateAdvanced() {
+            const target = document.getElementById('target').value.trim();
+            
+            if (!target) {
+                alert('Please enter a target domain');
+                return;
+            }
+            
+            const container = document.getElementById('dorks-container');
+            container.innerHTML = '';
+            
+            let totalDorks = 0;
+            const operators = new Set();
+            
+            for (const [category, templates] of Object.entries(dorkTemplates)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'dork-category';
+                
+                const categoryTitle = document.createElement('h4');
+                categoryTitle.textContent = category;
+                categoryDiv.appendChild(categoryTitle);
+                
+                templates.forEach(template => {
+                    const dork = template.replace(/{target}/g, target);
+                    totalDorks++;
+                    
+                    // Extract operators
+                    const ops = dork.match(/\b(site|filetype|ext|intitle|inurl|intext|allin\w+):/g);
+                    if (ops) ops.forEach(op => operators.add(op.replace(':', '')));
+                    
+                    const dorkItem = createDorkItem(dork);
+                    categoryDiv.appendChild(dorkItem);
+                });
+                
+                container.appendChild(categoryDiv);
+            }
+            
+            document.getElementById('stat-total').textContent = totalDorks;
+            document.getElementById('stat-categories').textContent = Object.keys(dorkTemplates).length;
+            document.getElementById('stat-operators').textContent = operators.size;
+            
+            document.getElementById('results').classList.add('active');
+            document.getElementById('results-title').textContent = `Advanced Suite for: ${target}`;
+        }
+        
+        function generateDorks() {
+            const target = document.getElementById('target').value.trim();
+            const query = document.getElementById('query').value.trim();
+            
+            if (!target && !query) {
+                alert('Please enter a target or query');
+                return;
+            }
+            
+            const container = document.getElementById('dorks-container');
+            container.innerHTML = '';
+            
+            // Simple generation based on query keywords
+            const dorks = [];
+            
+            if (query.toLowerCase().includes('login') || query.toLowerCase().includes('admin')) {
+                dorks.push(...dorkTemplates['Logins'].slice(0, 3));
+            } else if (query.toLowerCase().includes('pdf') || query.toLowerCase().includes('file')) {
+                dorks.push(...dorkTemplates['Files'].slice(0, 3));
+            } else if (query.toLowerCase().includes('error') || query.toLowerCase().includes('sql')) {
+                dorks.push(...dorkTemplates['Errors'].slice(0, 3));
+            } else {
+                // Default to general search
+                dorks.push(`site:${target} ${query}`);
+                dorks.push(`site:${target} intitle:"${query}"`);
+                dorks.push(`site:${target} intext:"${query}"`);
+            }
+            
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'dork-category';
+            
+            dorks.forEach(template => {
+                const dork = template.replace(/{target}/g, target);
+                const dorkItem = createDorkItem(dork);
+                categoryDiv.appendChild(dorkItem);
+            });
+            
+            container.appendChild(categoryDiv);
+            
+            document.getElementById('stat-total').textContent = dorks.length;
+            document.getElementById('stat-categories').textContent = 1;
+            document.getElementById('stat-operators').textContent = 3;
+            
+            document.getElementById('results').classList.add('active');
+            document.getElementById('results-title').textContent = 'Generated Dorks';
+        }
+        
+        function createDorkItem(dork) {
+            const item = document.createElement('div');
+            item.className = 'dork-item';
+            
+            const text = document.createElement('div');
+            text.className = 'dork-text';
+            text.textContent = dork;
+            
+            const actions = document.createElement('div');
+            actions.className = 'dork-actions';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'icon-btn';
+            copyBtn.innerHTML = '📋';
+            copyBtn.title = 'Copy to clipboard';
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(dork);
+                copyBtn.innerHTML = '✓';
+                setTimeout(() => copyBtn.innerHTML = '📋', 1000);
+            };
+            
+            const searchBtn = document.createElement('button');
+            searchBtn.className = 'icon-btn';
+            searchBtn.innerHTML = '🔍';
+            searchBtn.title = 'Search in Google';
+            searchBtn.onclick = () => {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(dork)}`, '_blank');
+            };
+            
+            actions.appendChild(copyBtn);
+            actions.appendChild(searchBtn);
+            
+            item.appendChild(text);
+            item.appendChild(actions);
+            
+            return item;
+        }
+        
+        function copyAll() {
+            const dorks = Array.from(document.querySelectorAll('.dork-text'))
+                .map(el => el.textContent)
+                .join('\n');
+            
+            navigator.clipboard.writeText(dorks);
+            
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => btn.textContent = originalText, 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recon Prep - Smart Google Dork Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0A0E27;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+        
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            margin-top: 4rem;
+        }
+        
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #00FFD1 0%, #00CCA3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            color: #A0AEC0;
+        }
+        
+        .tool-container {
+            background: rgba(20, 27, 61, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(0, 255, 209, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mode-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: rgba(10, 14, 39, 0.6);
+            border-radius: 8px;
+            padding: 0.5rem;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 0.75rem;
+            background: transparent;
+            color: #A0AEC0;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mode-btn.active {
+            background: linear-gradient(135deg, #00FFD1 0%, #00CCA3 100%);
+            color: #0A0E27;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #A0AEC0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .hint {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 8px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00FFD1;
+            box-shadow: 0 0 0 3px rgba(0, 255, 209, 0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        button:not(.mode-btn):not(.icon-btn):not(.copy-all) {
+            flex: 1;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00FFD1 0%, #00CCA3 100%);
+            color: #0A0E27;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:not(.mode-btn):not(.icon-btn):not(.copy-all):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 209, 0.3);
+        }
+        
+        .results {
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .results-header h3 {
+            font-size: 1.25rem;
+            color: #00FFD1;
+        }
+        
+        .copy-all {
+            padding: 0.5rem 1rem;
+            background: rgba(0, 255, 209, 0.1);
+            color: #00FFD1;
+            border: 1px solid rgba(0, 255, 209, 0.3);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-all:hover {
+            background: rgba(0, 255, 209, 0.2);
+        }
+        
+        .dork-item {
+            background: rgba(10, 14, 39, 0.6);
+            border: 1px solid rgba(0, 255, 209, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .dork-item:hover {
+            border-color: rgba(0, 255, 209, 0.3);
+            transform: translateX(4px);
+        }
+        
+        .dork-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #FFFFFF;
+            flex: 1;
+            word-break: break-all;
+        }
+        
+        .dork-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .icon-btn {
+            padding: 0.5rem;
+            background: rgba(0, 255, 209, 0.1);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #00FFD1;
+        }
+        
+        .icon-btn:hover {
+            background: rgba(0, 255, 209, 0.2);
+        }
+        
+        .examples {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(10, 14, 39, 0.4);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 209, 0.1);
+        }
+        
+        .examples h4 {
+            font-size: 0.875rem;
+            color: #00FFD1;
+            margin-bottom: 0.75rem;
+        }
+        
+        .example-pill {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            background: rgba(0, 255, 209, 0.1);
+            border: 1px solid rgba(0, 255, 209, 0.2);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #A0AEC0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-pill:hover {
+            background: rgba(0, 255, 209, 0.2);
+            color: #00FFD1;
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <div class="content">
+        <div class="header">
+            <h1>🎯 Recon Prep</h1>
+            <p>Smart Google Dork Generator · No Target Required</p>
+        </div>
+        
+        <div class="tool-container">
+            <div class="mode-toggle">
+                <button class="mode-btn active" onclick="setMode('smart')">🧠 Smart Mode</button>
+                <button class="mode-btn" onclick="setMode('advanced')">⚡ Advanced Suite</button>
+            </div>
+            
+            <div id="smart-mode">
+                <div class="input-group">
+                    <label for="query">What are you looking for?</label>
+                    <input type="text" id="query" placeholder="government contract tips, machine learning cheat sheet, python tutorial..." />
+                    <div class="hint">✨ No target domain needed - just describe what you want</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="target-optional">Target Domain (Optional)</label>
+                    <input type="text" id="target-optional" placeholder="example.com" />
+                    <div class="hint">Leave blank for web-wide search</div>
+                </div>
+                
+                <button onclick="generateSmart()">Generate Optimized Dorks</button>
+                
+                <div class="examples">
+                    <h4>💡 Try these:</h4>
+                    <span class="example-pill" onclick="fillExample('government contract bid tips')">Government contracts</span>
+                    <span class="example-pill" onclick="fillExample('machine learning cheat sheet pdf')">ML cheat sheets</span>
+                    <span class="example-pill" onclick="fillExample('excel template business plan')">Excel templates</span>
+                    <span class="example-pill" onclick="fillExample('python error fix import')">Error fixes</span>
+                    <span class="example-pill" onclick="fillExample('grant proposal template nonprofit')">Grant proposals</span>
+                </div>
+            </div>
+            
+            <div id="advanced-mode" style="display: none;">
+                <div class="input-group">
+                    <label for="target">Target Domain (Required)</label>
+                    <input type="text" id="target" placeholder="example.com" />
+                    <div class="hint">For comprehensive reconnaissance</div>
+                </div>
+                
+                <button onclick="generateAdvanced()">Generate Full Suite</button>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="results-header">
+                    <h3 id="results-title">Generated Dorks</h3>
+                    <button class="copy-all" onclick="copyAll()">📋 Copy All</button>
+                </div>
+                
+                <div id="dorks-container"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Three.js background (same as before)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+        
+        const particles = new THREE.BufferGeometry();
+        const particleCount = 1000;
+        const positions = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 100;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0x00FFD1,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.6
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        camera.position.z = 50;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            particleSystem.rotation.x += 0.0005;
+            particleSystem.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Mode switching
+        function setMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('smart-mode').style.display = mode === 'smart' ? 'block' : 'none';
+            document.getElementById('advanced-mode').style.display = mode === 'advanced' ? 'block' : 'none';
+            document.getElementById('results').classList.remove('active');
+        }
+        
+        // Fill example
+        function fillExample(text) {
+            document.getElementById('query').value = text;
+            document.getElementById('query').focus();
+        }
+        
+        // Smart dork generation
+        function generateSmart() {
+            const query = document.getElementById('query').value.trim();
+            const target = document.getElementById('target-optional').value.trim();
+            
+            if (!query) {
+                alert('Please enter what you\'re looking for');
+                return;
+            }
+            
+            const dorks = smartDorkGeneration(query, target);
+            displayDorks(dorks, query, target);
+        }
+        
+        function smartDorkGeneration(query, target) {
+            const dorks = [];
+            const qLower = query.toLowerCase();
+            
+            // File type detection
+            if (qLower.includes('pdf') || qLower.includes('cheat sheet') || qLower.includes('guide')) {
+                dorks.push(`"${query}" filetype:pdf`);
+            }
+            if (qLower.includes('doc') || qLower.includes('template')) {
+                dorks.push(`"${query}" filetype:doc OR filetype:docx`);
+            }
+            if (qLower.includes('excel') || qLower.includes('spreadsheet')) {
+                dorks.push(`"${query}" filetype:xls OR filetype:xlsx`);
+            }
+            
+            // Intent-based
+            if (qLower.includes('tips') || qLower.includes('how to')) {
+                dorks.push(`"${query}" intitle:guide OR intitle:tips`);
+                dorks.push(`"${query}" inurl:tutorial OR inurl:howto`);
+            }
+            
+            if (qLower.includes('error') || qLower.includes('fix')) {
+                dorks.push(`"${query}" site:stackoverflow.com OR site:github.com`);
+                dorks.push(`"${query}" intext:solution OR intext:solved`);
+            }
+            
+            if (qLower.includes('contract') || qLower.includes('bid') || qLower.includes('proposal')) {
+                dorks.push(`"${query}" site:gov OR site:mil`);
+                dorks.push(`"${query}" intitle:"request for proposal" OR intitle:RFP`);
+            }
+            
+            // Generic enhancements
+            if (dorks.length === 0) {
+                dorks.push(`"${query}" filetype:pdf`);
+                dorks.push(`intitle:"${query}"`);
+            }
+            
+            // Noise reduction
+            dorks.push(`"${query}" -site:pinterest.com -site:youtube.com`);
+            
+            // Add target if provided
+            if (target) {
+                return dorks.map(d => `site:${target} ${d}`);
+            }
+            
+            return dorks.slice(0, 6);
+        }
+        
+        function generateAdvanced() {
+            const target = document.getElementById('target').value.trim();
+            
+            if (!target) {
+                alert('Please enter a target domain');
+                return;
+            }
+            
+            const dorks = [
+                `site:${target} filetype:pdf`,
+                `site:${target} filetype:doc OR filetype:docx`,
+                `site:${target} intitle:login OR intitle:admin`,
+                `site:${target} ext:xml OR ext:conf intext:password`,
+                `site:${target} inurl:id= OR inurl:file=`,
+                `site:${target} intext:"SQL syntax" OR intext:"mysql_fetch"`,
+                `site:*.${target}`,
+                `site:${target} intext:"@${target}"`
+            ];
+            
+            displayDorks(dorks, `Advanced Suite`, target);
+        }
+        
+        function displayDorks(dorks, query, target) {
+            const container = document.getElementById('dorks-container');
+            container.innerHTML = '';
+            
+            dorks.forEach(dork => {
+                const item = createDorkItem(dork);
+                container.appendChild(item);
+            });
+            
+            document.getElementById('results-title').textContent = target 
+                ? `Results for: ${query} (${target})`
+                : `Results for: ${query}`;
+            document.getElementById('results').classList.add('active');
+        }
+        
+        function createDorkItem(dork) {
+            const item = document.createElement('div');
+            item.className = 'dork-item';
+            
+            const text = document.createElement('div');
+            text.className = 'dork-text';
+            text.textContent = dork;
+            
+            const actions = document.createElement('div');
+            actions.className = 'dork-actions';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'icon-btn';
+            copyBtn.innerHTML = '📋';
+            copyBtn.title = 'Copy';
+            copyBtn.onclick = () => {
+                navigator.clipboard.writeText(dork);
+                copyBtn.innerHTML = '✓';
+                setTimeout(() => copyBtn.innerHTML = '📋', 1000);
+            };
+            
+            const searchBtn = document.createElement('button');
+            searchBtn.className = 'icon-btn';
+            searchBtn.innerHTML = '🔍';
+            searchBtn.title = 'Search';
+            searchBtn.onclick = () => {
+                window.open(`https://www.google.com/search?q=${encodeURIComponent(dork)}`, '_blank');
+            };
+            
+            actions.appendChild(copyBtn);
+            actions.appendChild(searchBtn);
+            
+            item.appendChild(text);
+            item.appendChild(actions);
+            
+            return item;
+        }
+        
+        function copyAll() {
+            const dorks = Array.from(document.querySelectorAll('.dork-text'))
+                .map(el => el.textContent)
+                .join('\n');
+            
+            navigator.clipboard.writeText(dorks);
+            
+            const btn = event.target;
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => btn.textContent = '📋 Copy All', 2000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+{
+  "name": "@popsim/contract",
+  "version": "1.0.0",
+  "description": "Domain contract package for population-based agent simulation. Schedule A attachment for open-model-contracts. Contract-first AI architecture with MCP as law.",
+  "license": "Apache-2.0",
+  "author": "Metatronsdoob369",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Metatronsdoob369/open-model-contracts"
+  },
+  "keywords": [
+    "open-model-contracts",
+    "population-simulation",
+    "contract-first-ai",
+    "sovereign-agents",
+    "agent-swarm",
+    "mcp",
+    "zod-contract",
+    "crewai",
+    "schedule-a"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.6",
+    "express": "^5.2.1",
+    "zod": "^3.23.0"
+  },
+  "peerDependencies": {
+    "@open-model-contracts/core": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@open-model-contracts/core": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
