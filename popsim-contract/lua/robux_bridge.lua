@@ -10,7 +10,7 @@ local ContractService = {}
 ContractService.__index = ContractService
 
 -- Configuration: Point this to your hosted MCP/Bridge Server
-local BRIDGE_URL = "https://api.your-popsim-server.com/v1/contract"
+local BRIDGE_URL = "https://popsim-contract-bridge-pt662zocvq-uc.a.run.app/v1/contract"
 
 -- SAFE GATE: Fetch static parameters (Platform fees, DevEx rates)
 function ContractService:GetEconomicPolicy()
