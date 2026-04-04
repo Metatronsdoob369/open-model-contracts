@@ -1,7 +1,7 @@
 # ⚖️ Open Model Contracts (OMC)
-### *Autonomous Governance via Manifestation.*
+### *A Constitution for Autonomous Manifestation.*
 
-This repository is the **Core DNA** for a contract-first architecture designed to govern AI agents across multiple sectors—from **Level-Scale Roblox Environments** to **Distributed Server Infrastructure.**
+Open Model Contracts (OMC) is a domain-agnostic framework designed to govern AI agent swarms through structured, typed agreements. It transforms AI labor from "probabilistic prompts" into "deterministic contracts."
 
 ---
 
@@ -82,15 +82,37 @@ Every pipeline is a **Pack** that plugs into the **Constitution**, executed thro
 **MCP-enforced phase gates**: Intelligence → Escrow → Manifestation.
 
 One constitution. Many projects. No swelling.
+## 🕋 The Three-Phase Lifecycle
+Every manifestation in the OMC ecosystem follows the **Sovereign Pipeline**:
+
+1.  **Phase I: Intelligence**: A specialist board members (the AI swarm) translates a **Level Primer (DNA)** into a signed **omc.manifest.json**.
+2.  **Phase II: Escrow**: The manifest and generated modules are escrowed into a **Bridge Service**, secured by TTL and one-time tokens.
+3.  **Phase III: Manifestation**: The target domain (e.g., Roblox Studio) pulls the manifest, reviews the diff, and installs the assets with explicit user consent.
 
 ---
 
-### 🚥 Active Mission: Chaos Metropolis
-*   **Target**: High-fidelity Gothic-Cyber City.
-*   **State**: ARMED.
-*   **Visibility**: Pre-dawn (3 AM) / Cyber-Blue / Radiant Glow.
+## 🏛️ Repository Structure
+
+### `/constitution`
+The "Supreme Law." Defines the **Capability Taxonomy** and **Phase Gates** that all packs must obey.
+
+### `/packs`
+Sector-specific implementations of the OMC DNA.
+*   [`/roblox-game-automator`](./packs/roblox-game-automator): Manifests high-fidelity Gothic-Cyber environments.
+*   *Coming Soon*: /telegram-governance, /logistics-fleet.
+
+### `/server/bridge`
+The reference implementation of the **OMC Escrow Service.** (Node.js/TypeScript).
 
 ---
-### ⚖️ *Get Paid to Have Problems. Manifest Solutions.*
+
+## 🚀 Mission: The Metropolis
+The current reference manifestation is a **High-Fidelity Gothic Metropolis** featuring:
+- **Procedural Obsidian Skyscrapers** 🏙️
+- **11-Arch Central Cathedral** ⛪️
+- **Radiant Cyber-Movement Mechanics** 💨✨
+
+---
+### ⚖️ *Getting Paid to Have Problems. Manifesting Solutions.*
 *The future is not prompted; it is Contracted.*
 
