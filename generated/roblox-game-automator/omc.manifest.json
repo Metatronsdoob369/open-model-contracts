@@ -1,0 +1,45 @@
+{
+  "omc_version": "1.0.0",
+  "pack_id": "roblox-game-automator",
+  "manifest_id": "metropolis-ready-tonight-01",
+  "timestamp": "2026-04-04T20:31:57.630Z",
+  "modules": [
+    {
+      "id": "playermechanics",
+      "filename": "PlayerMechanics.luau",
+      "specialist": "system-01",
+      "hash": "382071e94c5887a8d1339c9ff601184764f0df7441fdc80af58f6dd18d917008",
+      "capabilities": [
+        "capability:client_install"
+      ]
+    },
+    {
+      "id": "soundscapemanager",
+      "filename": "SoundscapeManager.luau",
+      "specialist": "sonic-01",
+      "hash": "e4f4acb8fa9d98b03efb3c38336d83cb5c565d009a8e9efc5d5b6fbdcbe62295",
+      "capabilities": [
+        "capability:client_install"
+      ]
+    },
+    {
+      "id": "taggamelogic",
+      "filename": "TagGameLogic.luau",
+      "specialist": "system-01",
+      "hash": "24424a96d979a4aefb9c40ce8635b0167796f0503f6c5e049f59974b45d078ec",
+      "capabilities": [
+        "capability:client_install"
+      ]
+    },
+    {
+      "id": "visualatmosphere",
+      "filename": "VisualAtmosphere.luau",
+      "specialist": "architect-01",
+      "hash": "7375ed09b99c09412b0808083839428e4b899b18c50f4c53d00b8a5886e57571",
+      "capabilities": [
+        "capability:client_install"
+      ]
+    }
+  ],
+  "summary": "Metropolis Playable Tonight: Systems, Sonic, and Visuals manifested."
+}
