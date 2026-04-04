@@ -19,7 +19,11 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "echo \"Tests coming soon\"",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "bridge:install": "npm install --prefix server/bridge",
+    "bridge:build": "npm run build --prefix server/bridge",
+    "bridge:start": "npm run start --prefix server/bridge",
+    "bridge:dev": "npm run dev --prefix server/bridge"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.28.0",

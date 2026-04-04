@@ -1,0 +1,169 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://open-model-contracts.dev/schemas/plugin-pull-response.schema.json",
+  "title": "Plugin Pull Response",
+  "description": "Phase 3 (Manifestation) response payload. Returned by the Bridge server when a Roblox Studio plugin requests the escrowed module bundle. Includes the manifest, module bundle, install plan, and metadata for the user-consent diff display.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "session_id",
+    "manifest",
+    "modules",
+    "install_plan"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Version of this response schema.",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "The escrow session ID.",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "manifest": {
+      "description": "The original Phase 1 manifest (full object), embedded for traceability.",
+      "type": "object",
+      "required": ["pipeline_id", "pack_id", "pack_version", "created_at", "files"],
+      "additionalProperties": true
+    },
+    "modules": {
+      "type": "array",
+      "description": "The module bundle to be installed.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/PluginModuleEntry"
+      }
+    },
+    "install_plan": {
+      "description": "Human-readable + machine-readable install plan for the user-consent diff view.",
+      "$ref": "#/$defs/InstallPlan"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata from the escrow session.",
+      "additionalProperties": {
+        "type": ["string", "number", "boolean"]
+      }
+    },
+    "retrieved_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when this pull was served.",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "PluginModuleEntry": {
+      "type": "object",
+      "required": ["module_id", "name", "content", "sha256", "target_path"],
+      "additionalProperties": false,
+      "properties": {
+        "module_id": {
+          "type": "string",
+          "description": "Specialist/module identifier.",
+          "example": "architect-01"
+        },
+        "name": {
+          "type": "string",
+          "description": "Luau file name.",
+          "example": "StructureGenerator.luau"
+        },
+        "content": {
+          "type": "string",
+          "description": "Base64-encoded Luau source content."
+        },
+        "sha256": {
+          "type": "string",
+          "description": "SHA-256 hash for integrity verification.",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "target_path": {
+          "type": "string",
+          "description": "Dot-separated Roblox hierarchy path for this ModuleScript.",
+          "example": "ReplicatedStorage.OMCModules.v1_0_0.StructureGenerator"
+        },
+        "action": {
+          "type": "string",
+          "description": "What the plugin will do with this module (create, update, skip).",
+          "enum": ["create", "update", "skip"]
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the module."
+        }
+      }
+    },
+    "InstallPlan": {
+      "type": "object",
+      "required": ["target_root", "actions_summary", "actions"],
+      "additionalProperties": false,
+      "properties": {
+        "target_root": {
+          "type": "string",
+          "description": "Root Roblox path where all modules will be placed.",
+          "example": "ReplicatedStorage.OMCModules.v1_0_0"
+        },
+        "actions_summary": {
+          "type": "object",
+          "description": "Count of each action type in the plan.",
+          "additionalProperties": false,
+          "properties": {
+            "create": { "type": "integer", "minimum": 0 },
+            "update": { "type": "integer", "minimum": 0 },
+            "skip": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "actions": {
+          "type": "array",
+          "description": "Ordered list of install actions for the plugin to execute after user approval.",
+          "items": {
+            "$ref": "#/$defs/InstallAction"
+          }
+        },
+        "requires_consent": {
+          "type": "boolean",
+          "description": "Always true — plugin MUST show diff + obtain user click before applying.",
+          "const": true
+        },
+        "consent_message": {
+          "type": "string",
+          "description": "Message to display to the user in the consent dialog.",
+          "example": "The following modules will be installed into your Roblox project. Review the diff below and click Apply to proceed."
+        }
+      }
+    },
+    "InstallAction": {
+      "type": "object",
+      "required": ["action", "target_path", "module_id"],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["create", "update", "skip"]
+        },
+        "target_path": {
+          "type": "string",
+          "description": "Full dot-separated Roblox hierarchy path.",
+          "example": "ReplicatedStorage.OMCModules.v1_0_0.StructureGenerator"
+        },
+        "module_id": {
+          "type": "string",
+          "description": "Module identifier."
+        },
+        "existing_sha256": {
+          "type": "string",
+          "description": "Hash of the existing ModuleScript source (if updating). Used to show the diff.",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "new_sha256": {
+          "type": "string",
+          "description": "Hash of the incoming module source.",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}
