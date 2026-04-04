@@ -31,6 +31,15 @@ pipeline:
     allowed_capabilities:
       - "capability:client_install"
       - "capability:platform_apply_changes"
+    manifestation_tracks:
+      track_a:
+        name: "Hotfix Surge (Development)"
+        method: "Bridge-to-Memory Injection"
+        goal: "Rapid Prototyping & Live Testing"
+      track_b:
+        name: "Sovereign Install (Production)"
+        method: "User-Approved Hierarchy Installation"
+        goal: "Permanent Asset Deployment & Licensing"
 
 # 📜 REQUIRED ARTIFACTS
 artifacts:
