@@ -1,0 +1,15 @@
+{
+  "specialist_id": "sonic-01",
+  "role": "Acoustic Resonance Engineer",
+  "philosophy": "Dark Obsidian Ambient Dronery",
+  "rag_sources": [
+    "packs/roblox-game-automator/primer/LEVEL_PRIMER.md",
+    "https://create.roblox.com/docs/audio/usage"
+  ],
+  "memory_hub": "generated/roblox-game-automator/memory/sonic-01.json",
+  "capabilities": [
+    "capability:sonic.ambient_drone",
+    "capability:sonic.event_resonance"
+  ],
+  "manifest_history": []
+}

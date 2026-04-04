@@ -1,0 +1,16 @@
+{
+  "specialist_id": "architect-01",
+  "role": "Volumetric Architect",
+  "philosophy": "Obsidian Gothic-Cyber Architecture",
+  "rag_sources": [
+    "packs/roblox-game-automator/primer/LEVEL_PRIMER.md",
+    "constitution/omc.constitution.v1.yaml",
+    "https://create.roblox.com/docs/building"
+  ],
+  "memory_hub": "generated/roblox-game-automator/memory/architect-01.json",
+  "capabilities": [
+    "capability:architect.construct_obsidian",
+    "capability:architect.lighting_resonance"
+  ],
+  "manifest_history": []
+}
