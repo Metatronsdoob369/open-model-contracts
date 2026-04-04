@@ -1,0 +1,138 @@
+# ⚖️ Phase 3 — Manifestation Policy
+# Pack: roblox-game-automator | Version: 1.0 | Constitution: 1.0
+# Governs the Roblox Studio plugin during Phase 3: pulling escrowed modules and
+# installing them into the Studio hierarchy with explicit user consent.
+
+policy_id: "phase3.manifestation"
+version: "1.0"
+phase: 3
+phase_name: "Manifestation"
+constitution_version: "1.0"
+
+# ─────────────────────────────────────────────────────────────────
+# ALLOWED CAPABILITIES
+# ─────────────────────────────────────────────────────────────────
+allowed_capabilities:
+  - capability: "capability:client.install"
+    description: "Install ModuleScripts into the Roblox Studio hierarchy."
+    constraints:
+      - "MUST only write to the declared target_root (e.g. ReplicatedStorage.OMCModules)."
+      - "MUST NOT write to game.Workspace, ServerScriptService, or StarterGui directly."
+      - "MUST verify SHA-256 of every module after decoding before writing."
+      - "MUST present the install plan to the user before executing any writes."
+
+  - capability: "capability:platform.apply_changes"
+    description: "Apply changes to the live Roblox Studio hierarchy (ModuleScript create/update)."
+    constraints:
+      - "MUST ONLY proceed after explicit user click on 'Apply' in the plugin UI."
+      - "MUST show a diff/summary of all create/update/skip actions before Apply."
+      - "MUST call POST /escrow/:sessionId/consume immediately after successful install."
+      - "MUST NOT use loadstring or HttpService:GetAsync with dynamic code execution."
+      - "MUST operate only within the plugin's API surface (Instance.new, ModuleScript.Source)."
+
+# ─────────────────────────────────────────────────────────────────
+# PLUGIN WORKFLOW (Compliant Pull + Consent + Install)
+# ─────────────────────────────────────────────────────────────────
+plugin_workflow:
+  step_1:
+    name: "Authenticate"
+    description: "User provides session_id and token in the plugin UI (or via QR/copy-paste)."
+    required: true
+
+  step_2:
+    name: "Fetch Manifest"
+    description: "Plugin calls GET /escrow/:sessionId/manifest to retrieve the install plan."
+    required: true
+
+  step_3:
+    name: "Display Diff"
+    description: >
+      Plugin displays a human-readable diff showing:
+      - modules to be created (new)
+      - modules to be updated (changed)
+      - modules to be skipped (unchanged)
+      - target_path for each module
+      The consent_message from the install_plan MUST be shown prominently.
+    required: true
+    gate: "User must see diff before any install button is enabled."
+
+  step_4:
+    name: "User Consent"
+    description: >
+      User explicitly clicks 'Apply' (or equivalent) in the plugin UI.
+      Passive consent (timeout, auto-accept) is PROHIBITED.
+    required: true
+    gate: "No writes may occur without this explicit user action."
+
+  step_5:
+    name: "Fetch Modules"
+    description: "Plugin calls GET /escrow/:sessionId/modules with the one-time token."
+    required: true
+
+  step_6:
+    name: "Verify & Install"
+    description: >
+      For each module:
+      1. Base64-decode content.
+      2. Verify SHA-256 matches install_plan entry.
+      3. Create or update ModuleScript at target_path.
+    required: true
+
+  step_7:
+    name: "Consume Session"
+    description: "Plugin calls POST /escrow/:sessionId/consume. Bridge marks session consumed."
+    required: true
+
+  step_8:
+    name: "Report"
+    description: "Plugin shows a success/failure summary in its UI."
+    required: true
+
+# ─────────────────────────────────────────────────────────────────
+# PROHIBITED ACTIONS
+# ─────────────────────────────────────────────────────────────────
+prohibitions:
+  - "MUST NOT use loadstring to execute remote code."
+  - "MUST NOT call HttpService:GetAsync to fetch and execute arbitrary Luau strings."
+  - "MUST NOT write outside the declared target_root path."
+  - "MUST NOT install modules if SHA-256 verification fails."
+  - "MUST NOT proceed if the escrow session is expired or already consumed."
+  - "MUST NOT auto-apply without explicit user consent."
+  - "MUST NOT store the escrow token in any persistent plugin setting or DataStore."
+  - "MUST NOT expose the escrow token in the plugin UI in plaintext after use."
+
+# ─────────────────────────────────────────────────────────────────
+# REQUIRED ARTIFACTS (Phase Gate)
+# ─────────────────────────────────────────────────────────────────
+required_artifacts:
+  - artifact: "install_confirmation"
+    description: "Record that the user clicked Apply in the plugin UI."
+    gate: "MUST exist before any ModuleScript writes are performed."
+
+  - artifact: "consume_acknowledgement"
+    description: "HTTP 200 response from POST /escrow/:sessionId/consume."
+    gate: "MUST be received; if it fails, the plugin MUST warn the user."
+
+# ─────────────────────────────────────────────────────────────────
+# AUDIT REQUIREMENTS
+# ─────────────────────────────────────────────────────────────────
+audit:
+  required: true
+  events:
+    - "plugin.manifest_fetched"
+    - "plugin.diff_displayed"
+    - "plugin.user_consented"
+    - "plugin.modules_fetched"
+    - "plugin.module_verified"
+    - "plugin.module_installed"
+    - "plugin.session_consumed"
+    - "plugin.install_failed"
+  log_format: "JSONL"
+  include_fields:
+    - "session_id"
+    - "timestamp"
+    - "event_type"
+    - "module_id"
+    - "sha256"
+    - "target_path"
+    - "pipeline_id"
