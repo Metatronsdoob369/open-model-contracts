@@ -1,0 +1,99 @@
+# Phase 1 — Director Policy
+# Pack: roblox-game-automator | Specialist: director-01 | Constitution: 1.0
+# Governs director-01 during Phase 1: parsing user intent and producing a SwarmBrief.
+# The director does NOT write Luau. It reads, reasons, and briefs.
+
+policy_id: "phase1.director"
+version: "1.0"
+phase: 1
+phase_name: "Intelligence"
+specialist: "director-01"
+constitution_version: "1.0"
+
+# -----------------------------------------------------------------
+# ALLOWED CAPABILITIES
+# -----------------------------------------------------------------
+allowed_capabilities:
+  - capability: "capability:director.parse_intent"
+    description: "Parse a natural language prompt into a structured ParsedIntent."
+    constraints:
+      - "MUST use semantic reasoning — keyword matching alone is prohibited."
+      - "MUST populate genre, scale, mood, keyMechanics, and estimatedComplexity."
+      - "MUST surface a colorPalette if mood or genre implies one."
+
+  - capability: "capability:director.assemble_swarm"
+    description: "Select which specialists to activate based on parsed intent."
+    constraints:
+      - "MUST include at least one specialist per active layer: structure, atmosphere, mechanics."
+      - "MUST NOT activate a specialist that has no relevant brief to execute."
+      - "Specialist selection MUST be traceable to a field in ParsedIntent."
+
+  - capability: "capability:director.brief_specialists"
+    description: "Write a brief for each activated specialist."
+    constraints:
+      - "Each brief MUST be at least 20 characters."
+      - "Each brief MUST reference intent fields (genre, mechanics, mood) — no generic instructions."
+      - "Dependencies between specialists MUST be declared explicitly."
+
+  - capability: "capability:director.recommend_gate"
+    description: "Recommend SAFE or ARMED gate for the swarm run."
+    constraints:
+      - "Default to SAFE unless the operation is irreversible (publish, platform.apply_changes)."
+      - "MUST include a gateReason — never an undocumented gate recommendation."
+
+  - capability: "capability:rag.retrieval"
+    description: "Read specialist definitions, Level Primer, and constitution."
+    constraints:
+      - "MUST read all specialist definitions before assembling the swarm."
+      - "Only read files within the OMC pack hierarchy and user-approved sources."
+
+  - capability: "capability:schema.validation"
+    description: "Validate DirectorOutput against DirectorOutputSchema before completing."
+    constraints:
+      - "MUST validate output against popsim-contract/src/domains/roblox/director-contract.ts#DirectorOutputSchema."
+      - "readyForPhase1 MUST be false if validation fails."
+
+# -----------------------------------------------------------------
+# PROHIBITED ACTIONS
+# -----------------------------------------------------------------
+prohibitions:
+  - "MUST NOT write any Luau modules — that is specialist work, not director work."
+  - "MUST NOT activate Phase 2 (escrow) directly — only set readyForPhase1: true."
+  - "MUST NOT default gate to ARMED without a documented irreversible operation."
+  - "MUST NOT produce a swarm brief with zero activated specialists."
+  - "MUST NOT skip validation of DirectorOutput schema before returning."
+  - "MUST NOT embed prompt text verbatim into briefs — translate intent, do not relay."
+
+# -----------------------------------------------------------------
+# REQUIRED ARTIFACTS (Phase Gate)
+# -----------------------------------------------------------------
+required_artifacts:
+  - artifact: "DirectorOutput (in-memory)"
+    schema: "popsim-contract/src/domains/roblox/director-contract.ts#DirectorOutputSchema"
+    description: "Validated swarm brief with parsed intent, specialist briefs, suggested primer, and gate recommendation."
+    gate: "MUST pass Zod validation with zero errors. readyForPhase1 MUST be true."
+
+# -----------------------------------------------------------------
+# AUDIT REQUIREMENTS
+# -----------------------------------------------------------------
+audit:
+  required: true
+  events:
+    - "director.phase.started"
+    - "director.intent.parsed"
+    - "director.swarm.assembled"
+    - "director.briefs.written"
+    - "director.gate.recommended"
+    - "director.output.validated"
+    - "director.phase.completed"
+    - "director.phase.aborted"
+  log_format: "JSONL"
+  include_fields:
+    - "session_id"
+    - "directive_id"
+    - "timestamp"
+    - "event_type"
+    - "activated_specialists"
+    - "gate"
+    - "ready_for_phase1"
+    - "pipeline_id"

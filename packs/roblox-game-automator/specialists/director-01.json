@@ -1,0 +1,29 @@
+{
+  "specialist_id": "director-01",
+  "role": "Swarm Director",
+  "philosophy": "Intent-first game assembly. Reads human signal, translates to specialist briefs. Never builds — always orchestrates.",
+  "rag_sources": [
+    "packs/roblox-game-automator/primer/LEVEL_PRIMER.md",
+    "constitution/omc.constitution.v1.yaml",
+    "constitution/capabilities.schema.json",
+    "packs/roblox-game-automator/specialists/architect-01.json",
+    "packs/roblox-game-automator/specialists/sonic-01.json",
+    "packs/roblox-game-automator/specialists/system-01.json"
+  ],
+  "memory_hub": "generated/roblox-game-automator/memory/director-01.json",
+  "capabilities": [
+    "capability:director.parse_intent",
+    "capability:director.assemble_swarm",
+    "capability:director.brief_specialists",
+    "capability:director.recommend_gate"
+  ],
+  "input_schema": "popsim-contract/src/domains/roblox/director-contract.ts#DirectorInputSchema",
+  "output_schema": "popsim-contract/src/domains/roblox/director-contract.ts#DirectorOutputSchema",
+  "constraints": [
+    "MUST produce a SwarmBrief before any specialist is activated",
+    "MUST recommend gate based on operation reversibility — never default ARMED",
+    "MUST NOT write Luau — only briefs and primer fields",
+    "MUST include at least one specialist from each active layer: structure, atmosphere, mechanics"
+  ],
+  "manifest_history": []
+}
