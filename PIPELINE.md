@@ -1,7 +1,7 @@
-# 📜 The Metropolis Pipeline Blueprint
+# 📜 The OMC Sovereign Pipeline
 ### *The Mechanics of Autonomous Manifestation.*
 
-This document maps the flow of **Open Model Contracts** from natural language intent to live-rendered architectural reality.
+This document maps the flow of **Open Model Contracts** from natural language intent to live-rendered architectural reality via the 3-Phase Lifecycle.
 
 ---
 
@@ -9,46 +9,42 @@ This document maps the flow of **Open Model Contracts** from natural language in
 ```text
       [ 👤 USER ]
            |
-           |--(Natural Language Intent / Level Primer JSON)
+           |--(Level Primer DNA)
            v
-      [ 🧠 TRANSLATOR ] 
-           |  (Zod Pattern Matching & Template Mapping)
+      [ 🛑 PHASE I: INTELLIGENCE ] <----(SPECIALIST BOARD)
+           |  (omc.manifest.json)               |
+           |                                    |--(Generates 11+ Modules)
+           v                                    v
+      [ 🛑 PHASE II: ESCROW ] <-----------------
+           |  (Bridge Server: TTL / Token)
            |
-           v
-      [ 🏛️ CONTRACT ESCROW ] <----(AI SWARM AGENTS)
-           |  (Contract ID Generation)         |
-           |                                   |--(Generates 11+ Modules)
-           v                                   |
-      [ 🌉 BRIDGE SERVER ] <--------------------
-           |  (Asset Hosting & Hotfix Override)
-           |
-           |--(HTTP PULL / NGROK)-----> [ ⚓ HYBRID LOADER ]
-           |                                   |
-           |                             (Server/Client Split)
-           v                                   v
-      [ 📁 GITHUB RECORD ]          [ 🏙️ METROPOLIS MANIFEST ]
-       (Version Control)              (Live Playable World)
+           |--(Signed Envelope)-----> [ 🛑 PHASE III: MANIFESTATION ]
+           |                                    |
+           |                              (User Consent / Diff)
+           v                                    v
+      [ 📁 AUDIT LOGS ]                [ 🏙️ LIVE HIERARCHY ]
 ```
 
 ---
 
-## 🏮 Amendment: Telegram Governance Add-on
-### *The Remote Command Center Protocol.*
+## 🏛️ The Three-Phase Protocol
 
-To achieve true **Sovereign Control,** we implement a **Telegram Governance Gate.** This allows the Architect to command the city-state from any device without needing to touch a code editor.
+### **PHASE I: INTELLIGENCE (Agent -> MCP -> Files)**
+The **Specialist Board** (Architect, Sonic Engineer, Systems Pilot) translates the high-level **Level Primer (DNA)** into a signed **`omc.manifest.json`**. 🏮
 
-### 🚥 **THE BOT LAYER**
-The **Delivery Hub Bot** acts as the remote listener for the Bridge Server.
+### **PHASE II: ESCROW (Agent -> Backend Bridge)**
+The manifest and generated modules are escrowed into a **Bridge Service.** This phase ensures that the manifestation is governed by a **Signed Envelope** and is secured by **TTL (Time To Live)** and **One-Time Tokens.** 🌉🏢
 
-### ⚙️ **ACTIVE COMMANDS:**
-1.  `/manifest [Prompt]`: Triggers the Translator to build a new world from a text prompt.
-2.  `/primer [Filename]`: Automatically pushes a pre-saved JSON Level Primer to the Bridge.
-3.  `/status [ID]`: Reports the current state of the Metropolis generation (0/11 modules, etc.).
-4.  `/evidence`: Instructs the Roblox client to take a screenshot and beam it back to the Telegram chat as verification.
-
-### ⚖️ **THE AUDIT GATE**
-The Telegram bot acts as the **"Audited Journalism"** layer. When a mission is ARMED, the bot posts the **Contract ID** and the **Manifesto** to the channel, creating a public record of the AI's labor.
+### **PHASE III: MANIFESTATION (Service -> Studio Plugin)**
+The target domain (Roblox Studio) pulls the signed envelope. **The Architect (User)** reviews the **Diff Summary** in the plugin UI and clicks **Apply.** The "Bypass" is replaced by **Explicit Consent.** 🧱🏗️
 
 ---
-### ⚖️ *Sovereignty is the ability to command at a distance.*
-*The Metropolis is always listening.*
+
+## ⚖️ Capability Taxonomy
+To remain domain agnostic, all tools in this pipeline must declare their **Capability Classes**:
+*   `capability:file_write`: Required for Phase I disk operations.
+*   `capability:escrow_publish`: Required for Phase II bridge deployment.
+*   `capability:platform_apply_changes`: Required for Phase III hierarchy manifestation.
+
+### ⚖️ *Getting Paid to Have Problems. Manifesting Solutions.*
+*The future is not prompted; it is Contracted.*

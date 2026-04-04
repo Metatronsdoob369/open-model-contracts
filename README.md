@@ -1,32 +1,40 @@
 # ⚖️ Open Model Contracts (OMC)
-### *Autonomous Governance via Manifestation.*
+### *A Constitution for Autonomous Manifestation.*
 
-This repository is the **Core DNA** for a contract-first architecture designed to govern AI agents across multiple sectors—from **Level-Scale Roblox Environments** to **Distributed Server Infrastructure.**
-
----
-
-## 🏙️ Sector A: Metropolis (Roblox)
-Located in [`/popsim-contract`](./popsim-contract).
-The **Metropolis Showcase** demonstrates the power of OMC to manifest high-fidelity, hybrid level-scale environments (Skyscrapers, Neon Streets, Traffic, and Audio) via a bulletproof AI bridge.
-
-## 🏛️ Sector B: Governance & Spec
-Located in [`/spec`](./spec).
-The "Law" of the system. This sector defines how **Sovereign Agents** are admitted into the pipeline and how work is audited and verified.
-
-## 🌉 Sector C: The Core Bridge
-Located in [`/src`](./src).
-The Zod-based contract engine that translates natural language intentions into **Governed Game Assets** and **System Commands.**
+Open Model Contracts (OMC) is a domain-agnostic framework designed to govern AI agent swarms through structured, typed agreements. It transforms AI labor from "probabilistic prompts" into "deterministic contracts."
 
 ---
 
-## 🚀 The Vision
-Open Model Contracts move the industry away from "informal prompting" and into **"Hardened Manifestation."** Every asset, every sound, and every line of code in this repository was manifested under a contract.
+## 🕋 The Three-Phase Lifecycle
+Every manifestation in the OMC ecosystem follows the **Sovereign Pipeline**:
 
-### 🚥 Active Mission: Chaos Metropolis
-*   **Target**: High-fidelity Gothic-Cyber City.
-*   **State**: ARMED.
-*   **Visibility**: Pre-dawn (3 AM) / Cyber-Blue / Radiant Glow.
+1.  **Phase I: Intelligence**: A specialist board members (the AI swarm) translates a **Level Primer (DNA)** into a signed **omc.manifest.json**.
+2.  **Phase II: Escrow**: The manifest and generated modules are escrowed into a **Bridge Service**, secured by TTL and one-time tokens.
+3.  **Phase III: Manifestation**: The target domain (e.g., Roblox Studio) pulls the manifest, reviews the diff, and installs the assets with explicit user consent.
 
 ---
-### ⚖️ *Get Paid to Have Problems. Manifest Solutions.*
+
+## 🏛️ Repository Structure
+
+### `/constitution`
+The "Supreme Law." Defines the **Capability Taxonomy** and **Phase Gates** that all packs must obey.
+
+### `/packs`
+Sector-specific implementations of the OMC DNA.
+*   [`/roblox-game-automator`](./packs/roblox-game-automator): Manifests high-fidelity Gothic-Cyber environments.
+*   *Coming Soon*: /telegram-governance, /logistics-fleet.
+
+### `/server/bridge`
+The reference implementation of the **OMC Escrow Service.** (Node.js/TypeScript).
+
+---
+
+## 🚀 Mission: The Metropolis
+The current reference manifestation is a **High-Fidelity Gothic Metropolis** featuring:
+- **Procedural Obsidian Skyscrapers** 🏙️
+- **11-Arch Central Cathedral** ⛪️
+- **Radiant Cyber-Movement Mechanics** 💨✨
+
+---
+### ⚖️ *Getting Paid to Have Problems. Manifesting Solutions.*
 *The future is not prompted; it is Contracted.*
