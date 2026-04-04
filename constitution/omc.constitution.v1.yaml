@@ -1,0 +1,55 @@
+# ⚖️ Open Model Contract Constitution (v1.0)
+### *Domain-Agnostic Governance for Autonomous Manifestation.*
+
+version: "1.0"
+authority: "Sovereign Board"
+
+# 🚥 CORE PIPELINE DEFINITION
+pipeline:
+  phase_1:
+    name: "Intelligence"
+    input: "LevelPrimer (DNA)"
+    output: "omc.manifest.json"
+    allowed_capabilities:
+      - "capability:file_write"
+      - "capability:rag_retrieval"
+      - "capability:schema_validation"
+
+  phase_2:
+    name: "Escrow"
+    input: "omc.manifest.json + ModuleBundle"
+    output: "EscrowEnvelope (Signed)"
+    allowed_capabilities:
+      - "capability:escrow_publish"
+      - "capability:network_expose"
+
+  phase_3:
+    name: "Manifestation"
+    input: "EscrowEnvelope"
+    output: "DomainStateChange"
+    governance: "Explicit User Consent (UI Diff Review)"
+    allowed_capabilities:
+      - "capability:client_install"
+      - "capability:platform_apply_changes"
+
+# 📜 REQUIRED ARTIFACTS
+artifacts:
+  - path: "manifest.json"
+    required: true
+    description: "The signed intent of the specialist agent."
+  - path: "pack.yaml"
+    required: true
+    description: "Pack metadata and dependency tree."
+
+# 🛡️ SAFETY & AUDIT POLICY
+audit:
+  logging: "SovereignJSONL"
+  verification: "HashMatchRequired"
+  human_review_gate: true
+
+# 🔗 CAPABILITY DEFINITIONS
+capabilities:
+  - id: "capability:file_write"
+    description: "Write code modules to the local workspace."
+  - id: "capability:platform_apply_changes"
+    description: "Directly manipulate the target domain's object tree (e.g., Roblox Hierarchy)."

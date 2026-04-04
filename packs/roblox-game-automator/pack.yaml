@@ -1,0 +1,34 @@
+# 🏮 Pack: roblox-game-automator
+### *The Sovereign Architect's Manifest.*
+
+version: "1.0"
+domain: "Roblox"
+constitution_version: "1.0"
+
+# 🌉 PIPELINE DEFINITION
+pipeline:
+  phase_1:
+    task: "Specialist Team Manifestation"
+    output_path: "./lua/modules/"
+  phase_2:
+    service: "BridgeServer (Node.js)"
+    escrow_port: 8080
+  phase_3:
+    client: "Roblox Studio Plugin"
+    install_logic: "ModuleScript Installation (User Consented)"
+
+# ⚖️ CORE POLICIES (Must/Must-Not)
+policies:
+  - "must: Use Obsidian/Teal/Violet color harmony by default."
+  - "must: Validate all Luau code before escrow."
+  - "must_not: Inject without explicit diff review in Studio."
+  - "must_not: Expose local file paths in the escrow envelope."
+
+# 🏛️ BOARD SPECIALISTS
+specialists:
+  - id: "architect-01"
+    role: "Volumetric Construction"
+  - id: "sonic-01"
+    role: "Ambient Reverb Master"
+  - id: "system-01"
+    role: "Radiant Player Mechanics"
