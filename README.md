@@ -5,22 +5,85 @@ This repository is the **Core DNA** for a contract-first architecture designed t
 
 ---
 
-## 🏙️ Sector A: Metropolis (Roblox)
-Located in [`/popsim-contract`](./popsim-contract).
-The **Metropolis Showcase** demonstrates the power of OMC to manifest high-fidelity, hybrid level-scale environments (Skyscrapers, Neon Streets, Traffic, and Audio) via a bulletproof AI bridge.
+## 🗺️ The 3-Phase Execution Model
+
+OMC governs AI-assisted work through three mandatory, gated phases:
+
+| Phase | Name | Description | Key Artifact |
+|-------|------|-------------|-------------|
+| 1 | **Intelligence** | Agent reads Level Primer (DNA) + sovereign docs; writes Luau modules to local repo; produces validated manifest | `omc.manifest.json` |
+| 2 | **Escrow** | Agent POSTs manifest + module bundle to Bridge server; Bridge arms a session with TTL + one-time token | `EscrowEnvelope` (in-memory) |
+| 3 | **Manifestation** | Studio plugin pulls escrowed modules; displays diff to user; user consents; plugin installs ModuleScripts | ModuleScripts in Studio |
+
+See [`PIPELINE.md`](./PIPELINE.md) for the full execution map, Bridge server usage, and plugin workflow.
+
+---
+
+## 📦 Repository Layout
+
+```
+open-model-contracts/
+├── constitution/                   ← Global governance law (never duplicated)
+│   ├── omc.constitution.v1.yaml   ← Core constitution
+│   ├── capabilities.schema.json   ← Canonical capability taxonomy
+│   └── phase-gates.md             ← Required artifacts + validations per phase
+│
+├── packs/                         ← Domain-specific contract packs
+│   └── roblox-game-automator/     ← Roblox Game Automator pack
+│       ├── primer/LEVEL_PRIMER.md ← DNA entrypoint (agent reads this first)
+│       ├── schemas/               ← JSON Schemas for all phase artifacts
+│       ├── policies/              ← Phase 1/2/3 policy YAML
+│       └── examples/             ← Example manifest, envelope, Luau module
+│
+├── server/
+│   ├── src/                       ← MCP server (governance enforcement)
+│   └── bridge/                    ← Bridge escrow reference server (Phase 2)
+│
+├── spec/                          ← Governance specification documents
+├── constitution/                  ← OMC constitution + capability taxonomy
+└── PIPELINE.md                    ← 3-phase execution model + how-to
+```
+
+---
+
+## 🏙️ Sector A: Roblox Game Automator Pack
+
+Located in [`packs/roblox-game-automator/`](./packs/roblox-game-automator).
+
+The **Roblox Game Automator** is the first full OMC pack. It implements the 3-phase execution
+model for generating and delivering Luau modules into a live Roblox Studio session via the Bridge
+escrow server.
+
+**Quick start for the pack:**
+1. Read [`packs/roblox-game-automator/primer/LEVEL_PRIMER.md`](./packs/roblox-game-automator/primer/LEVEL_PRIMER.md)
+2. Run the Bridge: `npm run bridge:install && npm run bridge:build && npm run bridge:start`
+3. Use an agent to complete Phase 1 (Intelligence) and POST to the Bridge (Phase 2)
+4. Use the Studio plugin to pull and install (Phase 3)
 
 ## 🏛️ Sector B: Governance & Spec
 Located in [`/spec`](./spec).
-The "Law" of the system. This sector defines how **Sovereign Agents** are admitted into the pipeline and how work is audited and verified.
+The "Law" of the system. Defines how **Sovereign Agents** are admitted and audited.
 
-## 🌉 Sector C: The Core Bridge
-Located in [`/src`](./src).
-The Zod-based contract engine that translates natural language intentions into **Governed Game Assets** and **System Commands.**
+## 🌉 Sector C: Bridge Escrow Server
+Located in [`server/bridge/`](./server/bridge/).
+Reference Node.js/TypeScript implementation of the Phase 2 escrow service.
+Provides `POST /escrow`, `GET /escrow/:id/manifest`, `GET /escrow/:id/modules`,
+and `POST /escrow/:id/consume` with TTL + one-time token enforcement.
+
+## 🔧 Sector D: MCP Governance Server
+Located in [`server/src/`](./server/src/).
+The Zod-based contract engine and MCP server that enforces policy at tool-call time.
 
 ---
 
 ## 🚀 The Vision
-Open Model Contracts move the industry away from "informal prompting" and into **"Hardened Manifestation."** Every asset, every sound, and every line of code in this repository was manifested under a contract.
+Open Model Contracts moves from "informal prompting" to **"Hardened Manifestation."**
+Every pipeline is a **Pack** that plugs into the **Constitution**, executed through
+**MCP-enforced phase gates**: Intelligence → Escrow → Manifestation.
+
+One constitution. Many projects. No swelling.
+
+---
 
 ### 🚥 Active Mission: Chaos Metropolis
 *   **Target**: High-fidelity Gothic-Cyber City.
@@ -30,3 +93,4 @@ Open Model Contracts move the industry away from "informal prompting" and into *
 ---
 ### ⚖️ *Get Paid to Have Problems. Manifest Solutions.*
 *The future is not prompted; it is Contracted.*
+
