@@ -1,0 +1,17 @@
+{
+  "name": "RobloxGameAutomator",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "OMC": {
+        "$className": "Folder",
+        "Source": {
+          "$path": "src"
+        },
+        "Generated": {
+          "$path": "generated/roblox-game-automator/modules"
+        }
+      }
+    }
+  }
+}
