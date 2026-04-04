@@ -1,99 +1,32 @@
-# Open Model-Contracts
+# ⚖️ Open Model Contracts (OMC)
+### *Autonomous Governance via Manifestation.*
 
-**The legal framework for AI model execution.**
+This repository is the **Core DNA** for a contract-first architecture designed to govern AI agents across multiple sectors—from **Level-Scale Roblox Environments** to **Distributed Server Infrastructure.**
 
-Prompts are suggestions. Contracts are law.
+---
 
-## What It Is
+## 🏙️ Sector A: Metropolis (Roblox)
+Located in [`/popsim-contract`](./popsim-contract).
+The **Metropolis Showcase** demonstrates the power of OMC to manifest high-fidelity, hybrid level-scale environments (Skyscrapers, Neon Streets, Traffic, and Audio) via a bulletproof AI bridge.
 
-Open Model-Contracts defines how AI models, agents, and tools execute work through enforceable contracts rather than informal prompts.
+## 🏛️ Sector B: Governance & Spec
+Located in [`/spec`](./spec).
+The "Law" of the system. This sector defines how **Sovereign Agents** are admitted into the pipeline and how work is audited and verified.
 
-## The Three Meanings
+## 🌉 Sector C: The Core Bridge
+Located in [`/src`](./src).
+The Zod-based contract engine that translates natural language intentions into **Governed Game Assets** and **System Commands.**
 
-1. **Open** - A standardized specification (like OpenAPI)
-2. **Model** - AI models/agents/LLMs being governed
-3. **Contracts** - Legally binding execution agreements
+---
 
-Like "model contracts" in law - reusable, validated, constitutional templates for AI work.
+## 🚀 The Vision
+Open Model Contracts move the industry away from "informal prompting" and into **"Hardened Manifestation."** Every asset, every sound, and every line of code in this repository was manifested under a contract.
 
-## Why It Exists
+### 🚥 Active Mission: Chaos Metropolis
+*   **Target**: High-fidelity Gothic-Cyber City.
+*   **State**: ARMED.
+*   **Visibility**: Pre-dawn (3 AM) / Cyber-Blue / Radiant Glow.
 
-AI models execute work through:
-- ❌ Prompts (informal, unreliable)
-- ❌ Function calls (unvalidated JSON)
-- ❌ Tool use (no admission control)
-- ❌ Multi-agent systems (no coordination law)
-
-**There's no legal framework. Just suggestions.**
-
-Open Model-Contracts provides:
-- ✅ **Zod-validated schemas** - Type-safe contracts
-- ✅ **SAFE/ARMED gates** - Risk-based execution control
-- ✅ **MCP admission** - Tool compliance audits
-- ✅ **Constitutional evolution** - Self-improving governance
-- ✅ **Audit trails** - Complete governance logs
-
-## Quick Start
-
-```bash
-npm install @open-model-contracts/server
-```
-
-```typescript
-import { z } from "zod";
-
-// Define a contract
-const DataAnalysis = z.object({
-  dataset: z.string(),
-  operations: z.array(z.enum(["filter", "aggregate", "visualize"])),
-  output: z.enum(["json", "csv", "chart"])
-});
-
-// Execute through governance
-const result = await omc.execute({
-  contract: DataAnalysis,
-  input: { 
-    dataset: "sales.csv",
-    operations: ["aggregate"],
-    output: "json"
-  },
-  gate: "SAFE"
-});
-```
-
-## What Gets Governed
-
-- Single model tasks (GPT-4, Claude, Llama)
-- Multi-agent orchestration
-- Tool chains (MCP servers, APIs)
-- RAG pipelines
-- Workflow automation
-
-**Model-agnostic. Sector-agnostic.**
-
-## Documentation
-
-- [OVERVIEW](./spec/OVERVIEW.md) - Introduction
-- [CONTRACTS](./spec/CONTRACTS.md) - Schema specification
-- [GATES](./spec/GATES.md) - SAFE/ARMED model
-- [ADMISSION](./spec/ADMISSION.md) - MCP criteria
-- [GOVERNANCE](./spec/GOVERNANCE.md) - Constitutional framework
-- [DREAM_CYCLE](./spec/DREAM_CYCLE.md) - Self-improvement
-
-## Status
-
-**Alpha** - Core governance implemented.
-
-## License
-
-MIT
-
-## Domicile Governance Bundle
-
-Relocated governance contracts from Domicile live workspace now live at:
-- `spec/domicile-governance/INDEX.md`
-
-This bundle includes:
-- Admission contracts (MCP/OpenClaw/Terraform/n8n/Notebook)
-- SAFE/ARMED allowlists
-- Governed OpenClaw target routing profiles
+---
+### ⚖️ *Get Paid to Have Problems. Manifest Solutions.*
+*The future is not prompted; it is Contracted.*

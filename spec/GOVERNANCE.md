@@ -19,11 +19,11 @@
 
 ```json
 {
-  "skill": "clay-consigliere",
-  "persona_id": "18895da3",
+  "skill": "signal-agent",
+  "persona_id": "agent-001",
   "prime_directives": [
-    "MVP Protocol (80/20 Rule)",
-    "Compliance is Sovereign",
+    "Ship at 80%",
+    "Contract is Sovereign",
     "Local Sovereignty",
     "Delegate the Chaos"
   ],
@@ -32,7 +32,7 @@
     "fallback_enabled": true,
     "max_retries": 3
   },
-  "covenant": "Protect the build. Ship at 80%. Compliance sovereign."
+  "covenant": "Protect the build. Contract governs execution."
 }
 ```
 
@@ -45,7 +45,7 @@
 ### Amendment Types
 
 1. **dream_promotion** - TARS tested mutation during sleep → succeeded → promote to production
-2. **manual_update** - Human operator (Preston System A) manually updated
+2. **manual_update** - Human operator manually updated
 3. **governance_tightening** - New compliance rule added (from gov.md)
 4. **capability_expansion** - New skill/capability added
 
@@ -149,7 +149,7 @@ ELSE:
 UPDATE systems
 SET constitution = new_constitution,
     updated_at = NOW()
-WHERE id = 'clay-consigliere-uuid';
+WHERE id = 'signal-agent-uuid';
 ```
 
 **System A now uses confidence_threshold = 0.65 for all future routing.**
@@ -162,7 +162,7 @@ WHERE id = 'clay-consigliere-uuid';
 
 1. **Dream mutation causes failures** (success rate drops below threshold)
 2. **Compliance violation detected** (new behavior violates gov.md)
-3. **User satisfaction drops** (Katie rates 1-2 stars consistently)
+3. **Signal quality drops** (output scores fall below acceptance threshold)
 4. **Cost spike** (budget alerts triggered)
 
 ### Rollback Process
@@ -170,7 +170,7 @@ WHERE id = 'clay-consigliere-uuid';
 ```sql
 -- Find last amendment
 SELECT * FROM constitutional_amendments
-WHERE system_id = 'clay-consigliere-uuid'
+WHERE system_id = 'signal-agent-uuid'
   AND can_rollback = true
   AND rolled_back_at IS NULL
 ORDER BY approved_at DESC
@@ -182,7 +182,7 @@ SET constitution = (
   SELECT old_constitution FROM constitutional_amendments WHERE id = 'amendment-uuid'
 ),
 updated_at = NOW()
-WHERE id = 'clay-consigliere-uuid';
+WHERE id = 'signal-agent-uuid';
 
 -- Mark amendment as rolled back
 UPDATE constitutional_amendments
@@ -216,10 +216,10 @@ WHERE id = 'amendment-uuid';
       "Delegate the Chaos" // NEW
     ]
   },
-  "approved_by": "preston@oms.com",
+  "approved_by": "operator@example.com",
   "evidence": {
     "reason": "Operator recognized delegation pattern needed",
-    "jira_ticket": "-1234"
+    "issue_ref": "RFC-001"
   },
   "can_rollback": true
 }
@@ -235,14 +235,14 @@ WHERE id = 'amendment-uuid';
 {
   "amendment_type": "governance_tightening",
   "old_constitution": {
-    "requires_approval": ["upload_payroll_entries", "audit"]
+    "requires_approval": ["publish_signals", "audit"]
   },
   "new_constitution": {
-    "requires_approval": ["upload_payroll_entries", "audit", "delete"] // Added "delete"
+    "requires_approval": ["publish_signals", "audit", "delete"] // Added "delete"
   },
-  "approved_by": "compliance-officer@oms.com",
+  "approved_by": "compliance@example.com",
   "evidence": {
-    "reason": "New GDPR requirement: All deletions require explicit approval",
+    "reason": "Retention policy: all deletions require explicit approval",
     "gov_md_section": "7.3",
     "effective_date": "2026-02-01"
   },
@@ -262,17 +262,17 @@ WHERE id = 'amendment-uuid';
 {
   "amendment_type": "capability_expansion",
   "old_constitution": {
-    "capabilities": ["payroll", "compliance", "pdf-processing"]
+    "capabilities": ["signals", "analysis", "content-generation"]
   },
   "new_constitution": {
     "capabilities": [
-      "payroll",
-      "compliance",
-      "pdf-processing",
+      "signals",
+      "analysis",
+      "content-generation",
       "voice-synthesis"
     ] // NEW
   },
-  "approved_by": "preston@oms.com",
+  "approved_by": "operator@example.com",
   "evidence": {
     "reason": "Added Voice System 7B integration",
     "deployment_date": "2026-01-28",
@@ -312,7 +312,7 @@ WHERE id = 'amendment-uuid';
 **Who can approve amendments:**
 
 - TARS: dream_promotion (autonomous)
-- Operator (Preston System A): manual_update, capability_expansion
+- Operator: manual_update, capability_expansion
 - Compliance Officer: governance_tightening
 - Security Team: security patches
 
@@ -352,7 +352,7 @@ SELECT
   ca.diff,
   ca.evidence
 FROM constitutional_amendments ca
-WHERE ca.system_id = 'clay-consigliere-uuid'
+WHERE ca.system_id = 'signal-agent-uuid'
 ORDER BY ca.approved_at DESC;
 ```
 
@@ -366,7 +366,7 @@ SELECT
   (SELECT COUNT(*) FROM constitutional_amendments WHERE system_id = s.id AND rolled_back_at IS NOT NULL) as rollbacks,
   s.updated_at as last_updated
 FROM systems s
-WHERE s.name = 'clay-consigliere';
+WHERE s.name = 'signal-agent';
 ```
 
 ---
@@ -397,7 +397,7 @@ System self-improves over time (no human intervention)
 
 ```json
 {
-  "skill": "clay-consigliere",
+  "skill": "signal-agent",
   "routing_confidence_threshold": 0.7,
   "fallback_delay_ms": 500
 }
@@ -435,7 +435,7 @@ Promote to production
 ### Day 60: Manual Update
 
 ```
-Preston: "Add budget limits to prevent overspend"
+operator: "Add budget limits to prevent overspend"
     ↓
 Manual amendment
 ```
@@ -454,7 +454,7 @@ Manual amendment
 ### Day 90: Governance Tightening
 
 ```
-Compliance: "New labor law requires payroll audit trail"
+operator: "New policy requires content pipeline audit trail"
     ↓
 Governance amendment
 ```
@@ -486,30 +486,28 @@ Governance amendment
 ```json
 {
   "skill": "open-model-contracts-governance",
-  "requires_approval": ["upload_payroll_entries", "audit", "delete"],
-  "dual_write_enabled": true,
-  "fuzzy_match_threshold": 0.4,
-  "covenant": "Profit from errors. Dual-write. ARM mode."
+  "requires_approval": ["publish_signals", "audit", "delete"],
+  "covenant": "Contract governs execution. ARM before state change."
 }
 ```
 
-**clay-consigliere:**
+**signal-agent:**
 
 ```json
 {
-  "skill": "clay-consigliere",
-  "persona_id": "18895da3",
+  "skill": "signal-agent",
+  "persona_id": "agent-001",
   "routing_confidence_threshold": 0.7,
-  "prime_directives": ["MVP Protocol", "Compliance Sovereign"]
+  "prime_directives": ["Contract Sovereign", "Ship at 80%"]
 }
 ```
 
-**personaplex-7b:**
+**voice-agent:**
 
 ```json
 {
-  "skill": "personaplex-7b",
-  "model": "nvidia/personaplex-7b",
+  "skill": "voice-agent",
+  "model": "tts-model",
   "voice_quality": "high",
   "latency_target_ms": 500
 }

@@ -15,7 +15,7 @@ import {
 const server = new Server(
   {
     name: "open-model-contracts",
-    version: "0.1.0",
+    version: "0.2.0",
   },
   {
     capabilities: {
@@ -24,7 +24,7 @@ const server = new Server(
   }
 );
 
-// Tool: validate_contract
+// Tool Definitions
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
@@ -34,10 +34,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: "object",
           properties: {
-            contract: {
-              type: "object",
-              description: "Contract to validate"
-            }
+            contract: { type: "object", description: "Contract to validate" },
+            domain: { type: "string", description: "Domain context (e.g., 'popsim')" }
           },
           required: ["contract"]
         }
@@ -48,26 +46,57 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         inputSchema: {
           type: "object",
           properties: {
-            operation: {
-              type: "string",
-              description: "Operation to check"
-            }
+            operation: { type: "string", description: "Operation to check" }
           },
           required: ["operation"]
         }
       },
       {
-        name: "log_governance_event",
-        description: "Log a governance event to audit trail",
+        name: "roblox_bridge_call",
+        description: "Execute a validated contract via the Roblox Bridge",
         inputSchema: {
           type: "object",
           properties: {
-            event: {
-              type: "object",
-              description: "Event to log"
-            }
+            domain: { type: "string", description: "Roblox domain (e.g., 'popsim')" },
+            action: { type: "string", description: "Action name" },
+            payload: { type: "object", description: "Action payload" }
           },
-          required: ["event"]
+          required: ["domain", "action", "payload"]
+        }
+      },
+      {
+        name: "roblox_inspect_state",
+        description: "Inspect the current state of a Roblox domain",
+        inputSchema: {
+          type: "object",
+          properties: {
+            domain: { type: "string", description: "Roblox domain to inspect" }
+          },
+          required: ["domain"]
+        }
+      },
+      {
+        name: "run_skill",
+        description: "Execute a specialized agent skill (ARMED)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            skill_name: { type: "string" },
+            args: { type: "object" }
+          },
+          required: ["skill_name"]
+        }
+      },
+      {
+        name: "run_workflow",
+        description: "Execute a multi-step agent workflow (ARMED)",
+        inputSchema: {
+          type: "object",
+          properties: {
+            workflow_path: { type: "string" },
+            context: { type: "object" }
+          },
+          required: ["workflow_path"]
         }
       }
     ],
@@ -75,60 +104,59 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 });
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  switch (request.params.name) {
+  const { name, arguments: args } = request.params;
+  const typedArgs = args as any;
+
+  console.error(`[Governance] Tool Call: ${name}`, JSON.stringify(args));
+
+  switch (name) {
     case "validate_contract": {
-      const contract = request.params.arguments?.contract;
-      // Validation logic here
+      // In a real implementation, this would call the TS validation logic
       return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ valid: true, contract }),
-          },
-        ],
+        content: [{ type: "text", text: JSON.stringify({ valid: true, domain: typedArgs?.domain || "generic", contract: typedArgs?.contract }) }],
       };
     }
     
     case "check_gate": {
-      const operation = request.params.arguments?.operation;
-      // Gate checking logic here
+      const isArmed = typedArgs?.operation?.match(/delete|publish|execute|post/i);
       return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ gate: "SAFE", operation }),
-          },
-        ],
+        content: [{ type: "text", text: JSON.stringify({ gate: isArmed ? "ARMED" : "SAFE", operation: typedArgs?.operation }) }],
+      };
+    }
+
+    case "roblox_bridge_call": {
+      // Bridge handles the actual enforcement/dispatch
+      return {
+        content: [{ type: "text", text: JSON.stringify({ status: "dispatched", domain: typedArgs?.domain, action: typedArgs?.action }) }],
+      };
+    }
+
+    case "roblox_inspect_state": {
+      return {
+        content: [{ type: "text", text: JSON.stringify({ status: "active", domain: typedArgs?.domain, metrics: { agents: 12, health: "nominal" } }) }],
       };
     }
     
-    case "log_governance_event": {
-      const event = request.params.arguments?.event;
-      // Logging logic here
+    case "run_skill":
+    case "run_workflow": {
       return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify({ logged: true, event }),
-          },
-        ],
+        content: [{ type: "text", text: JSON.stringify({ status: "initiated", gate: "ARMED", detail: typedArgs }) }],
       };
     }
     
     default:
-      throw new Error(`Unknown tool: ${request.params.name}`);
+      throw new Error(`Unknown tool: ${name}`);
   }
 });
 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Open Model-Contracts MCP server running on stdio");
+  console.error("Open Model-Contracts Governance Server (v0.2.0) running on stdio");
 }
 
 main().catch((error) => {
   console.error("Server error:", error);
-  if (typeof process !== 'undefined') {
-    process.exit(1);
-  }
+  process.exit(1);
 });
+

@@ -6,6 +6,7 @@ This folder is the canonical contract/spec mirror relocated from:
 ## Admission Contracts
 - `admission/MCP_ADMISSION_CONTRACT.md`
 - `admission/MCP_RAG_SPECIALIST.md`
+- `admission/SPECIALIST_AGENT.md` — **PENDING_PROOF** — self-improving domain specialist with circadian loop. Promote to APPROVED after UE5 specialist first production run.
 - `admission/openclaw_ADMISSION_CONTRACT.md`
 - `admission/terraform_ADMISSION_CONTRACT.md`
 - `admission/n8n_ADMISSION_CONTRACT.md`

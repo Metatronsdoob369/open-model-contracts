@@ -110,7 +110,7 @@ Define new capabilities or improvements:
   },
   "governance": {
     "security": "Data encryption at rest and in transit",
-    "compliance": "GDPR compliant data processing",
+    "compliance": "Data processing within declared scope only",
     "ethics": "Bias detection and mitigation"
   },
   "validation_criteria": "Accuracy > 85%, false positive rate < 5%"

@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOVEREIGN ASSET INTELLIGENCE — Distressed Property & Estate Data Platform</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root {
+    --black: #050508;
+    --deep: #0a0a0f;
+    --surface: #0f0f17;
+    --border: #1a1a28;
+    --border-bright: #2a2a40;
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --gold-bright: #f0c96a;
+    --red: #c23b3b;
+    --red-dim: #7a1f1f;
+    --text: #e8e4d8;
+    --text-dim: #8a8578;
+    --text-muted: #4a4840;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Libre Baskerville', serif;
+    --display: 'Bebas Neue', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ── CANVAS ── */
+  #bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── SCAN LINE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── NOISE GRAIN ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 2;
+    animation: grain 0.5s steps(1) infinite;
+  }
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0,0); }
+    10% { transform: translate(-2%, -3%); }
+    20% { transform: translate(3%, 1%); }
+    30% { transform: translate(-1%, 4%); }
+    40% { transform: translate(4%, -2%); }
+    50% { transform: translate(-3%, 2%); }
+    60% { transform: translate(2%, -4%); }
+    70% { transform: translate(-4%, 1%); }
+    80% { transform: translate(1%, 3%); }
+    90% { transform: translate(3%, -1%); }
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    position: relative;
+    z-index: 10;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(5,5,8,0.92);
+    backdrop-filter: blur(12px);
+  }
+
+  nav .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .nav-logo {
+    font-family: var(--display);
+    font-size: 22px;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+
+  .nav-logo span {
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    display: block;
+    font-family: var(--mono);
+    margin-top: -4px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    padding: 8px 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--black);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    position: relative;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+  }
+
+  .hero-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.02em;
+    color: var(--text);
+    margin-bottom: 32px;
+  }
+
+  .hero-title .accent { color: var(--gold); }
+  .hero-title .dim { color: var(--text-muted); }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin-bottom: 48px;
+    font-style: italic;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 14px 32px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-bright);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border-bright);
+    padding: 14px 32px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  /* ── HERO TERMINAL CARD ── */
+  .hero-terminal {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-terminal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .terminal-bar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .terminal-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot.red { background: var(--red); }
+  .terminal-dot.yellow { background: var(--gold-dim); }
+  .terminal-dot.green { background: #3a7a3a; }
+
+  .terminal-title {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.2em;
+    margin-left: 8px;
+  }
+
+  .terminal-body {
+    padding: 20px;
+    font-size: 11px;
+    line-height: 2;
+  }
+
+  .t-line { display: flex; gap: 8px; }
+  .t-prompt { color: var(--gold-dim); user-select: none; }
+  .t-cmd { color: var(--text); }
+  .t-out { color: var(--text-dim); padding-left: 16px; }
+  .t-highlight { color: var(--gold); }
+  .t-red { color: var(--red); }
+  .t-green { color: #5a9a5a; }
+  .t-blank { height: 8px; }
+
+  .terminal-cursor {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--gold);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    padding: 24px 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .stats-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    divide-x: var(--border);
+  }
+
+  .stat-item {
+    padding: 0 40px;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: var(--display);
+    font-size: 48px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── SECTION ── */
+  section {
+    padding: 100px 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+
+  .section-title {
+    font-family: var(--display);
+    font-size: clamp(40px, 5vw, 64px);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+
+  .section-desc {
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-dim);
+    max-width: 560px;
+    font-style: italic;
+  }
+
+  /* ── MOAT SECTION ── */
+  .moat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .moat-cell {
+    background: var(--deep);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .moat-cell:hover { background: var(--surface); }
+
+  .moat-cell::before {
+    content: attr(data-num);
+    position: absolute;
+    top: 20px; right: 24px;
+    font-family: var(--display);
+    font-size: 80px;
+    color: var(--border-bright);
+    line-height: 1;
+    pointer-events: none;
+    transition: color 0.3s;
+  }
+
+  .moat-cell:hover::before { color: var(--border); }
+
+  .moat-icon {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .moat-title {
+    font-family: var(--display);
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .moat-body {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
+
+  /* ── PIPELINE ── */
+  .pipeline {
+    margin-top: 60px;
+    position: relative;
+  }
+
+  .pipeline-line {
+    position: absolute;
+    left: 28px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), var(--border) 80%);
+  }
+
+  .pipeline-step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 32px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .step-num {
+    width: 56px; height: 56px;
+    border: 1px solid var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-size: 24px;
+    color: var(--gold);
+    background: var(--black);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-content {
+    padding-top: 8px;
+  }
+
+  .step-title {
+    font-family: var(--display);
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .step-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+
+  .step-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--border-bright);
+    color: var(--text-muted);
+  }
+
+  .tag.gold {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+
+  /* ── FAQ ── */
+  .faq-list {
+    margin-top: 60px;
+    border: 1px solid var(--border);
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item:last-child { border-bottom: none; }
+
+  .faq-q {
+    padding: 28px 32px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .faq-q:hover { background: var(--surface); }
+
+  .faq-q-text {
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--text);
+    max-width: 85%;
+  }
+
+  .faq-icon {
+    font-size: 20px;
+    color: var(--gold-dim);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .faq-item.open .faq-icon { transform: rotate(45deg); }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .faq-item.open .faq-a { max-height: 400px; }
+
+  .faq-a-inner {
+    padding: 0 32px 28px 32px;
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .faq-a-inner strong {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 60px;
+    border: 1px solid var(--border);
+  }
+
+  .compare-table th {
+    padding: 16px 24px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .compare-table th.ours {
+    color: var(--gold);
+    background: rgba(201,168,76,0.05);
+    border-top: 2px solid var(--gold);
+  }
+
+  .compare-table td {
+    padding: 16px 24px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .compare-table td.feature {
+    color: var(--text);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .compare-table td.ours {
+    background: rgba(201,168,76,0.04);
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  .check { color: #5a9a5a; }
+  .cross { color: var(--red-dim); }
+  .partial { color: var(--gold-dim); }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .pricing-card {
+    background: var(--deep);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .pricing-card:hover { background: var(--surface); }
+
+  .pricing-card.featured {
+    background: var(--surface);
+    border-top: 2px solid var(--gold);
+  }
+
+  .pricing-badge {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 4px 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .pricing-name {
+    font-family: var(--display);
+    font-size: 32px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .pricing-price {
+    font-family: var(--display);
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-period {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 32px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .pricing-features li {
+    font-size: 12px;
+    color: var(--text-dim);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .pricing-features li::before {
+    content: '—';
+    color: var(--gold-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    text-align: center;
+    padding: 120px 0;
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+
+  .cta-title {
+    font-family: var(--display);
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 0.03em;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+
+  .cta-sub {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 48px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-disclaimer {
+    font-size: 10px;
+    color: var(--text-muted);
+    max-width: 480px;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-bright), transparent);
+    margin: 0;
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-terminal { display: none; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .moat-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    nav .inner { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .container { padding: 0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="nav-logo">
+      SOVEREIGN
+      <span>Asset Intelligence Platform</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#pipeline">Pipeline</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+      Request Access
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow">Distressed Asset Intelligence</div>
+        <h1 class="hero-title">
+          THE DATA<br>
+          NOBODY<br>
+          <span class="accent">BUILT.</span><br>
+          <span class="dim">UNTIL NOW.</span>
+        </h1>
+        <p class="hero-sub">
+          Cross-referenced unclaimed property, estate records, and distressed real assets — 
+          across all 50 states. The layer that PropStream, BatchLeads, and ATTOM don't have.
+        </p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">Request Sample Pull</a>
+          <a href="#platform" class="btn-ghost">See the Architecture</a>
+        </div>
+      </div>
+
+      <div class="hero-terminal reveal">
+        <div class="terminal-bar">
+          <div class="terminal-dot red"></div>
+          <div class="terminal-dot yellow"></div>
+          <div class="terminal-dot green"></div>
+          <span class="terminal-title">sovereign_engine.py — AL ▸ running</span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">▸</span><span class="t-cmd">run_sweep --state AL --tier PREMIUM --type estate</span></div>
+          <div class="t-blank"></div>
+          <div class="t-out">Connecting via CDP... <span class="t-green">OK</span></div>
+          <div class="t-out">Turnstile bypass... <span class="t-green">CLEARED</span></div>
+          <div class="t-out">Intercepting SWS/properties...</div>
+          <div class="t-blank"></div>
+          <div class="t-out">Records captured: <span class="t-highlight">1,000</span></div>
+          <div class="t-out">PREMIUM tier: <span class="t-highlight">147</span></div>
+          <div class="t-out">Deceased + physical: <span class="t-highlight">89</span></div>
+          <div class="t-blank"></div>
+          <div class="t-out">⬡ GOLDEN LEADS: <span class="t-highlight">34</span></div>
+          <div class="t-out">Est. finder range: <span class="t-highlight">$3,400 — $1.7M</span></div>
+          <div class="t-blank"></div>
+          <div class="t-out">Cross-ref → ATTOM parcel data...</div>
+          <div class="t-out">Real property confirmed: <span class="t-highlight">28/34</span></div>
+          <div class="t-out">Dual revenue eligible: <span class="t-highlight">28</span> leads</div>
+          <div class="t-blank"></div>
+          <div class="t-out">Output → <span class="t-green">golden_leads_AL.tsv</span></div>
+          <div class="t-line"><span class="t-prompt">▸</span><span class="terminal-cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat-item reveal">
+        <div class="stat-number">$70B</div>
+        <div class="stat-label">Estimated US unclaimed assets</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-number">50</div>
+        <div class="stat-label">States covered by engine</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Minimum value floor per record</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Commercial platforms with this layer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLATFORM / MOAT -->
+<section id="platform">
+  <div class="container">
+    <div class="section-label">The Moat</div>
+    <h2 class="section-title reveal">WHY THIS<br>DATA IS DIFFERENT</h2>
+    <p class="section-desc reveal">
+      Every commercial real estate platform sources from the same public records. 
+      None of them cross-reference the unclaimed property layer. That gap is your edge.
+    </p>
+
+    <div class="moat-grid">
+      <div class="moat-cell reveal" data-num="01">
+        <div class="moat-icon">⬡</div>
+        <div class="moat-title">The $100 Floor Advantage</div>
+        <div class="moat-body">
+          State treasury systems cap displayed values at "$100+" — no exact amounts are visible to anyone. 
+          This isn't a limitation. It's a moat. The only way to extract value from a masked dataset 
+          is volume combined with holder classification. We know which insurers and financial institutions 
+          historically pay out at which tiers. That classification layer took months to build. 
+          A one-off search gives you names. Our engine gives you ranked, tiered, actionable intelligence.
+        </div>
+      </div>
+
+      <div class="moat-cell reveal" data-num="02">
+        <div class="moat-icon">◈</div>
+        <div class="moat-title">Confirmed Deceased Owners</div>
+        <div class="moat-body">
+          "Proceeds Due Beneficiaries" is not a data field. It's a confirmed death signal. 
+          When an insurance company reports unclaimed proceeds owed to beneficiaries, 
+          the original policyholder is deceased. That property is in probate, in transition, 
+          or about to be. No other platform surfaces this signal at scale. 
+          We filter for it specifically and cross-reference the address against county assessor records 
+          to confirm real property ownership simultaneously.
+        </div>
+      </div>
+
+      <div class="moat-cell reveal" data-num="03">
+        <div class="moat-icon">◎</div>
+        <div class="moat-title">Entity Unmasking at Scale</div>
+        <div class="moat-body">
+          Trusts and LLCs own property. County assessors return the entity name, not the human. 
+          Our pipeline cross-references Secretary of State registries, tax billing addresses, 
+          voter rolls, and utility records to extract the Ultimate Beneficial Owner — 
+          the actual human being making decisions. 
+          When a trust also appears in the unclaimed property database, 
+          you have confirmed mismanagement or a deceased trustee. That's the highest-quality distress signal that exists.
+        </div>
+      </div>
+
+      <div class="moat-cell reveal" data-num="04">
+        <div class="moat-icon">⊕</div>
+        <div class="moat-title">Dual Revenue Architecture</div>
+        <div class="moat-body">
+          One lead. Two checks. The same deceased estate owner has both unclaimed financial assets 
+          (insurance proceeds, dividends, mineral rights) and real property in transition. 
+          A finder agreement on the financial asset generates 10% of the recovered amount. 
+          A wholesale contract on the real property generates a $10K–$50K assignment fee. 
+          No other data product positions you for both simultaneously from a single record.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PIPELINE -->
+<section id="pipeline">
+  <div class="container">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title reveal">THE INTELLIGENCE<br>PIPELINE</h2>
+    <p class="section-desc reveal">
+      Six layers from raw state data to actionable dual-revenue lead. 
+      Fully automated. Runs overnight. Delivers prioritized output every morning.
+    </p>
+
+    <div class="pipeline reveal">
+      <div class="pipeline-line"></div>
+
+      <div class="pipeline-step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">50-STATE SCRAPE ENGINE</div>
+          <div class="step-body">CDP-based real Chrome automation bypasses Cloudflare Turnstile by inheriting live browser session tokens. Intercepts SWS/properties API responses directly — no DOM parsing, no visual rendering, pure JSON capture. Runs overnight on configurable keyword matrices across all 50 state treasury portals.</div>
+          <div class="step-tags">
+            <span class="tag gold">Playwright CDP</span>
+            <span class="tag gold">Turnstile Bypass</span>
+            <span class="tag">50 States</span>
+            <span class="tag">NAUPA II Standard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">HOLDER CLASSIFICATION ENGINE</div>
+          <div class="step-body">Every record is scored against a proprietary holder value tier table. PREMIUM (major life insurers, mineral/energy companies), HIGH (regional banks, investment firms), MED, LOW. Claim type multipliers applied: "Proceeds Due Beneficiaries" carries a 3x priority weight. Output is a ranked, tiered working list — not a raw dump.</div>
+          <div class="step-tags">
+            <span class="tag gold">PREMIUM / HIGH / MED / LOW</span>
+            <span class="tag">Claim Type Scoring</span>
+            <span class="tag">Deceased Signal Detection</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">ADDRESS RESOLUTION & CROSS-REFERENCE</div>
+          <div class="step-body">Physical addresses are separated from PO Boxes automatically. Physical addresses feed into ATTOM Data parcel lookup — returning assessed value, tax status, ownership history, and probate flags. Records where unclaimed financial asset + real property are confirmed simultaneously are flagged as GOLDEN LEADS.</div>
+          <div class="step-tags">
+            <span class="tag gold">ATTOM Data API</span>
+            <span class="tag">County Assessor</span>
+            <span class="tag">Probate Flag</span>
+            <span class="tag gold">Golden Lead Output</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">VISION-BASED DISTRESS CONFIRMATION</div>
+          <div class="step-body">Property images sourced from listing aggregators and Google Street View are passed through multimodal AI (GPT-4V / LLaVA / Kosmos 2.5). Models score for visual distress markers: boarded windows, structural damage, vacancy indicators, overgrown vegetation, deferred maintenance. Distress score appended to lead record.</div>
+          <div class="step-tags">
+            <span class="tag gold">GPT-4 Vision</span>
+            <span class="tag">LLaVA Local</span>
+            <span class="tag">Kosmos 2.5</span>
+            <span class="tag">Distress Score 0–10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">SPECTRAL HEAT MAP — CONTRACT DENSITY SCORING</div>
+          <div class="step-body">Spectral graph analysis of historical wholesale contract activity, tax lien concentration, probate filing density, and foreclosure patterns by ZIP code and census tract. Outputs a heat map of areas where contracts are most readily executable — overlaid against your lead list for geographic prioritization.</div>
+          <div class="step-tags">
+            <span class="tag gold">Spectral Graph Analysis</span>
+            <span class="tag">RAG Pipeline</span>
+            <span class="tag">ZIP-level Heat Map</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <div class="step-title">STATE-AWARE CONTRACT GENERATION</div>
+          <div class="step-body">Wholesale contracts auto-generated with state-specific compliance clauses injected based on property coordinates. Pennsylvania Act 52 disclosures, Connecticut HB 7287 registration requirements, Ohio SB 155 disclosure documents — all handled automatically. Static templates are a liability. Dynamic generation is the only defensible approach in 2025–2026.</div>
+          <div class="step-tags">
+            <span class="tag gold">Dynamic Clause Injection</span>
+            <span class="tag">50-State Compliance</span>
+            <span class="tag">Auto-generated PDF</span>
+            <span class="tag gold">Finder Agreement + Purchase Agreement</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPARISON -->
+<section>
+  <div class="container">
+    <div class="section-label">Competitive Landscape</div>
+    <h2 class="section-title reveal">VERSUS THE<br>EXISTING STACK</h2>
+
+    <table class="compare-table reveal">
+      <thead>
+        <tr>
+          <th>Capability</th>
+          <th class="ours">Sovereign</th>
+          <th>PropStream</th>
+          <th>BatchLeads</th>
+          <th>ATTOM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="feature">Unclaimed property layer</td>
+          <td class="ours check">✓ Native</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td class="feature">Deceased owner signal</td>
+          <td class="ours check">✓ Classified</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td class="feature">Trust / LLC unmasking</td>
+          <td class="ours check">✓ UBO extraction</td>
+          <td class="partial">~ Partial</td>
+          <td class="partial">~ Partial</td>
+          <td class="partial">~ Partial</td>
+        </tr>
+        <tr>
+          <td class="feature">Vision distress scoring</td>
+          <td class="ours check">✓ Multimodal AI</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td class="feature">Dual revenue positioning</td>
+          <td class="ours check">✓ Finder + Wholesale</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td class="feature">State-aware contract gen</td>
+          <td class="ours check">✓ Dynamic clauses</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+        </tr>
+        <tr>
+          <td class="feature">Mineral rights detection</td>
+          <td class="ours check">✓ Classified</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="partial">~ Limited</td>
+        </tr>
+        <tr>
+          <td class="feature">On-demand 50-state pull</td>
+          <td class="ours check">✓ Live engine</td>
+          <td class="partial">~ Cached data</td>
+          <td class="partial">~ Cached data</td>
+          <td class="partial">~ Cached data</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Access Tiers</div>
+    <h2 class="section-title reveal">STRUCTURED FOR<br>OPERATORS</h2>
+
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div class="pricing-name">DATA FEED</div>
+        <div class="pricing-price">$499</div>
+        <div class="pricing-period">/ month per state</div>
+        <ul class="pricing-features">
+          <li>Full state database pull, weekly refresh</li>
+          <li>Holder classification included</li>
+          <li>TSV / JSON / webhook output</li>
+          <li>PREMIUM + HIGH tier records only</li>
+          <li>Apify Actor access</li>
+        </ul>
+        <a href="#cta" class="btn-ghost" style="width:100%;text-align:center">Get Access</a>
+      </div>
+
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Most Requested</div>
+        <div class="pricing-name">DUAL ASSET</div>
+        <div class="pricing-price">$1,999</div>
+        <div class="pricing-period">/ month per state</div>
+        <ul class="pricing-features">
+          <li>Everything in Data Feed</li>
+          <li>ATTOM parcel cross-reference</li>
+          <li>Golden lead identification</li>
+          <li>Vision distress scoring</li>
+          <li>Heat map overlay</li>
+          <li>Finder + wholesale dual positioning</li>
+        </ul>
+        <a href="#cta" class="btn-primary" style="width:100%;text-align:center;display:block">Get Access</a>
+      </div>
+
+      <div class="pricing-card reveal">
+        <div class="pricing-name">WHITE GLOVE</div>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-period">enterprise licensing</div>
+        <ul class="pricing-features">
+          <li>All 50 states</li>
+          <li>Daily refresh cadence</li>
+          <li>State-aware contract generation</li>
+          <li>Skip trace integration</li>
+          <li>Dedicated data pipeline</li>
+          <li>Revenue share available</li>
+        </ul>
+        <a href="#cta" class="btn-ghost" style="width:100%;text-align:center">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label">Due Diligence</div>
+    <h2 class="section-title reveal">QUESTIONS SERIOUS<br>OPERATORS ASK</h2>
+
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Who is the customer for this data?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <strong>Primary:</strong> Real estate investors and wholesale operators targeting estate and probate properties before they hit the MLS. The unclaimed property layer identifies confirmed deceased owners — the highest-quality off-market distress signal available at scale.<br><br>
+            <strong>Secondary:</strong> Estate attorneys, heir hunting firms, and wealth recovery specialists who need fresh, structured lead feeds rather than running their own database infrastructure.<br><br>
+            <strong>Tertiary:</strong> Hedge funds and family offices building distressed asset acquisition pipelines who require programmatic data access rather than platform subscriptions.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Is this better than existing databases like PropStream or BatchLeads?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            It's not a replacement — it's a layer that doesn't exist in those platforms. PropStream, BatchLeads, and ATTOM all source from the same public property records. None of them cross-reference the unclaimed property database. <strong>That cross-reference is the product.</strong><br><br>
+            When a trust appears in both the county assessor database and the state unclaimed property registry with "Proceeds Due Beneficiaries" — that's a confirmed deceased trustee, an estate in transition, and a real property likely available off-market. No existing commercial platform surfaces that signal. We do.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Why does a large dataset matter if the dollar values are hidden?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            State treasury systems cap displayed values at "$100+" — no exact amounts are shown, by design. This is actually the moat.<br><br>
+            Because value is hidden from everyone equally, the only way to extract signal from a masked dataset is <strong>volume combined with holder classification</strong>. We know which insurers and financial institutions historically pay out at which tiers. Liberty National Life insurance endowments historically range $500–$50K. American General annuity proceeds range $1K–$500K+. Principal Financial Group dividends on trust accounts range $5K–$500K+.<br><br>
+            That holder classification table took time to build. Scale is the unlock. 50,000 tiered records beats 50 random records every time — even when nobody can see the exact dollar amount.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Will state governments change their websites and break access?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            <strong>Short term (1–2 years): Low risk.</strong> States are legally required to maintain public unclaimed property databases under NAUPA compliance. The data obligation is statutory — it cannot be removed, only the access method can change.<br><br>
+            <strong>Medium term (2–5 years): Moderate risk.</strong> States may add stronger bot protection or move to authenticated portals. Alabama's Turnstile implementation on detail pages is an early signal of this trend.<br><br>
+            <strong>Mitigation:</strong> We don't store static snapshots — we run a live engine. When access methods change, we update the scraper. The data obligation never disappears. First-mover advantage is now, before this access window closes.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">Is scraping state treasury databases legal?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            State unclaimed property databases are public records, maintained and published specifically for the purpose of reuniting owners with their assets. Programmatic access to publicly available government data for commercial purposes has been consistently upheld — most recently affirmed in <em>hiQ Labs v. LinkedIn</em> (9th Circuit, 2022) establishing that scraping publicly accessible data does not violate the Computer Fraud and Abuse Act.<br><br>
+            The finder service model is specifically regulated at the state level — most states permit finder agreements with fee caps (Alabama: 10%) — meaning the entire commercial model is explicitly anticipated and accommodated by the legal framework that governs this data.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <span class="faq-q-text">What does "dual revenue" actually mean in practice?</span>
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">
+          <div class="faq-a-inner">
+            One confirmed estate lead can generate two separate revenue events from a single contact:<br><br>
+            <strong>Revenue 1 — Finder Fee:</strong> The deceased owner has unclaimed financial assets (life insurance proceeds, annuity payments, bank accounts, mineral rights royalties) held by the state treasury. A finder agreement gives you 10% of the recovered amount in exchange for identifying the asset and assisting the heirs in filing the claim. This requires no capital and no real estate license.<br><br>
+            <strong>Revenue 2 — Wholesale Assignment Fee:</strong> The same deceased owner almost certainly had real property. That property is now in an estate or probate situation — heirs are motivated to sell, often below market. A wholesale contract with a $10K–$50K assignment fee to a cash buyer is a standard transaction in this scenario.<br><br>
+            Same lead. One outreach. Two checks. That's the architecture.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta-section">
+  <div class="container">
+    <div class="section-label" style="justify-content:center">Request Access</div>
+    <h2 class="cta-title reveal">READY TO SEE<br>YOUR MARKET?</h2>
+    <p class="cta-sub reveal">Tell us your target state and property type. We'll run a sample pull within 24 hours.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;" class="reveal">
+      <a href="mailto:access@sovereignasset.io?subject=Sample Pull Request" class="btn-primary">
+        Request Sample Pull →
+      </a>
+      <a href="mailto:enterprise@sovereignasset.io?subject=Enterprise Inquiry" class="btn-ghost">
+        Enterprise Licensing
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-copy">
+        © 2026 SOVEREIGN ASSET INTELLIGENCE — ALL RIGHTS RESERVED
+      </div>
+      <div class="footer-disclaimer">
+        Data sourced from publicly available state treasury unclaimed property registries. 
+        All scraping conducted on public government databases. Commercial use of public data 
+        for finder services is regulated at the state level. Consult applicable state statutes.
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── THREE.JS PARTICLE FIELD ──────────────────────────────────────────────────
+const canvas = document.getElementById('bg-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x000000, 0);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 80;
+
+// Particle geometry
+const count = 2000;
+const positions = new Float32Array(count * 3);
+const velocities = new Float32Array(count * 3);
+const sizes = new Float32Array(count);
+
+for (let i = 0; i < count; i++) {
+  positions[i * 3]     = (Math.random() - 0.5) * 200;
+  positions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+  positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+  velocities[i * 3]     = (Math.random() - 0.5) * 0.02;
+  velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+  velocities[i * 3 + 2] = 0;
+  sizes[i] = Math.random() * 1.5 + 0.3;
+}
+
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+const mat = new THREE.PointsMaterial({
+  color: 0xc9a84c,
+  size: 0.4,
+  transparent: true,
+  opacity: 0.6,
+  sizeAttenuation: true,
+});
+
+const particles = new THREE.Points(geo, mat);
+scene.add(particles);
+
+// Grid lines
+const gridMat = new THREE.LineBasicMaterial({
+  color: 0x1a1a28,
+  transparent: true,
+  opacity: 0.4
+});
+
+for (let i = -10; i <= 10; i++) {
+  const hGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(-100, i * 10, -20),
+    new THREE.Vector3(100, i * 10, -20)
+  ]);
+  const vGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(i * 10, -100, -20),
+    new THREE.Vector3(i * 10, 100, -20)
+  ]);
+  scene.add(new THREE.Line(hGeo, gridMat));
+  scene.add(new THREE.Line(vGeo, gridMat));
+}
+
+// Mouse parallax
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+  mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+// Animation
+let frame = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  frame++;
+
+  const pos = geo.attributes.position.array;
+  for (let i = 0; i < count; i++) {
+    pos[i * 3]     += velocities[i * 3];
+    pos[i * 3 + 1] += velocities[i * 3 + 1];
+
+    if (pos[i * 3] > 100) pos[i * 3] = -100;
+    if (pos[i * 3] < -100) pos[i * 3] = 100;
+    if (pos[i * 3 + 1] > 100) pos[i * 3 + 1] = -100;
+    if (pos[i * 3 + 1] < -100) pos[i * 3 + 1] = 100;
+  }
+  geo.attributes.position.needsUpdate = true;
+
+  camera.position.x += (mouseX * 8 - camera.position.x) * 0.02;
+  camera.position.y += (-mouseY * 8 - camera.position.y) * 0.02;
+  camera.lookAt(scene.position);
+
+  particles.rotation.z += 0.0002;
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── FAQ TOGGLE ────────────────────────────────────────────────────────────────
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── TERMINAL TYPEWRITER ───────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const lines = document.querySelectorAll('.t-out');
+  lines.forEach((line, i) => {
+    line.style.opacity = '0';
+    setTimeout(() => {
+      line.style.transition = 'opacity 0.3s';
+      line.style.opacity = '1';
+    }, 800 + i * 180);
+  });
+});
+</script>
+</body>
+</html>
