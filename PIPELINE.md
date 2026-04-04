@@ -154,5 +154,5 @@ ARMED state, creating an auditable record of every agent action.
 
 ---
 
-*Pipeline v2.0 — Governed by Open Model Contracts Constitution v1.0*
+*Pipeline v1.0 — Governed by Open Model Contracts Constitution v1.0*
 
