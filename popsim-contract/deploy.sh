@@ -21,7 +21,7 @@ gcloud run deploy $SERVICE_NAME \
     --region $REGION \
     --allow-unauthenticated \
     --port 8080 \
-    --set-env-vars="NODE_ENV=production"
+    --set-env-vars="NODE_ENV=production,CONTRACT_BRIDGE_KEY=development-only-key"
 
 echo "✅ Deployment complete!"
 gcloud run services describe $SERVICE_NAME --platform managed --region $REGION --format='value(status.url)'

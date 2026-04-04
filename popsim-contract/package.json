@@ -23,18 +23,33 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "validate": "ts-node src/validate-contract.ts",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@types/express": "^5.0.6",
+    "archiver": "^7.0.1",
+    "cls-rtracer": "^2.6.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
+    "node-telegram-bot-api": "^0.67.0",
+    "openai": "^6.33.0",
+    "redis": "^5.11.0",
+    "socket.io": "^4.8.3",
+    "winston": "^3.19.0",
     "zod": "^3.23.0"
   },
   "peerDependencies": {
@@ -47,5 +62,13 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/archiver": "^7.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/node": "^25.5.0",
+    "@types/node-telegram-bot-api": "^0.64.14",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0"
   }
 }
