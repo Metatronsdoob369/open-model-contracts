@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "session_id": "b2c3d4e5-f6a7-4890-bcde-f01234567891",
+  "pipeline_id": "a1b2c3d4-e5f6-4789-abcd-ef1234567890",
+  "manifest_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+  "ttl_seconds": 3600,
+  "pack_id": "roblox-game-automator",
+  "pack_version": "1.0.0",
+  "capability_tags": [
+    "capability:client.install",
+    "capability:platform.apply_changes"
+  ],
+  "manifest": {
+    "schema_version": "1.0",
+    "pack_id": "roblox-game-automator",
+    "pack_version": "1.0.0",
+    "pipeline_id": "a1b2c3d4-e5f6-4789-abcd-ef1234567890",
+    "created_at": "2026-04-04T14:00:00.000Z",
+    "files": [
+      {
+        "path": "generated/roblox-game-automator/modules/StructureGenerator.luau",
+        "type": "luau_module",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "generated/roblox-game-automator/modules/AtmosphereManager.luau",
+        "type": "luau_module",
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "module_id": "architect-01",
+      "name": "StructureGenerator.luau",
+      "content": "LS0tIFN0cnVjdHVyZUdlbmVyYXRvci5sdWF1IChtaW5pbWFsIHBsYWNlaG9sZGVyKQpsb2NhbCBNb2R1bGUgPSB7fQoKZnVuY3Rpb24gTW9kdWxlLmdlbmVyYXRlKCkKICBwcmludCgiW1N0cnVjdHVyZUdlbmVyYXRvcl0gcmVhZHkiKQplbmQKCnJldHVybiBNb2R1bGUK",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "capability_tags": ["capability:platform.apply_changes"],
+      "target_path": "ReplicatedStorage.OMCModules.v1_0_0.StructureGenerator",
+      "description": "Generates volumetric building structures for the Metropolis level."
+    },
+    {
+      "module_id": "atmosphere-01",
+      "name": "AtmosphereManager.luau",
+      "content": "LS0tIEF0bW9zcGhlcmVNYW5hZ2VyLmx1YXUgKG1pbmltYWwgcGxhY2Vob2xkZXIpCmxvY2FsIExpZ2h0aW5nID0gZ2FtZTpHZXRTZXJ2aWNlKCJMaWdodGluZyIpCmxvY2FsIE1vZHVsZSA9IHt9CgpmdW5jdGlvbiBNb2R1bGUuYXBwbHkoKQogIExpZ2h0aW5nLkNsb2NrVGltZSA9IDMKICBwcmludCgiW0F0bW9zcGhlcmVNYW5hZ2VyXSBhcHBsaWVkIikKZW5kCgpyZXR1cm4gTW9kdWxlCg==",
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "capability_tags": ["capability:platform.apply_changes"],
+      "target_path": "ReplicatedStorage.OMCModules.v1_0_0.AtmosphereManager",
+      "description": "Controls lighting, fog, and ambient atmosphere."
+    }
+  ],
+  "metadata": {
+    "level_name": "Chaos Metropolis",
+    "aesthetic": "gothic-cyber"
+  }
+}

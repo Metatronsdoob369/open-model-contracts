@@ -1,0 +1,89 @@
+# ⚖️ Phase 2 — Escrow Policy
+# Pack: roblox-game-automator | Version: 1.0 | Constitution: 1.0
+# Governs the agent and the Bridge server during Phase 2: escrowing the module bundle.
+
+policy_id: "phase2.escrow"
+version: "1.0"
+phase: 2
+phase_name: "Escrow"
+constitution_version: "1.0"
+
+# ─────────────────────────────────────────────────────────────────
+# ALLOWED CAPABILITIES
+# ─────────────────────────────────────────────────────────────────
+allowed_capabilities:
+  - capability: "capability:escrow.publish"
+    description: "POST the module bundle + manifest to the Bridge server."
+    constraints:
+      - "MUST include a valid manifest_hash (SHA-256 of the serialised manifest)."
+      - "MUST include all modules declared in the manifest."
+      - "Each module MUST have a sha256 hash that matches the manifest entry."
+      - "MUST set a ttl_seconds value between 60 and 86400."
+
+  - capability: "capability:network.expose"
+    description: "Expose a local HTTP endpoint (Bridge server) for Studio polling."
+    constraints:
+      - "Bridge MUST only bind to localhost or a user-controlled tunnel (e.g. ngrok)."
+      - "MUST NOT expose raw file system paths or internal config in HTTP responses."
+      - "MUST enforce CORS if the tunnel is publicly accessible."
+
+# ─────────────────────────────────────────────────────────────────
+# BRIDGE SERVER ENFORCEMENT RULES
+# These rules are enforced by the Bridge server itself, not the agent.
+# ─────────────────────────────────────────────────────────────────
+bridge_enforcement:
+  - rule: "MUST validate all incoming POST /escrow payloads against escrow-envelope.schema.json."
+  - rule: "MUST generate a unique session_id (UUID v4) for each session."
+  - rule: "MUST generate a cryptographically random one-time token (nonce) per session."
+  - rule: "MUST enforce session TTL; expired sessions MUST return HTTP 410 Gone."
+  - rule: "MUST reject the token after it has been used once (replay guard)."
+  - rule: "MUST verify that the manifest_hash in the envelope matches the submitted manifest."
+  - rule: "MUST write an audit record for every session creation, access, and consumption."
+  - rule: "MUST return HTTP 404 for non-existent sessions (never leak session existence via timing)."
+
+# ─────────────────────────────────────────────────────────────────
+# PROHIBITED ACTIONS
+# ─────────────────────────────────────────────────────────────────
+prohibitions:
+  - "MUST NOT store raw file system paths in the escrow envelope."
+  - "MUST NOT store secrets, API keys, or PII in the escrow payload."
+  - "MUST NOT advance to Phase 3 without a valid session_id and token from the Bridge."
+  - "MUST NOT allow a session token to be reused after consumption."
+  - "MUST NOT accept payloads with a manifest_hash mismatch."
+  - "MUST NOT allow sessions to persist beyond their ttl_seconds."
+  - "MUST NOT log module content to stdout (only hashes and metadata)."
+
+# ─────────────────────────────────────────────────────────────────
+# REQUIRED ARTIFACTS (Phase Gate)
+# ─────────────────────────────────────────────────────────────────
+required_artifacts:
+  - artifact: "escrow_session_id"
+    description: "UUID v4 session identifier returned by the Bridge server."
+    gate: "MUST be present and valid UUID v4 before Phase 3 may begin."
+
+  - artifact: "escrow_token"
+    description: "One-time token returned by the Bridge server on session creation."
+    gate: "MUST be securely passed to the Studio plugin for pull authentication."
+
+# ─────────────────────────────────────────────────────────────────
+# AUDIT REQUIREMENTS
+# ─────────────────────────────────────────────────────────────────
+audit:
+  required: true
+  events:
+    - "session.created"
+    - "session.manifest_retrieved"
+    - "session.modules_retrieved"
+    - "session.consumed"
+    - "session.expired"
+    - "session.rejected"
+    - "validation.failed"
+  log_format: "JSONL"
+  include_fields:
+    - "session_id"
+    - "timestamp"
+    - "event_type"
+    - "manifest_hash"
+    - "pipeline_id"
+    - "pack_id"
+    - "ip_address"

@@ -1,0 +1,80 @@
+# ⚖️ Phase 1 — Intelligence Policy
+# Pack: roblox-game-automator | Version: 1.0 | Constitution: 1.0
+# Governs the agent during Phase 1: reading the Level Primer and writing Luau modules.
+
+policy_id: "phase1.intelligence"
+version: "1.0"
+phase: 1
+phase_name: "Intelligence"
+constitution_version: "1.0"
+
+# ─────────────────────────────────────────────────────────────────
+# ALLOWED CAPABILITIES
+# The agent MAY only exercise the capabilities listed here.
+# Any tool that exercises a capability not in this list MUST be blocked.
+# ─────────────────────────────────────────────────────────────────
+allowed_capabilities:
+  - capability: "capability:file.write"
+    description: "Write generated Luau modules and JSON config to the local repository."
+    constraints:
+      - "Output path MUST be within the declared output_path from the Level Primer."
+      - "File names MUST follow PascalCase.luau / kebab-case.json naming conventions."
+
+  - capability: "capability:rag.retrieval"
+    description: "Read sovereign RAG documents (Level Primer, constitution, policies)."
+    constraints:
+      - "Only read files within the OMC pack hierarchy and user-approved sources."
+      - "MUST NOT fetch external URLs unless listed in the Sovereign RAG Sources."
+
+  - capability: "capability:schema.validation"
+    description: "Validate produced files against JSON schemas."
+    constraints:
+      - "MUST validate omc.manifest.json against omc.manifest.schema.json before completing Phase 1."
+      - "MUST reject any file whose SHA-256 cannot be computed."
+
+# ─────────────────────────────────────────────────────────────────
+# PROHIBITED ACTIONS
+# Any of these MUST cause an immediate abort and error manifest entry.
+# ─────────────────────────────────────────────────────────────────
+prohibitions:
+  - "MUST NOT use loadstring or dynamic code execution in any generated Luau."
+  - "MUST NOT write files outside the declared output_path."
+  - "MUST NOT embed secrets, API keys, or PII in any generated file."
+  - "MUST NOT advance to Phase 2 without a valid, schema-compliant omc.manifest.json."
+  - "MUST NOT modify existing files outside the generated/ output directory without explicit user approval."
+  - "MUST NOT skip SHA-256 hash computation for any generated file."
+
+# ─────────────────────────────────────────────────────────────────
+# REQUIRED ARTIFACTS (Phase Gate)
+# These artifacts MUST exist and be valid before Phase 1 is complete.
+# ─────────────────────────────────────────────────────────────────
+required_artifacts:
+  - artifact: "omc.manifest.json"
+    schema: "packs/roblox-game-automator/schemas/omc.manifest.schema.json"
+    description: "Signed intent manifest listing all produced files with hashes."
+    gate: "MUST pass schema validation with zero errors."
+
+  - artifact: "generated/roblox-game-automator/modules/*.luau"
+    description: "All specialist Luau modules declared in the manifest."
+    gate: "MUST exist and SHA-256 must match manifest entries."
+
+# ─────────────────────────────────────────────────────────────────
+# AUDIT REQUIREMENTS
+# ─────────────────────────────────────────────────────────────────
+audit:
+  required: true
+  events:
+    - "phase.started"
+    - "file.written"
+    - "file.hash_computed"
+    - "schema.validated"
+    - "phase.completed"
+    - "phase.aborted"
+  log_format: "JSONL"
+  include_fields:
+    - "session_id"
+    - "timestamp"
+    - "event_type"
+    - "file_path"
+    - "sha256"
+    - "pipeline_id"

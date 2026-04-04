@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "roblox-game-automator",
+  "pack_version": "1.0.0",
+  "pipeline_id": "a1b2c3d4-e5f6-4789-abcd-ef1234567890",
+  "created_at": "2026-04-04T14:00:00.000Z",
+  "agent_id": "claude-3-7-sonnet",
+  "constitution_version": "1.0",
+  "capabilities_used": [
+    "capability:file.write",
+    "capability:schema.validation"
+  ],
+  "files": [
+    {
+      "path": "generated/roblox-game-automator/modules/StructureGenerator.luau",
+      "type": "luau_module",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 1024,
+      "specialist_id": "architect-01",
+      "description": "Generates volumetric building structures for the Metropolis level."
+    },
+    {
+      "path": "generated/roblox-game-automator/modules/AtmosphereManager.luau",
+      "type": "luau_module",
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "size_bytes": 768,
+      "specialist_id": "atmosphere-01",
+      "description": "Controls lighting, fog, and ambient atmosphere."
+    }
+  ],
+  "specialists": [
+    {
+      "id": "architect-01",
+      "role": "Volumetric Construction",
+      "output_module": "StructureGenerator.luau",
+      "capabilities": ["capability:file.write"]
+    },
+    {
+      "id": "atmosphere-01",
+      "role": "Environmental Atmosphere",
+      "output_module": "AtmosphereManager.luau",
+      "capabilities": ["capability:file.write"]
+    }
+  ],
+  "approvals_required": [],
+  "metadata": {
+    "level_name": "Chaos Metropolis",
+    "aesthetic": "gothic-cyber"
+  }
+}
