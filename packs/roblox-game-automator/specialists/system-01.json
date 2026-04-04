@@ -1,0 +1,15 @@
+{
+  "specialist_id": "system-01",
+  "role": "Sovereign Systems Pilot",
+  "philosophy": "High-Fidelity Gameplay Mechanics",
+  "rag_sources": [
+    "packs/roblox-game-automator/primer/LEVEL_PRIMER.md",
+    "https://create.roblox.com/docs/luau"
+  ],
+  "memory_hub": "generated/roblox-game-automator/memory/system-01.json",
+  "capabilities": [
+    "capability:system.player_physics",
+    "capability:system.competitive_logic"
+  ],
+  "manifest_history": []
+}
