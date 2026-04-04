@@ -15,7 +15,7 @@ const SCHEMAS_DIR = path.resolve(
   '../../../packs/roblox-game-automator/schemas'
 );
 
-const ajv = new Ajv({ allErrors: true, strict: false });
+const ajv = new Ajv({ strict: false });
 addFormats(ajv);
 
 function loadSchema(filename: string): Record<string, unknown> {
