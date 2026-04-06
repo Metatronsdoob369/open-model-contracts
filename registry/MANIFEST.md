@@ -1,0 +1,36 @@
+# 📜 OPEN-MODEL-CONTRACTS REGISTRY
+
+**Philosophy:** Memory is an asset. We get paid to have problems, solve them, and document the "wrong moves" as much as the right ones.
+
+This registry tracks the evolution of our "contracts-first" game development—from the first `popsim-contract` push to the current "Director-01" swarm architectures.
+
+---
+
+## 🕒 CHECKPOINTS (SNAPSHOTS)
+
+| Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| baseline-alpha-20260405 | 2026-04-05 | `HEAD` | **Baseline ALPHA.** The first unified shift from prompt-based to contract-based game logic. | ✅ ACTIVE |
+
+---
+
+## 🕹️ GAME ARCHIVES (GAME ATTEMPTS)
+
+| Game / Contract | Version | Directory | Date | Core Mechanic |
+| :--- | :--- | :--- | :--- | :--- |
+| **PopSim Metropolis** | v1.0 | `popsim-contract` | 2026-04-05 | Sovereign metropolis governance & tag game. |
+| **Director-01 Swarm** | ALPHA | `tbd` | 2026-04-06 | Recursive autonomous asset manifestation. |
+
+---
+
+## 🛠️ HOW TO ROLLBACK
+
+1. **Git Tag:** `git checkout tags/v1.2.3` (Best for point-in-time repo state)
+2. **Registry Archive:** Check `registry/checkpoints/<id>` for the specific contract files isolated from the rest of the repo.
+3. **Command:** Run `./scripts/checkpoint.sh --list` to see all archived versions.
+
+---
+
+**Last Updated:** 2026-04-06
+**Asset Manager:** Antigravity AI
+| InitialRegistrySetup_checkpoint_2026-04-05_223826_8358f37 | 2026-04-05   | 8358f37  | Baseline synchronization of current project state into the new Registry system. | ✅ ARCHIVED |
