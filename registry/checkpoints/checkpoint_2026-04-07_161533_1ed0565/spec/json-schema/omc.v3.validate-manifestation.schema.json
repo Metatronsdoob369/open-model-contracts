@@ -1,0 +1,80 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.validate-manifestation.schema.json",
+  "$ref": "#/definitions/omc.v3.validate-manifestation",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.validate-manifestation": {
+      "additionalProperties": false,
+      "properties": {
+        "agentId": {
+          "description": "Agent that triggered the manifestation",
+          "format": "uuid",
+          "type": "string"
+        },
+        "checkpointRef": {
+          "description": "Registry checkpoint ID attached to this manifestation",
+          "type": "string"
+        },
+        "contractId": {
+          "description": "Contract ID this manifestation fulfils",
+          "type": "string"
+        },
+        "contractVersion": {
+          "description": "Semver of the contract being fulfilled",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "type": "string"
+        },
+        "errors": {
+          "default": [],
+          "description": "Validation errors (empty when approved)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "manifestationId": {
+          "description": "Unique ID of the manifestation event",
+          "format": "uuid",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": {},
+          "description": "Raw payload submitted for manifestation",
+          "type": "object"
+        },
+        "result": {
+          "description": "Validation outcome",
+          "enum": [
+            "approved",
+            "rejected",
+            "pending",
+            "conflict"
+          ],
+          "type": "string"
+        },
+        "timestamp": {
+          "description": "ISO-8601 event timestamp",
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "manifestationId",
+        "agentId",
+        "contractId",
+        "contractVersion",
+        "payload",
+        "result",
+        "timestamp"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Schema for validating a Phase-3 manifestation event in the OMC pipeline.",
+  "title": "omc.v3.validate-manifestation",
+  "x-omc-capabilities": [
+    "validate",
+    "checkpoint"
+  ],
+  "x-omc-version": "3.0.0"
+}
