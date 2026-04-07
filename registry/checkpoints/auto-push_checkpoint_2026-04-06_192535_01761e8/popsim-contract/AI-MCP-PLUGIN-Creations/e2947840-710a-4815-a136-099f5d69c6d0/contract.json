@@ -1,0 +1,86 @@
+{
+  "contractMetadata": {
+    "contractId": "e2947840-710a-4815-a136-099f5d69c6d0",
+    "gate": "SAFE",
+    "domicile": "State of Delaware, USA",
+    "openModelContractRef": "https://github.com/Metatronsdoob369/open-model-contracts",
+    "signedBy": "Sovereign Architect",
+    "effectiveDate": "2026-04-02T20:17:05.726Z"
+  },
+  "config": {
+    "version": "1.0",
+    "swarmName": "Sovereign Game Swarm",
+    "description": "Auto-generated game simulation",
+    "agents": [
+      {
+        "id": "9b297389-d927-4677-bd7b-fbf6f2213d93",
+        "role": "Game Mechanic Specialist",
+        "goal": "Orchestrate Luau logic",
+        "backstory": "Physics Specialist",
+        "persona": "technical",
+        "label": "Frontier Mechanic",
+        "demographicAnchor": {
+          "percentageOfPop": 10,
+          "ageRange": [
+            18,
+            99
+          ],
+          "incomeBracket": "n/a",
+          "geography": "metaverse",
+          "educationLevel": "sovereign"
+        },
+        "stanceProbabilityDistribution": {
+          "agile": 0.9,
+          "rigid": 0.1
+        },
+        "coreValues": [
+          "efficiency",
+          "recursion"
+        ],
+        "primaryMotivations": [
+          "code clarity"
+        ],
+        "primaryFears": [
+          "null pointer exceptions"
+        ],
+        "informationDiet": [
+          "GitHub",
+          "StackOverflow"
+        ],
+        "behavioralHeuristics": [
+          "Occam's razor"
+        ],
+        "influenceWeight": 8,
+        "archetypeVariations": [
+          "Acceleration_Purist"
+        ]
+      }
+    ]
+  },
+  "contractInput": {
+    "swarmName": "Sovereign Game Swarm",
+    "runId": "0e79d5c5-b5be-4d98-86bc-12bb218ceca8",
+    "roundNumber": 1,
+    "gate": "SAFE",
+    "reversible": true,
+    "simulationSettings": {
+      "initialAgentCount": 10,
+      "maxRoundsPerRun": 5,
+      "simulatedTimeAcceleration": "1:1",
+      "computeAssumption": "finite",
+      "shockInjectionProbability": 0.1,
+      "humanReviewQueue": true
+    }
+  },
+  "admission": [
+    {
+      "physics": "ROBLOX_LUAU",
+      "affordances": [
+        "scripting",
+        "ui"
+      ],
+      "inspectability": true,
+      "reversibilityDeclaration": true
+    }
+  ]
+}
