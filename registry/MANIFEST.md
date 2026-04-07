@@ -10,15 +10,21 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| baseline-alpha-20260405 | 2026-04-05 | `HEAD` | **Baseline ALPHA.** The first unified shift from prompt-based to contract-based game logic. | ✅ ACTIVE |
+| FinalValidation_checkpoint_2026-04-06_191205_6c2284f | 2026-04-06 | 6c2284f | Omni-Registry v2.2: Universal Portability Fix. Replaced brittle sed with awk. Restored and polished the MANIFEST. | ✅ ARCHIVED |
 | ProtocolHardening_checkpoint_2026-04-06_191130_7136a19 | 2026-04-06 | 7136a19 | Hardened Omni-Registry v2.0: Implemented high-fidelity flag parsing, smart manifest insertion, and tag-loop prevention. | ✅ ARCHIVED |
+| auto-push_checkpoint_2026-04-06_190210_d0966fc | 2026-04-06 | d0966fc | Automatic mission protection: Git Pre-Push Hook + GitHub Action integration. | ✅ AUTO |
+| AutomationInfra_checkpoint_2026-04-06_190207_257c8c2 | 2026-04-06 | 257c8c2 | Hardened the 'Memory' protocol with zero-effort automation: Hooks and Actions. | ✅ ARCHIVED |
+| RegistryDeployment_checkpoint_2026-04-06_190022_3acb625 | 2026-04-06 | 3acb625 | Established Omni-Registry System. Implemented Checkpoint, Ship, and Rollback. | ✅ ARCHIVED |
+| InitialRegistrySetup_checkpoint_2026-04-05_223826_8358f37 | 2026-04-05 | 8358f37 | Baseline synchronization into the new Registry system. | ✅ ARCHIVED |
+| baseline-alpha-20260405 | 2026-04-05 | `HEAD` | **Baseline ALPHA.** First shift from prompt-based to contract-based game logic. | ✅ ACTIVE |
 
 ---
 
 ## 🕹️ GAME ARCHIVES (GAME ATTEMPTS)
 
 | Game / Contract | Version | Directory | Date | Core Mechanic |
-| :--- | :--- | :--- | :--- | :--- |
+| :--- | : :--- | :--- | :--- | :--- |
+| FinalValidation_checkpoint_2026-04-06_191205_6c2284f | 2026-04-06 | 6c2284f | Omni-Registry v2.2: Universal Portability Fix. Replaced brittle sed with awk. Restored and polished the MANIFEST. | ✅ ARCHIVED |
 | **PopSim Metropolis** | v1.0 | `popsim-contract` | 2026-04-05 | Sovereign metropolis governance & tag game. |
 | **Director-01 Swarm** | ALPHA | `tbd` | 2026-04-06 | Recursive autonomous asset manifestation. |
 
@@ -28,14 +34,9 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 1. **Git Tag:** `git checkout tags/v1.2.3` (Best for point-in-time repo state)
 2. **Registry Archive:** Check `registry/checkpoints/<id>` for the specific contract files isolated from the rest of the repo.
-3. **Command:** Run `./scripts/checkpoint.sh --list` to see all archived versions.
+3. **Command:** Run `./scripts/rollback.sh <CheckpointID>` to restore any archived version.
 
 ---
 
 **Last Updated:** 2026-04-06
 **Asset Manager:** Antigravity AI
-| InitialRegistrySetup_checkpoint_2026-04-05_223826_8358f37 | 2026-04-05   | 8358f37  | Baseline synchronization of current project state into the new Registry system. | ✅ ARCHIVED |
-| RegistryDeployment_checkpoint_2026-04-06_190022_3acb625 | 2026-04-06   | 3acb625  | Established Omni-Registry System for persistent version memory. Implemented Checkpoint, Ship, and Rollback scripts to govern contract-first game development. Integrated lm_test_script (Universal LLM Switcher) as the first archived asset class. | ✅ ARCHIVED |
-| AutomationInfra_checkpoint_2026-04-06_190207_257c8c2 | 2026-04-06   | 257c8c2  | Hardened the 'Memory' protocol with zero-effort automation: Git Pre-Push Hook and GitHub Actions for auto-registry releases. No manual checkpoints required anymore. | ✅ ARCHIVED |
-| auto-push_checkpoint_2026-04-06_190210_d0966fc | 2026-04-06   | d0966fc  | Auto-captured on push: chore(registry): snapshot AutomationInfra_checkpoint_2026-04-06_190207_257c8c2
-Memo: Hardened the 'Memory' protocol with zero-effort automation: Git Pre-Push Hook and GitHub Actions for auto-registry releases. No manual checkpoints required anymore. | ✅ ARCHIVED |
