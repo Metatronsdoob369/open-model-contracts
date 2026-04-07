@@ -1,0 +1,53 @@
+name: Schema Sync
+
+# Fails if Zod contracts changed but committed JSON Schema files are not updated.
+# Responsibilities:
+#   - Run gen:schema and fail if git diff shows uncommitted changes in spec/json-schema/
+# This workflow is separate from the registry drift gate (registry-gate.yml) which
+# guards registry/MANIFEST.md and checkpoint provenance.  Responsibilities are distinct:
+#   registry-gate  → ensures contract changes are checkpointed in registry/
+#   schema-sync    → ensures JSON Schemas in spec/json-schema/ are up-to-date with Zod Law
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "spec/contracts/**"
+      - "spec/json-schema/**"
+      - "scripts/export-json-schema.ts"
+      - "package.json"
+      - "package-lock.json"
+
+jobs:
+  check-schema-sync:
+    name: "JSON Schema drift check"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate JSON Schemas
+        run: npm run gen:schema
+
+      - name: Fail if schemas are out of sync
+        run: |
+          if ! git diff --exit-code spec/json-schema/; then
+            echo ""
+            echo "❌  JSON Schema drift detected."
+            echo "    The files above would change if the generator were run."
+            echo "    Run  npm run gen:schema  locally and commit the updated schemas."
+            exit 1
+          fi
+          echo "✅  JSON Schemas are in sync with Zod contracts."
