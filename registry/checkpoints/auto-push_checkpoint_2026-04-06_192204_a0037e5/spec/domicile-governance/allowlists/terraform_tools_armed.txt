@@ -1,0 +1,11 @@
+# ARMED tool list (mutating)
+create_workspace
+update_workspace
+delete_workspace
+create_run
+apply_run
+cancel_run
+force_cancel_run
+create_variable
+update_variable
+delete_variable
