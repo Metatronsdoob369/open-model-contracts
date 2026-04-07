@@ -35,6 +35,19 @@ open-model-contracts/
 │       ├── policies/              ← Phase 1/2/3 policy YAML
 │       └── examples/             ← Example manifest, envelope, Luau module
 │
+├── spec/
+│   ├── contracts/                 ← Zod "Law" schemas (no src/ imports allowed)
+│   │   ├── index.ts               ← OMC_REGISTRY — single source of truth
+│   │   └── v3/                    ← v3.x contract schemas (asset, agent, task, …)
+│   └── json-schema/               ← Committed JSON Schemas (generated from Zod Law)
+│
+├── scripts/
+│   └── export-json-schema.ts      ← Generator: Zod → spec/json-schema/*.schema.json
+│
+├── src/
+│   └── informant/
+│       └── mcp-server.ts          ← v3.x Contract Informant MCP server
+│
 ├── server/
 │   ├── src/                       ← MCP server (governance enforcement)
 │   └── bridge/                    ← Bridge escrow reference server (Phase 2)
@@ -73,6 +86,42 @@ and `POST /escrow/:id/consume` with TTL + one-time token enforcement.
 ## 🔧 Sector D: MCP Governance Server
 Located in [`server/src/`](./server/src/).
 The Zod-based contract engine and MCP server that enforces policy at tool-call time.
+
+## 🧠 Sector E: v3.x Contract Informant
+Located in [`src/informant/`](./src/informant/).
+A purpose-built MCP server that exposes the OMC contract registry as callable tools for agents.
+
+**Tool surface:**
+| Tool | Description |
+|---|---|
+| `list_contracts()` | Returns all contract ids, versions, descriptions, and capabilities |
+| `get_contract(id)` | Returns full metadata + live JSON Schema for a specific contract |
+| `validate_payload(contract_id, payload)` | Validates a payload against a Zod contract; returns `{ok, errors[], normalized?}` |
+| `recall_checkpoint(ref)` | Retrieves registry checkpoint metadata by id, tag, or `"latest"` |
+
+**Zod Law:**
+Canonical schemas ("Law") live in [`spec/contracts/`](./spec/contracts/) and are the single source of truth.
+They **must never import from `src/`** (Law vs Runtime separation).
+
+**Committed JSON Schemas:**
+Pre-generated JSON Schemas live in [`spec/json-schema/`](./spec/json-schema/) and are committed to the repo.
+They are built from the Zod Law and kept in sync by CI.
+
+### Regenerating JSON Schemas
+
+When you add or modify a Zod contract under `spec/contracts/`, regenerate the committed schemas:
+
+```bash
+npm run gen:schema
+```
+
+To verify schemas are in sync without writing (what CI does on PRs):
+
+```bash
+npm run check:schema
+```
+
+If `check:schema` exits non-zero, the schemas are out of sync — run `gen:schema` and commit the result.
 
 ---
 
