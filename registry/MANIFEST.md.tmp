@@ -10,7 +10,7 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| auto-push_checkpoint_2026-04-07_161721_ecceba7 | 2026-04-07 | ecceba7 | Auto-captured on push: fix(registry): exclude .next and node_modules artifacts from checkpoints | ✅ ARCHIVED |
+| auto_2026-04-07_211733_0a4d2ab | 2026-04-07 | 0a4d2ab | chore(registry): snapshot auto-push_checkpoint_2026-04-07_161721_ecceba7 | ✅ AUTO |
 | auto-push_checkpoint_2026-04-06_192204_a0037e5 | 2026-04-06 | a0037e5 | Auto-captured on push: chore(registry): snapshot FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | ✅ ARCHIVED |
 | FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | 2026-04-06 | 19afe76 | Elite-Level Registry v2.4: Implemented assertive AWK insertion, core.hooksPath distribution, and memo sanitization. Final session milestone. | ✅ ARCHIVED |
 | ProductionGrade_checkpoint_2026-04-06_191821_1007000 | 2026-04-06 | 1007000 | Final Registry Polish (v2.3): Fixed memo typos, hardened awk regional targeting, and implemented distributed hook installation script. | ✅ ARCHIVED |
