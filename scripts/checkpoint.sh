@@ -42,7 +42,7 @@ ARCHIVE_ROOT="registry/checkpoints/${CHECKPOINT_ID}"
 mkdir -p "$ARCHIVE_ROOT"
 DIRS=("popsim-contract" "spec" "src" "lm_test_script")
 for d in "${DIRS[@]}"; do
-    [ -d "$d" ] && tar --exclude='node_modules' --exclude='.git' -cf - "$d" | (cd "$ARCHIVE_ROOT" && tar xf -)
+    [ -d "$d" ] && tar --exclude='node_modules' --exclude='.git' --exclude='.next' -cf - "$d" | (cd "$ARCHIVE_ROOT" && tar xf -)
 done
 
 # 2. Assertive AWK Regional Insertion (v2.5 Fix: Explicit error handling)
