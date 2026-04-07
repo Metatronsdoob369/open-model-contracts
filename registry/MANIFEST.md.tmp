@@ -10,7 +10,7 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| MasterLegacyRestored_checkpoint_2026-04-07_010348_1f7e006 | 2026-04-07 | 1f7e006 | The Great Restoration (v4.0): Migrated the 2-year Domicile Contract Legacy into the Diamond-Stable Registry. The Vault now contains the Sovereign schemas and documents. | ✅ ARCHIVED |
+| auto-push_checkpoint_2026-04-07_010351_c8ebdf1 | 2026-04-07 | c8ebdf1 | Auto-captured on push: chore(registry): snapshot MasterLegacyRestored_checkpoint_2026-04-07_010348_1f7e006 | ✅ ARCHIVED |
 | auto-push_checkpoint_2026-04-06_192204_a0037e5 | 2026-04-06 | a0037e5 | Auto-captured on push: chore(registry): snapshot FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | ✅ ARCHIVED |
 | FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | 2026-04-06 | 19afe76 | Elite-Level Registry v2.4: Implemented assertive AWK insertion, core.hooksPath distribution, and memo sanitization. Final session milestone. | ✅ ARCHIVED |
 | ProductionGrade_checkpoint_2026-04-06_191821_1007000 | 2026-04-06 | 1007000 | Final Registry Polish (v2.3): Fixed memo typos, hardened awk regional targeting, and implemented distributed hook installation script. | ✅ ARCHIVED |
