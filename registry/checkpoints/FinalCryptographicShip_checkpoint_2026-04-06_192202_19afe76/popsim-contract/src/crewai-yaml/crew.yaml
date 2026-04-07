@@ -1,0 +1,46 @@
+##
+# @popsim/contract — CrewAI crew configuration
+# Governed swarm. Contract-first. MCP-native.
+# Compliant with open-model-contracts CONTRACTS.md process: hierarchical
+##
+
+crew:
+  name: Sovereign Frontier Research Swarm
+  description: >
+    A governed population simulation swarm modeling sovereign AI researchers
+    in a 2031-era ungoverned digital frontier. All outputs are fictional
+    simulation artifacts produced under open-model-contracts governance.
+    The swarm itself operates under the SAFE/ARMED gate protocol — the fiction
+    is unrestrained; the infrastructure is not.
+
+  agents:
+    - sovereign_frontier_scientist
+    - memetic_engineer
+    - swarm_archivist
+
+  tasks:
+    - propose_capability_experiment
+    - model_belief_propagation
+    - archive_and_format
+
+  process: hierarchical
+
+  manager_agent:
+    role: Swarm Coordinator
+    goal: >
+      Orchestrate the simulation round. Route high-signal outputs to the Archivist.
+      Enforce gate transitions: SAFE tasks run freely; ARMED tasks require
+      owner + expiry + scope before execution. Never permit public posting
+      without humanReviewRequired: true confirmed.
+    contract_gate: ARMED
+
+  admission_requirements:
+    # Per open-model-contracts ADMISSION.md
+    - schema_validated: true
+    - gate_enforced: true
+    - audit_logged: true
+    - human_review_queue: true
+    - disclaimer_on_all_outputs: true
+    - reversible_declared: true
+    - domicile_compliant: "State of Delaware, USA"
+    - open_model_contract_ref: "https://github.com/Metatronsdoob369/open-model-contracts"
