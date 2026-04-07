@@ -1,0 +1,11 @@
+{
+  "enabledPlugins": {
+    "claude-code-setup@claude-plugins-official": true,
+    "greptile@claude-plugins-official": true,
+    "atomic-agents@claude-plugins-official": true,
+    "data-engineering@claude-plugins-official": true,
+    "opsera-devsecops@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true
+  }
+}

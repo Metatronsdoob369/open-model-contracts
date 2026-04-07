@@ -19,6 +19,7 @@
     "crewai",
     "schedule-a"
   ],
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -31,6 +32,8 @@
   },
   "scripts": {
     "build": "tsc",
+    "predev": "lsof -ti :3099 | xargs kill -9 2>/dev/null; true",
+    "dev": "./node_modules/.bin/tsx --watch src/bridge-server.ts",
     "typecheck": "tsc --noEmit",
     "validate": "ts-node src/validate-contract.ts",
     "prepublishOnly": "npm run build"

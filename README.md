@@ -1,118 +1,92 @@
-# ⚖️ Open Model Contracts (OMC)
-### *A Constitution for Autonomous Manifestation.*
+# 🏛️ OPEN-MODEL-CONTRACTS (OMC)
 
-Open Model Contracts (OMC) is a domain-agnostic framework designed to govern AI agent swarms through structured, typed agreements. It transforms AI labor from "probabilistic prompts" into "deterministic contracts."
+**Autonomous Governance for Agentic Simulations.**
 
----
-
-## 🗺️ The 3-Phase Execution Model
-
-OMC governs AI-assisted work through three mandatory, gated phases:
-
-| Phase | Name | Description | Key Artifact |
-|-------|------|-------------|-------------|
-| 1 | **Intelligence** | Agent reads Level Primer (DNA) + sovereign docs; writes Luau modules to local repo; produces validated manifest | `omc.manifest.json` |
-| 2 | **Escrow** | Agent POSTs manifest + module bundle to Bridge server; Bridge arms a session with TTL + one-time token | `EscrowEnvelope` (in-memory) |
-| 3 | **Manifestation** | Studio plugin pulls escrowed modules; displays diff to user; user consents; plugin installs ModuleScripts | ModuleScripts in Studio |
-
-See [`PIPELINE.md`](./PIPELINE.md) for the full execution map, Bridge server usage, and plugin workflow.
+Open Model Contracts (OMC) is the constitutional layer for autonomous game development. It defines the "law" under which AI agents operate, moving from fragile prompts to hardened, Zod-validated contracts that are enforceable in any runtime (Roblox, Unity, Web).
 
 ---
 
-## 📦 Repository Layout
+## 🕋 OMNI-REGISTRY: MISSION MEMORY
 
-```
-open-model-contracts/
-├── constitution/                   ← Global governance law (never duplicated)
-│   ├── omc.constitution.v1.yaml   ← Core constitution
-│   ├── capabilities.schema.json   ← Canonical capability taxonomy
-│   └── phase-gates.md             ← Required artifacts + validations per phase
-│
-├── packs/                         ← Domain-specific contract packs
-│   └── roblox-game-automator/     ← Roblox Game Automator pack
-│       ├── primer/LEVEL_PRIMER.md ← DNA entrypoint (agent reads this first)
-│       ├── schemas/               ← JSON Schemas for all phase artifacts
-│       ├── policies/              ← Phase 1/2/3 policy YAML
-│       └── examples/             ← Example manifest, envelope, Luau module
-│
-├── server/
-│   ├── src/                       ← MCP server (governance enforcement)
-│   └── bridge/                    ← Bridge escrow reference server (Phase 2)
-│
-├── spec/                          ← Governance specification documents
-├── constitution/                  ← OMC constitution + capability taxonomy
-└── PIPELINE.md                    ← 3-phase execution model + how-to
-```
+**Philosophy:** Memory is an asset. This repository is a self-archiving laboratory. Every contract iteration and logic shift is automatically captured—no manual effort required.
+
+### 🚀 ELITE TEAM ONBOARDING (Quick Start)
+
+To join the registry protocol and activate high-fidelity mission tracking, run these three commands:
+
+1. **Activate Memory Hooks:**
+
+   ```bash
+   chmod +x scripts/install-hooks.sh && ./scripts/install-hooks.sh
+   ```
+
+2. **Standard Shipping (Enforces Memos):**
+
+   ```bash
+   ./scripts/ship.sh -m "What we built/learned on this mission."
+   ```
+
+3. **Manual Checkpoint (Optional):**
+
+   ```bash
+   ./scripts/checkpoint.sh -m "Snapshotting current contract state."
+   ```
 
 ---
 
-## 🏙️ Sector A: Roblox Game Automator Pack
+## 🧠 Memory & Versioning (The Registry)
 
-Located in [`packs/roblox-game-automator/`](./packs/roblox-game-automator).
+We use a **Registry-first** approach to versioning. Every "game attempt" or contract iteration is archived to provide a clear path backwards and a "Memory" of lessons learned.
 
-The **Roblox Game Automator** is the first full OMC pack. It implements the 3-phase execution
-model for generating and delivering Luau modules into a live Roblox Studio session via the Bridge
-escrow server.
+### 🛠️ Versioning Tools
 
-**Quick start for the pack:**
-1. Read [`packs/roblox-game-automator/primer/LEVEL_PRIMER.md`](./packs/roblox-game-automator/primer/LEVEL_PRIMER.md)
-2. Run the Bridge: `npm run bridge:install && npm run bridge:build && npm run bridge:start`
-3. Use an agent to complete Phase 1 (Intelligence) and POST to the Bridge (Phase 2)
-4. Use the Studio plugin to pull and install (Phase 3)
+- **`./scripts/checkpoint.sh`**: Captures a snapshot of all contract directories into `/registry/checkpoints/`.
+- **`./scripts/ship.sh`**: The only way to push to GitHub. It forces a checkpoint and a "Lesson Learned" memo.
+- **`./scripts/rollback.sh`**: Restores the repository to any previous checkpoint state.
+- **`./scripts/install-hooks.sh`**: Distributed hook installation via `core.hooksPath`.
 
-## 🏛️ Sector B: Governance & Spec
-Located in [`/spec`](./spec).
-The "Law" of the system. Defines how **Sovereign Agents** are admitted and audited.
+---
 
-## 🌉 Sector C: Bridge Escrow Server
-Located in [`server/bridge/`](./server/bridge/).
-Reference Node.js/TypeScript implementation of the Phase 2 escrow service.
-Provides `POST /escrow`, `GET /escrow/:id/manifest`, `GET /escrow/:id/modules`,
-and `POST /escrow/:id/consume` with TTL + one-time token enforcement.
+## 🏛️ Repository Architecture
 
-## 🔧 Sector D: MCP Governance Server
-Located in [`server/src/`](./server/src/).
-The Zod-based contract engine and MCP server that enforces policy at tool-call time.
+- **`popsim-contract/`**: The core simulation and population governance definitions.
+- **`spec/`**: Formal Zod-specifications for asset generation and agent behavior.
+- **`src/`**: Bridge logic and escrow systems (TypeScript).
+- **`registry/`**: The permanent archive of all missions and snapshots.
+- **`lm_test_script/`**: Universal LLM Switcher (The Pilot's HUD).
 
 ---
 
 ## 🚀 The Vision
+
 Open Model Contracts moves from "informal prompting" to **"Hardened Manifestation."**
-Every pipeline is a **Pack** that plugs into the **Constitution**, executed through
-**MCP-enforced phase gates**: Intelligence → Escrow → Manifestation.
+Every pipeline is a **Pack** that plugs into the **Constitution**, executed through **MCP-enforced phase gates**: Intelligence &rarr; Escrow &rarr; Manifestation.
 
 One constitution. Many projects. No swelling.
+
+---
+
 ## 🕋 The Three-Phase Lifecycle
-Every manifestation in the OMC ecosystem follows the **Sovereign Pipeline**:
 
-1.  **Phase I: Intelligence**: A specialist board members (the AI swarm) translates a **Level Primer (DNA)** into a signed **omc.manifest.json**.
-2.  **Phase II: Escrow**: The manifest and generated modules are escrowed into a **Bridge Service**, secured by TTL and one-time tokens.
-3.  **Phase III: Manifestation**: The target domain (e.g., Roblox Studio) pulls the manifest, reviews the diff, and installs the assets with explicit user consent.
+1. **Phase 1: Intelligence** (The Plan)
+   - Agent generates a Program Design Review (PDR).
+   - Contracts are drafted in Zod and validated against the Domain Spec.
 
----
+2. **Phase 2: Escrow** (The Forge)
+   - Draft code is held in a bridge-server (Local Node.js).
+   - Validation scripts ensure logic parity before deployment.
 
-## 🏛️ Repository Structure
-
-### `/constitution`
-The "Supreme Law." Defines the **Capability Taxonomy** and **Phase Gates** that all packs must obey.
-
-### `/packs`
-Sector-specific implementations of the OMC DNA.
-*   [`/roblox-game-automator`](./packs/roblox-game-automator): Manifests high-fidelity Gothic-Cyber environments.
-*   *Coming Soon*: /telegram-governance, /logistics-fleet.
-
-### `/server/bridge`
-The reference implementation of the **OMC Escrow Service.** (Node.js/TypeScript).
+3. **Phase 3: Manifestation** (The Game)
+   - Code is pushed to the client runtime (Roblox Studio) via Rojo/Argon.
+   - The contract becomes "The Law" of the simulation.
 
 ---
 
-## 🚀 Mission: The Metropolis
-The current reference manifestation is a **High-Fidelity Gothic Metropolis** featuring:
-- **Procedural Obsidian Skyscrapers** 🏙️
-- **11-Arch Central Cathedral** ⛪️
-- **Radiant Cyber-Movement Mechanics** 💨✨
+## 🤝 CONTRIBUTING
+
+This is a **Director-01 Sovereign Manifestation**. Contribution is by mission invitation only.
 
 ---
-### ⚖️ *Getting Paid to Have Problems. Manifesting Solutions.*
-*The future is not prompted; it is Contracted.*
 
+**Last Updated:** 2026-04-06
+**Status:** Diamond-Stable v2.5

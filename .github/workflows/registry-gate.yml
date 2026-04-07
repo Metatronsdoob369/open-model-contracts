@@ -1,0 +1,48 @@
+name: 🛡️ OMC Registry Drift Gate
+
+on:
+  pull_request:
+    branches: [main]
+    # Monitor core logic and any OMC pack contract changes
+    paths:
+      - 'popsim-contract/spec/**'
+      - 'popsim-contract/src/**'
+      - 'spec/**'
+      - 'src/**'
+
+jobs:
+  drift_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 👀 Detect Contract Drift
+        id: detect
+        run: |
+          # Use git-diff to see if any checkpoint-required paths were hit
+          # We check against the base branch of the PR
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          DRIFT_DETECTED=false
+          if echo "$FILES" | grep -qE "^(popsim-contract/spec/|popsim-contract/src/|spec/|src/)"; then
+            echo "🚨 CONTRACT DRIFT DETECTED: Source logic has changed."
+            DRIFT_DETECTED=true
+          fi
+          echo "DRIFT_DETECTED=$DRIFT_DETECTED" >> $GITHUB_OUTPUT
+
+      - name: 🧩 Verify Memory Update
+        if: steps.detect.outputs.DRIFT_DETECTED == 'true'
+        run: |
+          # Require that a new registry checkpoint and manifest entry exist in the SAME diff
+          FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          if ! echo "$FILES" | grep -q "registry/checkpoints/"; then
+            echo "❌ ERROR: Contract changes detected without a new Registry Checkpoint."
+            echo "Run './scripts/ship.sh -m \"[Lesson Learned]\"' to sync your changes."
+            exit 1
+          fi
+          if ! echo "$FILES" | grep -q "registry/MANIFEST.md"; then
+            echo "❌ ERROR: Manifest was not updated with the new checkpoint."
+            exit 1
+          fi
+          echo "✅ MEMORY INTEGRITY VERIFIED: Law and Registry are in sync."

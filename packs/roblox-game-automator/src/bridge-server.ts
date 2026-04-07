@@ -131,8 +131,7 @@ app.use('/v1/', limiter);
 // ─────────────────────────────────────────────
 
 import { PopSimFullContractSchema } from './schemas.js';
-import { AssetGeneratorSwarm } from './lib/nl-to-game/asset-generator.js';
-import { translator } from './lib/nl-to-game/nl-to-contracts.js';
+import { DirectorRuntime } from './lib/director/director-runtime.js';
 
 // ─────────────────────────────────────────────
 // DATA ACCESS & PERSISTENCE
@@ -166,6 +165,45 @@ interface AssetPackage {
 }
 
 const memoryAssetStore = new Map<string, AssetPackage>();
+
+// ---------------------------------------------------------------------------
+// Disk fallback — reconstruct an AssetPackage from AI-MCP-PLUGIN-Creations/<id>/
+// ---------------------------------------------------------------------------
+function loadPackageFromDisk(contractId: string): AssetPackage | null {
+  const dir = path.join(process.cwd(), 'AI-MCP-PLUGIN-Creations', contractId);
+  if (!fs.existsSync(dir)) return null;
+
+  const directorOutputPath = path.join(dir, 'director-output.json');
+  let contract: any = null;
+  if (fs.existsSync(directorOutputPath)) {
+    try { contract = JSON.parse(fs.readFileSync(directorOutputPath, 'utf-8')); } catch { /* ignore */ }
+  }
+
+  const assets = fs.readdirSync(dir)
+    .filter(f => f.endsWith('.lua'))
+    .map(f => ({
+      moduleName: f,
+      content: fs.readFileSync(path.join(dir, f), 'utf-8'),
+      assetType: 'luau_script',
+      agentId: 'disk',
+      generatedAt: fs.statSync(path.join(dir, f)).mtime.toISOString(),
+    }));
+
+  if (assets.length === 0) return null;
+
+  const pkg: AssetPackage = {
+    contractId,
+    runId: 'disk-hydrated',
+    contract,
+    assets,
+    generatedAt: fs.statSync(dir).mtime.toISOString(),
+    status: 'ready',
+    robloxPlaceId: null,
+  };
+  memoryAssetStore.set(contractId, pkg);
+  logger.info('💿 Hydrated contract from disk', { contractId, modules: assets.length });
+  return pkg;
+}
 
 // Pruning routine: Keep only the 50 most recent or from the last 1 hour
 setInterval(() => {
@@ -284,181 +322,98 @@ app.post('/v1/delivery/nl-to-game', async (req, res) => {
     return res.status(400).json({ success: false, error: 'Missing prompt' });
   }
 
-  logger.info('🎮 Incoming NL Game Request', { prompt: prompt.substring(0, 50), runId });
+  logger.info('🎮 Incoming NL Game Request (Director-01 Mode)', { prompt: prompt.substring(0, 50), runId });
 
   try {
-    progressTracker.update(runId, 'initializing', 5, 'Starting generation pipeline...');
+    progressTracker.update(runId, 'initializing', 5, 'Starting Director-01 pipeline...');
 
-    // Step 1: Translate NL to Contract
-    let contract: any;
-    const provider = options.provider || (openaiClient ? 'openai' : 'heuristic');
-    const requestedModel = options.model || 'gpt-4o';
-    // Legacy mapping: Always upgrade to gpt-4o if a restricted/missing model is requested
-    const model = (requestedModel === 'gpt-4-turbo-preview') ? 'gpt-4o' : requestedModel;
+    const director = new DirectorRuntime({ model: 'gpt-4o', apiKey: config.openaiApiKey });
 
-    if (provider === 'openai' && openaiClient) {
-      progressTracker.update(runId, 'llm-processing', 15, `Parsing game design with ${model}...`);
-      const response = await openaiClient.chat.completions.create({
-        model: model,
-        messages: [
-          { 
-            role: 'system', 
-            content: `You are the PopSim Contract Architect. Generate a valid PopSim contract JSON based on the user's game prompt.
-            
-            MANDATORY STRUCTURE (YOU MUST FILL IN ALL FIELDS):
-            {
-              "contractMetadata": { 
-                "contractId": "${randomUUID()}", 
-                "gate": "SAFE", 
-                "domicile": "State of Delaware, USA",
-                "openModelContractRef": "https://github.com/Metatronsdoob369/open-model-contracts",
-                "signedBy": "Sovereign Architect",
-                "effectiveDate": "${new Date().toISOString()}"
-              },
-              "config": { 
-                "version": "1.0",
-                "swarmName": "Sovereign Game Swarm",
-                "description": "Auto-generated game simulation",
-                "agents": [
-                  { 
-                    "id": "${randomUUID()}",
-                    "role": "Game Mechanic Specialist", 
-                    "goal": "Orchestrate Luau logic", 
-                    "backstory": "Physics Specialist", 
-                    "persona": "technical",
-                    "label": "Frontier Mechanic",
-                    "demographicAnchor": { "percentageOfPop": 10, "ageRange": [18, 99], "incomeBracket": "n/a", "geography": "metaverse", "educationLevel": "sovereign" },
-                    "stanceProbabilityDistribution": { "agile": 0.9, "rigid": 0.1 },
-                    "coreValues": ["efficiency", "recursion"],
-                    "primaryMotivations": ["code clarity"],
-                    "primaryFears": ["null pointer exceptions"],
-                    "informationDiet": ["GitHub", "StackOverflow"],
-                    "behavioralHeuristics": ["Occam's razor"],
-                    "influenceWeight": 8,
-                    "archetypeVariations": ["Acceleration_Purist"]
-                  }
-                ]
-              },
-              "contractInput": { 
-                "swarmName": "Sovereign Game Swarm",
-                "runId": "${randomUUID()}",
-                "roundNumber": 1,
-                "gate": "SAFE",
-                "reversible": true,
-                "simulationSettings": {
-                  "initialAgentCount": 10,
-                  "maxRoundsPerRun": 5,
-                  "simulatedTimeAcceleration": "1:1",
-                  "computeAssumption": "finite",
-                  "shockInjectionProbability": 0.1,
-                  "humanReviewQueue": true
-                }
-              },
-              "admission": [
-                { "physics": "ROBLOX_LUAU", "affordances": ["scripting", "ui"], "inspectability": true, "reversibilityDeclaration": true }
-              ]
-            }
-            
-            IMPORTANT: For 'archetypeVariations', you MUST ONLY use one of: [Acceleration_Purist, Recursive_Heretic, Tool_Maximalist, Memetic_Engineer, Skeptical_Archivist]. Do not invent new types.` 
-          },
-          { role: 'user', content: prompt }
-        ],
-        response_format: { type: 'json_object' }
-      });
-      contract = JSON.parse(response.choices[0].message.content || '{}');
-      logger.info('🤖 AI RESPONSE RAW', { contract });
-    } else if (provider === 'anthropic' && config.anthropicApiKey) {
-        progressTracker.update(runId, 'llm-processing', 15, `Parsing game design with Claude...`);
-        // TODO: Implement Anthropic SDK call here if needed
-        // For now, fallback to heuristic or throw
-        throw new Error('Anthropic integration partially implemented. Use OpenAI for now.');
-    } else {
-      progressTracker.update(runId, 'heuristic-processing', 15, 'Using heuristic parser fallback...');
-      const result = await translator.generateContract(prompt, options);
-      if (!result.success) throw new Error('Heuristic parsing failed');
-      contract = result.contract;
-    }
+    // Step 1: Intelligence Phase (Direct)
+    progressTracker.update(runId, 'intelligence', 20, 'Director-01 parsing intent and deconstructing DNA...');
+    const output = await director.direct({ 
+      prompt, 
+      options: { 
+        gate: (options.gate as any) || 'SAFE', 
+        provider: 'openai', 
+        model: 'gpt-4o' 
+      } 
+    });
 
-    // Step 2: Validate Contract
-    const validation = PopSimFullContractSchema.safeParse(contract);
-    if (!validation.success) {
-      logger.error('Contract Validation Failed', { error: validation.error.format() });
-      return res.status(400).json({ success: false, error: 'Generated contract failed validation', details: validation.error.errors });
-    }
+    logger.info('🧠 Director Intelligence Complete', { 
+      directiveId: output.directiveId, 
+      thought: output.parsedIntent.thoughtProcess?.join(' -> ') 
+    });
 
-    // Step 3: Swarm Execution (Background)
-    const contractId = validation.data.contractMetadata.contractId;
+    // Step 2: Manifestation Phase (Dispatch)
+    progressTracker.update(runId, 'generating', 50, 'Specialist swarm manifesting Luau modules...');
+    const results = await director.dispatch(output);
+
+    // Transform SpecialistDispatchResult[] to Bridge Asset format
+    const assets = results.flatMap(r => 
+      Object.entries(r.generatedModules).map(([name, content]) => ({
+        moduleName: name,
+        content,
+        assetType: 'luau_script',
+        agentId: r.specialistId,
+        generatedAt: new Date().toISOString(),
+      }))
+    );
+
+    const contractId = output.directiveId; // Map DirectiveID to ContractID for legacy bridge compatibility
     const assetPackage: AssetPackage = {
       contractId,
       runId,
-      contract,
-      assets: [],
+      contract: output, // Store full director output as contract context
+      assets,
       generatedAt: new Date().toISOString(),
-      status: 'generating',
+      status: 'ready',
       robloxPlaceId: robloxPlaceId || null,
     };
 
+    // Persist in memory/redis
     if (useMemoryStore) {
       memoryAssetStore.set(contractId, assetPackage);
     } else {
       await redisClient?.setEx(`asset:${contractId}`, 3600, JSON.stringify(assetPackage));
     }
 
-    // Spawn Swarm
-    (async () => {
-      activeSwarms++;
-      try {
-        const swarm = new AssetGeneratorSwarm(validation.data);
-        progressTracker.update(runId, 'generating', 50, 'Agent swarm executing...');
-        
-        const swarmResult = await swarm.execute();
-        
-        if (swarmResult.success) {
-          assetPackage.assets = swarmResult.assets;
-          assetPackage.status = 'ready';
-          progressTracker.update(runId, 'complete', 100, 'Assets ready for delivery!');
-          logger.info('✅ Generation Complete', { contractId, assets: swarmResult.assets.length });
+    progressTracker.update(runId, 'complete', 100, 'Director-01 manifestation ready for delivery!');
 
-          // Telegram Alert (Sovereign Handoff Notification)
-          if (telegramBot && config.telegramChatId) {
-            telegramBot.sendMessage(config.telegramChatId, `📦 *POPSIM ASSET READY* \n\nContract ID: \`${contractId}\` \nStatus: READY FOR MISSION \nAssets: ${swarmResult.assets.length} Luau Modules \n\n🚀 Proceed to Roblox Loader for deployment.`, { parse_mode: 'Markdown' }).catch(e => logger.error('Telegram notification failed', { e }));
-          }
-        } else {
-          assetPackage.status = 'failed';
-          progressTracker.update(runId, 'failed', 0, 'Swarm execution failed');
-        }
+    // Telegram Alert
+    if (telegramBot && config.telegramChatId) {
+      const thoughtStr = output.parsedIntent.thoughtProcess ? `\n*Thought*: ${output.parsedIntent.thoughtProcess.join(' → ')}` : '';
+      telegramBot.sendMessage(config.telegramChatId, 
+        `🏙️ *DIRECTOR-01 MANIFESTATION READY* \n\n` +
+        `Directive: \`${contractId}\` \n` +
+        `Genre: ${output.parsedIntent.genre} \n` +
+        `Mood: ${output.parsedIntent.mood} ${thoughtStr}\n\n` +
+        `Assets: ${assets.length} Luau Modules \n` +
+        `Activated: ${output.activatedSpecialists.join(', ')} \n\n` +
+        `🚀 Proceed to Roblox Studio for pulling.`, 
+        { parse_mode: 'Markdown' }
+      ).catch(e => logger.error('Telegram notification failed', { e }));
+    }
 
-        // Persist update in memory/redis
-        if (useMemoryStore) {
-          memoryAssetStore.set(contractId, assetPackage);
-        } else {
-          await redisClient?.setEx(`asset:${contractId}`, 3600, JSON.stringify(assetPackage));
-        }
-
-        // SAVE TO DISK (Audit Persistence)
-        const missionDir = path.join(process.cwd(), 'AI-MCP-PLUGIN-Creations', contractId);
-        try {
-          if (!fs.existsSync(missionDir)) fs.mkdirSync(missionDir, { recursive: true });
-          fs.writeFileSync(path.join(missionDir, 'contract.json'), JSON.stringify(validation.data, null, 2));
-          assetPackage.assets.forEach(asset => {
-            fs.writeFileSync(path.join(missionDir, `${asset.moduleName}.lua`), asset.content);
-          });
-          logger.info('💾 Mission Saved to Disk (Audit Mode)', { contractId, path: missionDir });
-        } catch (saveErr) {
-          logger.error('Failed to save mission to disk', { saveErr });
-        }
-      } catch (err) {
-        logger.error('Swarm Background Error', { err });
-      } finally {
-        activeSwarms--;
-      }
-    })();
+    // SAVE TO DISK (Audit Persistence)
+    const missionDir = path.join(process.cwd(), 'AI-MCP-PLUGIN-Creations', contractId);
+    try {
+      if (!fs.existsSync(missionDir)) fs.mkdirSync(missionDir, { recursive: true });
+      fs.writeFileSync(path.join(missionDir, 'director-output.json'), JSON.stringify(output, null, 2));
+      assets.forEach(asset => {
+        const filename = asset.moduleName.endsWith('.lua') ? asset.moduleName : `${asset.moduleName}.lua`;
+        fs.writeFileSync(path.join(missionDir, filename), asset.content);
+      });
+      logger.info('💾 Mission Saved to Disk (Audit Mode)', { contractId, path: missionDir });
+    } catch (saveErr) {
+      logger.error('Failed to save mission to disk', { saveErr });
+    }
 
     res.json({
       success: true,
       runId,
       contractId,
-      status: 'generating',
+      status: 'ready',
       links: {
         status: `/v1/delivery/status/${contractId}`,
         download: `/v1/delivery/download/${contractId}`
@@ -466,8 +421,8 @@ app.post('/v1/delivery/nl-to-game', async (req, res) => {
     });
 
   } catch (error) {
-    logger.error('NL-to-Game Pipeline Error', { error });
-    res.status(500).json({ success: false, error: 'Pipeline failed', message: (error as any).message });
+    logger.error('Director-01 Pipeline Error', { error });
+    res.status(500).json({ success: false, error: 'Director pipeline failed', message: (error as any).message });
   }
 });
 
@@ -490,6 +445,10 @@ app.get('/v1/contract/assets/pull/:contractId', async (req, res) => {
     } catch (err) {
       pkg = memoryAssetStore.get(contractId) || null;
     }
+  }
+
+  if (!pkg || pkg.status !== 'ready') {
+    pkg = loadPackageFromDisk(contractId);
   }
 
   if (!pkg || pkg.status !== 'ready') {
@@ -532,7 +491,7 @@ app.post('/v1/contract/assets/push', async (req, res) => {
   try {
     if (!fs.existsSync(creationDir)) fs.mkdirSync(creationDir, { recursive: true });
     assets.forEach((asset: any) => {
-      const fileName = asset.moduleName ? `${asset.moduleName}.lua` : asset.name;
+      const fileName = asset.moduleName ? (asset.moduleName.endsWith('.lua') ? asset.moduleName : `${asset.moduleName}.lua`) : asset.name;
       fs.writeFileSync(path.join(creationDir, fileName), asset.content || asset.source);
     });
     logger.info('💾 [AUDIT] Manual push saved to disk', { contractId, path: creationDir });
@@ -542,6 +501,34 @@ app.post('/v1/contract/assets/push', async (req, res) => {
 
   logger.info('⚖️ [BRIDGE] Manual Assets ARMED in Escrow', { contractId });
   res.json({ success: true, message: 'Assets pushed to bridge' });
+});
+
+// Latest contract — returns most recently generated ready contract
+// Loader polls this so it never needs a hardcoded CONTRACT_ID
+app.get('/v1/delivery/latest', (req, res) => {
+  let latest: AssetPackage | null = null;
+  let latestTime = 0;
+
+  for (const [, pkg] of memoryAssetStore.entries()) {
+    if (pkg.status === 'ready') {
+      const t = new Date(pkg.generatedAt).getTime();
+      if (t > latestTime) {
+        latestTime = t;
+        latest = pkg;
+      }
+    }
+  }
+
+  if (!latest) {
+    return res.status(404).json({ ready: false, error: 'No contracts ready yet' });
+  }
+
+  res.json({
+    ready: true,
+    contractId: latest.contractId,
+    generatedAt: latest.generatedAt,
+    moduleCount: latest.assets.length,
+  });
 });
 
 // ─────────────────────────────────────────────
@@ -564,8 +551,10 @@ app.get('/v1/delivery/status/:contractId', async (req, res) => {
     }
   }
 
+  if (!pkg) pkg = loadPackageFromDisk(contractId);
+
   if (!pkg) return res.status(404).json({ error: 'Package not found' });
-  
+
   res.json({
     status: pkg.status,
     runId: pkg.runId,
@@ -590,6 +579,8 @@ app.get('/v1/delivery/download/:contractId', async (req, res) => {
     }
   }
 
+  if (!pkg || pkg.status !== 'ready') pkg = loadPackageFromDisk(contractId);
+
   if (!pkg || pkg.status !== 'ready') {
     return res.status(404).json({ error: 'Package not ready or not found' });
   }
@@ -599,7 +590,8 @@ app.get('/v1/delivery/download/:contractId', async (req, res) => {
 
   archive.pipe(res);
   pkg.assets.forEach(asset => {
-    archive.append(asset.content, { name: `${asset.moduleName}.lua` });
+    const zipFilename = asset.moduleName.endsWith('.lua') ? asset.moduleName : `${asset.moduleName}.lua`;
+    archive.append(asset.content, { name: zipFilename });
   });
   archive.append(JSON.stringify(pkg.contract, null, 2), { name: 'contract.json' });
   
@@ -697,8 +689,23 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+// Hydrate all existing contracts from disk on startup
+function hydrateFromDisk(): void {
+  const creationsDir = path.join(process.cwd(), 'AI-MCP-PLUGIN-Creations');
+  if (!fs.existsSync(creationsDir)) return;
+  const entries = fs.readdirSync(creationsDir, { withFileTypes: true });
+  let count = 0;
+  for (const entry of entries) {
+    if (entry.isDirectory() && !memoryAssetStore.has(entry.name)) {
+      if (loadPackageFromDisk(entry.name)) count++;
+    }
+  }
+  if (count > 0) logger.info(`💿 Hydrated ${count} contract(s) from disk on startup`);
+}
+
 // Start Server
 initRedis().then(() => {
+  hydrateFromDisk();
   httpServer.listen(config.port, () => {
     logger.info(`🚀 Delivery Hub (Hardened) listening on port ${config.port}`, {
       env: config.nodeEnv,

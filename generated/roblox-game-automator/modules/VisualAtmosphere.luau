@@ -10,12 +10,12 @@ local VisualAtmosphere = {}
 -- Services
 local Lighting = game:GetService("Lighting")
 
--- Metropolis Aesthetic Config (Obsidian Teal Night)
-local AMBIENT_COLOR = Color3.fromHex("#1A1A2E") -- Obsidian Night
-local FOG_COLOR = Color3.fromHex("#0F3460") -- Teal Fog
-local OUTDOOR_AMBIENT = Color3.fromHex("#1A1A2E")
-local CLOCK_TIME = 3 -- 3 AM
-local FOG_END = 800
+-- Metropolis Aesthetic Config (Cyber-Gothic Alpha)
+local AMBIENT_COLOR = Color3.fromRGB(25, 25, 55)    -- Midnight Teal Fill
+local FOG_COLOR = Color3.fromRGB(150, 0, 255)       -- Phantasmagoric Fog (Secondary)
+local OUTDOOR_AMBIENT = Color3.fromRGB(20, 20, 40) -- Abyss Night
+local CLOCK_TIME = 3                                 -- 3 AM
+local FOG_END = 2500                                 -- Expansive Horizon
 
 function VisualAtmosphere.Apply()
     Lighting.ClockTime = CLOCK_TIME

@@ -1,0 +1,90 @@
+name: 🧠 Automated OMC Registry
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - 'checkpoint-*'
+      - 'release-*'
+    # Ignore changes to registry and docs to avoid recursive triggers
+    paths-ignore:
+      - 'registry/**'
+      - 'README.md'
+      - '.github/workflows/**'
+
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🏷️ Generate Version Metadata
+        id: meta
+        run: |
+          echo "TIMESTAMP=$(date +'%Y-%m-%d_%H%M%S')" >> $GITHUB_OUTPUT
+          echo "GIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          # Extract first line of commit message as memo, sanitize quotes
+          MSG=$(git log -1 --pretty=%B | head -n 1 | sed 's/"/\\"/g' | sed 's/|/\\|/g')
+          echo "MSG=$MSG" >> $GITHUB_OUTPUT
+
+      - name: 📦 Archive Contracts
+        run: |
+          ID="auto_${{ steps.meta.outputs.TIMESTAMP }}_${{ steps.meta.outputs.GIT_HASH }}"
+          mkdir -p "registry/checkpoints/$ID"
+          
+          # Target important directories for snapshot
+          DIRS=("popsim-contract" "spec" "src" "lm_test_script")
+          for dir in "${DIRS[@]}"; do
+            if [ -d "$dir" ]; then
+              tar --exclude='node_modules' --exclude='.git' --exclude='dist' -cf - "$dir" | (cd "registry/checkpoints/$ID" && tar xf -)
+            fi
+          done
+
+      - name: 📝 Update Manifest
+        run: |
+          DATE=$(date +"%Y-%m-%d")
+          ID="auto_${{ steps.meta.outputs.TIMESTAMP }}_${{ steps.meta.outputs.GIT_HASH }}"
+          MEMO="${{ steps.meta.outputs.MSG }}"
+          GIT_HASH="${{ steps.meta.outputs.GIT_HASH }}"
+          NEW_ROW="| $ID | $DATE | $GIT_HASH | $MEMO | ✅ AUTO |"
+          
+          # Regional AWK Insertion + Assertion (v2.5 Fix: Explicit error handling)
+          if ! awk -v row="$NEW_ROW" '
+            { print $0 }
+            /## 🕒 CHECKPOINTS/ { found=1 }
+            found && /\| :--- \| :--- \|/ { print row; found=0; inserted=1 }
+            END { if (!inserted) exit 1 }
+          ' registry/MANIFEST.md > registry/MANIFEST.md.tmp && mv registry/MANIFEST.md.tmp registry/MANIFEST.md; then
+            echo "❌ Error: Could not find '## 🕒 CHECKPOINTS' header."
+            exit 1
+          fi
+
+      - name: 🚀 Commit Registry Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(registry): auto-checkpoint ${{ steps.meta.outputs.GIT_HASH }} [skip ci]"
+          file_pattern: 'registry/*'
+          tagging_message: "checkpoint-${{ steps.meta.outputs.TIMESTAMP }}"
+
+      - name: 🏷️ Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "release-${{ steps.meta.outputs.TIMESTAMP }}-${{ steps.meta.outputs.GIT_HASH }}"
+          name: "Registry Version: ${{ steps.meta.outputs.GIT_HASH }}"
+          body: |
+            ### 🧠 AI Automated Registry Release
+            **Commit:** `${{ steps.meta.outputs.GIT_HASH }}`
+            **Memo:** ${{ steps.meta.outputs.MSG }}
+            
+            This is an automated, high-fidelity archive of the 'open-model-contracts' logic.
+            Protocol: Director-01 Sovereign Manifestation.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

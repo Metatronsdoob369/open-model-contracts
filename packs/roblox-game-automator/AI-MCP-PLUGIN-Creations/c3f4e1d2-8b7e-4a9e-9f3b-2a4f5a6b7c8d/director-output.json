@@ -1,0 +1,88 @@
+{
+  "directiveId": "c3f4e1d2-8b7e-4a9e-9f3b-2a4f5a6b7c8d",
+  "parsedIntent": {
+    "genre": "parkour",
+    "subGenre": "chase",
+    "scale": "medium",
+    "mood": "synthwave",
+    "keyMechanics": [
+      "vertical chase",
+      "platforming"
+    ],
+    "estimatedComplexity": "medium",
+    "thoughtProcess": [
+      "The Thought Bridge: Semantic Layer 1",
+      "The game involves fast-paced parkour on rooftops in a neon city, requiring vertical chase mechanics.",
+      "Semantic Layer 2",
+      "The synthwave atmosphere suggests a vibrant, neon-infused aesthetic with a focus on speed and agility."
+    ],
+    "colorPalette": {
+      "primary": "#ff007f",
+      "secondary": "#00ffcc",
+      "accent": "#ffcc00"
+    }
+  },
+  "gate": "SAFE",
+  "gateReason": "The operation involves initial construction and design, which are reversible.",
+  "activatedSpecialists": [
+    "architect-01",
+    "sonic-01",
+    "system-01"
+  ],
+  "swarmBriefs": [
+    {
+      "specialistId": "architect-01",
+      "brief": "Design neon city rooftops with rain-slicked surfaces for parkour.",
+      "priority": 8,
+      "dependencies": [],
+      "estimatedModules": [
+        "RooftopGenerator.lua"
+      ]
+    },
+    {
+      "specialistId": "sonic-01",
+      "brief": "Create a synthwave audio atmosphere to enhance the parkour experience.",
+      "priority": 7,
+      "dependencies": [],
+      "estimatedModules": [
+        "SynthwaveAmbience.lua"
+      ]
+    },
+    {
+      "specialistId": "system-01",
+      "brief": "Implement vertical chase mechanics and ensure smooth platforming.",
+      "priority": 9,
+      "dependencies": [
+        "architect-01"
+      ],
+      "estimatedModules": [
+        "ChaseMechanics.lua"
+      ]
+    }
+  ],
+  "suggestedPrimer": {
+    "levelName": "Neon Rooftop Chase",
+    "theme": {
+      "genre": "parkour",
+      "primaryColor": [
+        255,
+        0,
+        127
+      ],
+      "material": "neon"
+    },
+    "atmosphere": {
+      "clockTime": 22,
+      "bloomIntensity": 0.7,
+      "fogEnd": 1000
+    },
+    "mechanics": {
+      "dashEnabled": true,
+      "doubleJumpEnabled": true,
+      "tagGameActive": false
+    }
+  },
+  "readyForPhase1": true,
+  "humanReviewRequired": false,
+  "warnings": []
+}

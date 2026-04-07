@@ -1,0 +1,93 @@
+{
+  "directiveId": "b3f9e1a2-4d5c-4f9d-9c6f-8a2d5e7f3a4b",
+  "parsedIntent": {
+    "genre": "horror",
+    "subGenre": "carnival",
+    "scale": "medium",
+    "mood": "eerie",
+    "keyMechanics": [
+      "ghost chase",
+      "rickety rides"
+    ],
+    "estimatedComplexity": "medium",
+    "thoughtProcess": [
+      "The Thought Bridge: Semantic Layer 1",
+      "Interpreting 'haunted carnival' as a horror setting with a focus on unsettling amusement park elements.",
+      "Semantic Layer 2",
+      "Emphasizing ghost chase mechanics and eerie organ music to enhance the mood."
+    ],
+    "colorPalette": {
+      "primary": "#2e2b5f",
+      "secondary": "#8b0000",
+      "accent": "#f5f5dc"
+    }
+  },
+  "gate": "SAFE",
+  "gateReason": "The operation involves reversible design and mechanics implementations.",
+  "activatedSpecialists": [
+    "architect-01",
+    "sonic-01",
+    "system-01"
+  ],
+  "swarmBriefs": [
+    {
+      "specialistId": "architect-01",
+      "brief": "Design a haunted carnival with rickety rides and spooky structures.",
+      "priority": 8,
+      "dependencies": [],
+      "estimatedModules": [
+        "CarnivalLayout.lua",
+        "RideGenerator.lua"
+      ]
+    },
+    {
+      "specialistId": "sonic-01",
+      "brief": "Create eerie organ music and ambient sounds for the haunted carnival.",
+      "priority": 7,
+      "dependencies": [
+        "architect-01"
+      ],
+      "estimatedModules": [
+        "OrganMusic.lua",
+        "AmbientSounds.lua"
+      ]
+    },
+    {
+      "specialistId": "system-01",
+      "brief": "Implement ghost chase mechanics and interactions with rickety rides.",
+      "priority": 9,
+      "dependencies": [
+        "architect-01"
+      ],
+      "estimatedModules": [
+        "GhostChaseMechanics.lua",
+        "RideInteractions.lua"
+      ]
+    }
+  ],
+  "suggestedPrimer": {
+    "levelName": "Haunted Carnival",
+    "theme": {
+      "genre": "horror",
+      "primaryColor": [
+        46,
+        43,
+        95
+      ],
+      "material": "wood"
+    },
+    "atmosphere": {
+      "clockTime": 22,
+      "bloomIntensity": 0.3,
+      "fogEnd": 100
+    },
+    "mechanics": {
+      "dashEnabled": true,
+      "doubleJumpEnabled": false,
+      "tagGameActive": true
+    }
+  },
+  "readyForPhase1": true,
+  "humanReviewRequired": false,
+  "warnings": []
+}

@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+# Detect branch and auto-snapshot on push
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+if [ "$CURRENT_BRANCH" == "main" ]; then
+    echo "🤖 AUTOMATED REGISTRY: Capturing mission checkpoint..."
+    
+    # Sanitize memo to first line only for clean manifest rows
+    MEMO=$(git log -1 --pretty=%B | head -n 1)
+    
+    ./scripts/checkpoint.sh -m "Auto-captured on push: $MEMO" -n "auto-push"
+fi
+
+exit 0

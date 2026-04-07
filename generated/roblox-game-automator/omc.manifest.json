@@ -1,45 +1,65 @@
 {
-  "omc_version": "1.0.0",
+  "schema_version": "1.0",
   "pack_id": "roblox-game-automator",
-  "manifest_id": "metropolis-ready-tonight-01",
-  "timestamp": "2026-04-04T20:31:57.630Z",
-  "modules": [
+  "pack_version": "1.0.0",
+  "pipeline_id": "ebac1090-e10a-4cf8-ac9c-047674fd0880",
+  "created_at": "2026-04-05T00:52:46.358Z",
+  "files": [
     {
-      "id": "playermechanics",
-      "filename": "PlayerMechanics.luau",
-      "specialist": "system-01",
-      "hash": "382071e94c5887a8d1339c9ff601184764f0df7441fdc80af58f6dd18d917008",
-      "capabilities": [
-        "capability:client_install"
-      ]
+      "path": "generated/roblox-game-automator/modules/VisualAtmosphere.luau",
+      "type": "luau_module",
+      "sha256": "2b55dfa404711f7c66b3b4bbbe25d249181d974338d4f39b7e19c708d708b20b",
+      "size_bytes": 1251,
+      "description": "Metropolis Component: VisualAtmosphere"
     },
     {
-      "id": "soundscapemanager",
-      "filename": "SoundscapeManager.luau",
-      "specialist": "sonic-01",
-      "hash": "e4f4acb8fa9d98b03efb3c38336d83cb5c565d009a8e9efc5d5b6fbdcbe62295",
-      "capabilities": [
-        "capability:client_install"
-      ]
+      "path": "generated/roblox-game-automator/modules/SoundscapeManager.luau",
+      "type": "luau_module",
+      "sha256": "fbe3f6eb2d6d64271c5911f301e070c78564f8aa9e496d646a60dfd7a2d723ee",
+      "size_bytes": 1606,
+      "description": "Metropolis Component: SoundscapeManager"
     },
     {
-      "id": "taggamelogic",
-      "filename": "TagGameLogic.luau",
-      "specialist": "system-01",
-      "hash": "24424a96d979a4aefb9c40ce8635b0167796f0503f6c5e049f59974b45d078ec",
-      "capabilities": [
-        "capability:client_install"
-      ]
+      "path": "generated/roblox-game-automator/modules/PlayerMechanics.luau",
+      "type": "luau_module",
+      "sha256": "382071e94c5887a8d1339c9ff601184764f0df7441fdc80af58f6dd18d917008",
+      "size_bytes": 1495,
+      "description": "Metropolis Component: PlayerMechanics"
     },
     {
-      "id": "visualatmosphere",
-      "filename": "VisualAtmosphere.luau",
-      "specialist": "architect-01",
-      "hash": "7375ed09b99c09412b0808083839428e4b899b18c50f4c53d00b8a5886e57571",
-      "capabilities": [
-        "capability:client_install"
-      ]
+      "path": "generated/roblox-game-automator/modules/TagGameLogic.luau",
+      "type": "luau_module",
+      "sha256": "24424a96d979a4aefb9c40ce8635b0167796f0503f6c5e049f59974b45d078ec",
+      "size_bytes": 1448,
+      "description": "Metropolis Component: TagGameLogic"
+    },
+    {
+      "path": "generated/roblox-game-automator/modules/TowerGenerator.luau",
+      "type": "luau_module",
+      "sha256": "3ebeeef7d227446c2818484b852a58a162c4b42040fdcf2a41e5eb8a5de2506f",
+      "size_bytes": 2657,
+      "description": "Metropolis Component: TowerGenerator"
+    },
+    {
+      "path": "generated/roblox-game-automator/modules/TrafficController.luau",
+      "type": "luau_module",
+      "sha256": "5eb68768f1faaf4a8de29f9cb165dc062f93ad5f5b104d0a4324e8dda70ff6fe",
+      "size_bytes": 2110,
+      "description": "Metropolis Component: TrafficController"
     }
   ],
-  "summary": "Metropolis Playable Tonight: Systems, Sonic, and Visuals manifested."
+  "specialists": [
+    {
+      "id": "architect-01",
+      "role": "Volumetric Construction"
+    },
+    {
+      "id": "sonic-01",
+      "role": "Ambient Reverb Master"
+    },
+    {
+      "id": "system-01",
+      "role": "Radiant Player Mechanics"
+    }
+  ]
 }

@@ -12,9 +12,9 @@ local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 -- Metropolis Aesthetic Config (Dark Obsidian Hum)
-local AMBIENT_ID = "rbxassetid://1837012345" -- Placeholder for Metropolis Drone
-local DASH_SFX_ID = "rbxassetid://1837012346" -- Placeholder for Dash Ping
-local TAG_SFX_ID = "rbxassetid://1837012347" -- Placeholder for Tag Pulse
+local AMBIENT_ID = "rbxassetid://1837879082" -- Metropolis Cyber-Gothic Ambient
+local DASH_SFX_ID = "rbxassetid://1347631165" -- Kinetic Dash Burst
+local TAG_SFX_ID = "rbxassetid://1837012347"  -- Reserved for Tag Pulse
 
 -- Internal State
 local metropolisDrone = nil
@@ -29,7 +29,8 @@ function SoundscapeManager.Initialize()
     metropolisDrone.Parent = SoundService
     
     metropolisDrone:Play()
-    print("[SONIC] Metropolis Resonance activated.")
+    SoundService.AmbientReverb = Enum.ReverbType.StoneCorridor
+    print("[SONIC] Metropolis Resonance activated with StoneCorridor Reverberation.")
 end
 
 function SoundscapeManager.PlayDashSFX(position)
