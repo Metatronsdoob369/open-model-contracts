@@ -1,0 +1,11 @@
+# SAFE tool list (read-only)
+search_providers
+get_provider_details
+search_modules
+get_module_details
+list_workspaces
+get_workspace
+list_runs
+get_run
+list_state_versions
+get_state_version
