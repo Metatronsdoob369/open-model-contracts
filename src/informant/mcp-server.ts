@@ -25,7 +25,13 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { zodToJsonSchema } from "zod-to-json-schema";
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { listContracts, getContract } from "../../spec/contracts/index.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // ─── Server factory (exported for testability) ────────────────────────────────
 
@@ -69,6 +75,22 @@ export function createInformantServer(): Server {
             },
           },
           required: ["id"],
+          additionalProperties: false,
+        },
+      },
+      {
+        name: "read_governance_law",
+        description:
+          "Read the raw text of an OMC constitutional markdown document (e.g., 'MCP_ADMISSION_CONTRACT'). This is required before an agent is permitted to write code in a governed project.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            doc_id: {
+              type: "string",
+              description: "The name of the governance document (without .md). Examples: 'MCP_ADMISSION_CONTRACT', 'SPECIALIST_AGENT'",
+            },
+          },
+          required: ["doc_id"],
           additionalProperties: false,
         },
       },
@@ -174,6 +196,34 @@ export function createInformantServer(): Server {
             },
           ],
         };
+      }
+
+      // ── read_governance_law ──────────────────────────────────────────────────
+      case "read_governance_law": {
+        const docId = String(typedArgs.doc_id ?? "").replace(/[^a-zA-Z0-9_-]/g, ""); // sanitize
+        const docPath = path.resolve(__dirname, "../../spec/domicile-governance/admission", `${docId}.md`);
+        
+        try {
+          const content = await fs.readFile(docPath, "utf-8");
+          return {
+            content: [
+              {
+                type: "text",
+                text: content,
+              },
+            ],
+          };
+        } catch (error) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Error: Governance document '${docId}' could not be located. Valid laws exist in spec/domicile-governance/admission/`,
+              },
+            ],
+            isError: true,
+          };
+        }
       }
 
       // ── validate_payload ────────────────────────────────────────────────────
