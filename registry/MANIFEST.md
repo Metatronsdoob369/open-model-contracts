@@ -34,3 +34,4 @@ This registry tracks the evolution of our "contracts-first" game development—f
 **Last Updated:** 2026-04-06
 **Asset Manager:** Antigravity AI
 | InitialRegistrySetup_checkpoint_2026-04-05_223826_8358f37 | 2026-04-05   | 8358f37  | Baseline synchronization of current project state into the new Registry system. | ✅ ARCHIVED |
+| RegistryDeployment_checkpoint_2026-04-06_190022_3acb625 | 2026-04-06   | 3acb625  | Established Omni-Registry System for persistent version memory. Implemented Checkpoint, Ship, and Rollback scripts to govern contract-first game development. Integrated lm_test_script (Universal LLM Switcher) as the first archived asset class. | ✅ ARCHIVED |
