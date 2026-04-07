@@ -1,0 +1,24 @@
+{
+  "pack_id": "domicile-governance-mcp",
+  "version": "1.0.0",
+  "domain": "Governance",
+  "status": "APPROVED",
+  "governance": {
+    "audit_required": true,
+    "gate_type": "SAFE/ARMED",
+    "fist_min_score": 0.8
+  },
+  "entrypoints": {
+    "law": "spec/contracts/governance/mcp-admission.md",
+    "schema": "spec/contracts/core/agent-output.ts"
+  },
+  "capabilities": [
+    "tool-admission",
+    "execution-gate-enforcement",
+    "audit-trail-standardization"
+  ],
+  "checkpoint_required_paths": [
+    "spec/contracts/governance/",
+    "spec/contracts/core/"
+  ]
+}
