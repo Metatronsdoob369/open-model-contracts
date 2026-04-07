@@ -1,0 +1,5 @@
+# ARMED allowlist (mutating/exec)
+run_skill
+run_workflow
+apply_changes
+execute_task
