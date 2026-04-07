@@ -10,7 +10,7 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| auto-push_checkpoint_2026-04-06_192535_01761e8 | 2026-04-06 | 01761e8 | Auto-captured on push: chore(registry): snapshot FinalMissionComplete_checkpoint_2026-04-06_192533_d80b982 | ✅ ARCHIVED |
+| SovereignShift_checkpoint_2026-04-06_195543_477ce78 | 2026-04-06 | 477ce78 | OMC Sovereign Shift (v3.0): Deployed the 'Silent-Drift Shield' (PR CI Gate) and initialized Sovereign Pack Manifests (popsim-contract/OMC_PACK.json). | ✅ ARCHIVED |
 | auto-push_checkpoint_2026-04-06_192204_a0037e5 | 2026-04-06 | a0037e5 | Auto-captured on push: chore(registry): snapshot FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | ✅ ARCHIVED |
 | FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | 2026-04-06 | 19afe76 | Elite-Level Registry v2.4: Implemented assertive AWK insertion, core.hooksPath distribution, and memo sanitization. Final session milestone. | ✅ ARCHIVED |
 | ProductionGrade_checkpoint_2026-04-06_191821_1007000 | 2026-04-06 | 1007000 | Final Registry Polish (v2.3): Fixed memo typos, hardened awk regional targeting, and implemented distributed hook installation script. | ✅ ARCHIVED |
