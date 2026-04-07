@@ -10,7 +10,7 @@ This registry tracks the evolution of our "contracts-first" game development—f
 
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| GovernanceAdmission_checkpoint_2026-04-07_011152_e3eaa97 | 2026-04-07 | e3eaa97 | Sovereign Admission (v5.0): Codified Domicile MCP Governance Law and Minimal Output Schema into the Diamond-Stable Registry. Admitted the foundational Governance Pack (v1.0.0). | ✅ ARCHIVED |
+| auto-push_checkpoint_2026-04-07_011155_af3dfa7 | 2026-04-07 | af3dfa7 | Auto-captured on push: chore(registry): snapshot GovernanceAdmission_checkpoint_2026-04-07_011152_e3eaa97 | ✅ ARCHIVED |
 | auto-push_checkpoint_2026-04-06_192204_a0037e5 | 2026-04-06 | a0037e5 | Auto-captured on push: chore(registry): snapshot FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | ✅ ARCHIVED |
 | FinalCryptographicShip_checkpoint_2026-04-06_192202_19afe76 | 2026-04-06 | 19afe76 | Elite-Level Registry v2.4: Implemented assertive AWK insertion, core.hooksPath distribution, and memo sanitization. Final session milestone. | ✅ ARCHIVED |
 | ProductionGrade_checkpoint_2026-04-06_191821_1007000 | 2026-04-06 | 1007000 | Final Registry Polish (v2.3): Fixed memo typos, hardened awk regional targeting, and implemented distributed hook installation script. | ✅ ARCHIVED |
