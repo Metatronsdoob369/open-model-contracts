@@ -15,6 +15,7 @@ import { AssetSchema } from "./v3/asset.js";
 import { AgentSchema } from "./v3/agent.js";
 import { TaskSchema } from "./v3/task.js";
 import { ValidateManifestationSchema } from "./v3/validate-manifestation.js";
+import { SpecialistSchema } from "./v3/specialist.js";
 
 // ─── Registry Entry Type ──────────────────────────────────────────────────────
 
@@ -69,6 +70,14 @@ export const OMC_REGISTRY: Record<string, ContractEntry> = {
     description:
       "Schema for validating a Phase-3 manifestation event in the OMC pipeline.",
     capabilities: ["validate", "checkpoint"],
+  },
+  "omc.v3.specialist": {
+    id: "omc.v3.specialist",
+    version: "3.0.0",
+    schema: SpecialistSchema,
+    description:
+      "A self-learning RAG API architecture required for all Specialist Agents. Governs query, response, and the mandatory Circadian feedback loop.",
+    capabilities: ["read", "validate", "learn"],
   },
 } as const;
 
