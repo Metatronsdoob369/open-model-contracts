@@ -11,6 +11,7 @@ This registry tracks the evolution of our "contracts-first" game development—f
 | Checkpoint ID | Timestamp | Commit | Purpose/Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | baseline-alpha-20260405 | 2026-04-05 | `HEAD` | **Baseline ALPHA.** The first unified shift from prompt-based to contract-based game logic. | ✅ ACTIVE |
+| ProtocolHardening_checkpoint_2026-04-06_191130_7136a19 | 2026-04-06 | 7136a19 | Hardened Omni-Registry v2.0: Implemented high-fidelity flag parsing, smart manifest insertion, and tag-loop prevention. | ✅ ARCHIVED |
 
 ---
 
