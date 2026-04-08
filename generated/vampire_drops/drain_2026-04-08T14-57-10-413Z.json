@@ -1,0 +1,17 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-08T14:57:10.412Z",
+    "source": "https://raw.githubusercontent.com/MadStudioRoblox/ProfileService/master/ProfileService.lua",
+    "classification": "PROVEN_FRAMEWORK_DNA"
+  },
+  "omc_governance": {
+    "phase": "INGESTED",
+    "heuristic_safety": "BYPASSED_FOR_ANALYSIS",
+    "mempalace_routing": "PENDING_CLASSIFICATION"
+  },
+  "structural_dna": {
+    "raw_preview": "-- local Madwork = _G.Madwork\n--[[\n{Madwork}\n\n-[ProfileService]---------------------------------------\n\t(STANDALONE VERSION)\n\tDataStore profiles - universal session-locked savable table API\n\t\n\tOfficial documentation:\n\t\thttps://madstudioroblox.github.io/ProfileService/\n\n\tDevForum discussion:\n\t\thttps://devforum.roblox.com/t/ProfileService/667805\n\t\n\tWARNINGS FOR \"Profile.Data\" VALUES:\n\t \t! Do not cre\n...[TRUNCATED FOR PIPELINE]...",
+    "ast_nodes": 60,
+    "logic_composition": "HeuristicFallback"
+  }
+}
