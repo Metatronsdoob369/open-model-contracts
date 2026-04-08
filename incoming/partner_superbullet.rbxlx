@@ -1,0 +1,11 @@
+<roblox>
+  <Item class="Script" referent="RBX1234">
+    <Properties>
+      <string name="Name">SuspiciousDroplet</string>
+      <ProtectedString name="Source">
+        _G.test = 1
+        wait(5)
+      </ProtectedString>
+    </Properties>
+  </Item>
+</roblox>

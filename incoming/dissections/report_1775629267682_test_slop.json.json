@@ -1,0 +1,28 @@
+{
+  "Status": "REJECTED",
+  "DropFile": "test_slop.json",
+  "Violations": [
+    {
+      "script": "test_slop.json",
+      "line": 2,
+      "type": "IllegalGlobal",
+      "message": "Illegal use of global scope '_G'. Must route state through Diamond Slots.",
+      "snippet": "_G.test = 1"
+    },
+    {
+      "script": "test_slop.json",
+      "line": 3,
+      "type": "MemoryViolation",
+      "message": "Deprecated legacy function wait(). Use task.wait() instead.",
+      "snippet": "wait(1)"
+    },
+    {
+      "script": "test_slop.json",
+      "line": 4,
+      "type": "MemoryViolation",
+      "message": "Registry Alignment Violation: Script defines/uses slot 'HiddenSlot' which is missing from expectedSlots.",
+      "snippet": "OMC.State.HiddenSlot = 99"
+    }
+  ],
+  "Timestamp": "2026-04-08T06:21:07.680Z"
+}

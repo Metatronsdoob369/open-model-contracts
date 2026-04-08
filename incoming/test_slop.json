@@ -1,0 +1,7 @@
+{
+  "id": "123e4567-e89b-12d3-a456-426614174000",
+  "type": "script",
+  "code": "local function myFunc()\n    _G.test = 1\n    wait(1)\n    OMC.State.HiddenSlot = 99\nend",
+  "targetEnvironment": "Server",
+  "expectedSlots": ["OMC.State.PublicSlot"]
+}

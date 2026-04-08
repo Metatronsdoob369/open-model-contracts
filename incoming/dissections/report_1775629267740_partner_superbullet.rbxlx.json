@@ -1,0 +1,28 @@
+{
+  "Status": "REJECTED",
+  "DropFile": "partner_superbullet.rbxlx",
+  "Violations": [
+    {
+      "script": "ExtractedSlop.lua",
+      "line": 0,
+      "type": "MemoryViolation",
+      "message": "Invalid uuid",
+      "snippet": "Failed at field: id"
+    },
+    {
+      "script": "ExtractedSlop.lua",
+      "line": 2,
+      "type": "IllegalGlobal",
+      "message": "Illegal use of global scope '_G'. Must route state through Diamond Slots.",
+      "snippet": "_G.hack = 99"
+    },
+    {
+      "script": "ExtractedSlop.lua",
+      "line": 3,
+      "type": "MemoryViolation",
+      "message": "Deprecated legacy function wait(). Use task.wait() instead.",
+      "snippet": "wait(5)"
+    }
+  ],
+  "Timestamp": "2026-04-08T06:21:07.740Z"
+}

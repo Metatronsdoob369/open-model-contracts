@@ -16,6 +16,10 @@ import { AgentSchema } from "./v3/agent.js";
 import { TaskSchema } from "./v3/task.js";
 import { ValidateManifestationSchema } from "./v3/validate-manifestation.js";
 import { SpecialistSchema } from "./v3/specialist.js";
+import { ScriptAuditSchema } from "./v3/script-audit.js";
+import { AMEM, ResearchInference } from "./v3/amem-payload.js";
+import { SkillManifestSchema } from "./v3/skill.js";
+import { PhysicsThresholdSchema } from "./v3/physics-threshold.js";
 
 // ─── Registry Entry Type ──────────────────────────────────────────────────────
 
@@ -78,6 +82,30 @@ export const OMC_REGISTRY: Record<string, ContractEntry> = {
     description:
       "A self-learning RAG API architecture required for all Specialist Agents. Governs query, response, and the mandatory Circadian feedback loop.",
     capabilities: ["read", "validate", "learn"],
+  },
+  "omc.v3.script-audit": {
+    id: "omc.v3.script-audit",
+    version: "3.0.0",
+    schema: ScriptAuditSchema,
+    description:
+      "A strict validator schema running luaparse for testing raw drops against Diamond Stable logic rules.",
+    capabilities: ["read", "validate"],
+  },
+  "omc.v3.skill": {
+    id: "omc.v3.skill",
+    version: "3.0.0",
+    schema: SkillManifestSchema,
+    description:
+      "Canonical schema for a Domicile Agent Skill Manifest. Enforces tool boundaries, entry points, and admission gating.",
+    capabilities: ["read", "validate"],
+  },
+  "omc.v3.physics-threshold": {
+    id: "omc.v3.physics-threshold",
+    version: "3.0.0",
+    schema: PhysicsThresholdSchema,
+    description:
+      "Defines the hard mathematical limits for execution mutation. Governs maxVelocity, minSignificance, and driftThresholds for the Domicile Vagus Nerve.",
+    capabilities: ["read", "validate"],
   },
 } as const;
 
