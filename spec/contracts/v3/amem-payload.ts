@@ -1,9 +1,9 @@
 /**
  * OPEN MODEL CONTRACTS (OMC) - A-MEM INGESTION PAYLOAD
- * Derived from Deep Research Artifacts: Phase Gates, Mitigation Matrices, and Execution Timelines.
- * Integration: MemPalace Spatial Memory, Agentic Skill Manifests, Physics Thresholds, & Heuristic Safety.
- * * Purpose: Provides a canonical, type-safe structure for LLM ingestion,
- * recursive synthesis, and agent training based on validated research data.
+ * Version: 3.6.0 - "The Vampire Refinement"
+ * Integration: MemPalace, Skill Manifests, Physics Thresholds, Heuristic Safety, & Vampire DNA.
+ * Purpose: Provides a canonical, type-safe structure for LLM ingestion.
+ * Added: Vampire DNA mapping for cross-referencing successful game logic.
  */
 
 import { z } from "zod";
@@ -11,46 +11,23 @@ import { z } from "zod";
 export namespace AMEM {
   /**
    * PHASE GATE METRICS
-   * Derived from: phase_gate_gauges.jpg & phase_gate_metrics.jpg
+   * Tracking project-wide health gauges.
    */
   export type PhaseStatus = 'RED' | 'AMBER' | 'GREEN';
 
   export interface PhaseGateSystem {
     gauges: {
-      stability: {
-        value: number; // 0-100
-        status: PhaseStatus;
-        threshold: number;
-      };
-      performance: {
-        value: number; // ms or fps
-        status: PhaseStatus;
-        ideal: number;
-      };
-      coverage: {
-        value: number; // percentage
-        status: PhaseStatus;
-        target: number;
-      };
+      stability: { value: number; status: PhaseStatus; threshold: number; };
+      performance: { value: number; status: PhaseStatus; ideal: number; };
+      coverage: { value: number; status: PhaseStatus; target: number; };
     };
-    metrics: Array<{
-      id: string;
-      label: string;
-      currentValue: string;
-      variance: string;
-    }>;
+    metrics: Array<{ id: string; label: string; currentValue: string; variance: string; }>;
   }
 
   /**
    * RISK & MITIGATION LOGIC
-   * Derived from: mitigation_escalation_matrix.jpg & risk_register_cards.png
    */
-  export enum RiskLevel {
-    LOW = 1,
-    MEDIUM = 2,
-    HIGH = 3,
-    CRITICAL = 4
-  }
+  export enum RiskLevel { LOW = 1, MEDIUM = 2, HIGH = 3, CRITICAL = 4 }
 
   export interface RiskMitigation {
     escalationMatrix: {
@@ -60,125 +37,91 @@ export namespace AMEM {
         action: 'Warning' | 'Quarantine' | 'HardBlock';
       }>;
     };
-    ownershipChain: Array<{
-      sector: string;
-      ownerId: string;
-      backupId: string;
-      escalationPath: string[];
-    }>;
-    activeRisks: Array<{
-      cardId: string;
-      description: string;
-      mitigationStrategy: string;
-      probability: number;
-      impact: number;
-    }>;
+    ownershipChain: Array<{ sector: string; ownerId: string; backupId: string; escalationPath: string[]; }>;
+    activeRisks: Array<{ cardId: string; description: string; mitigationStrategy: string; probability: number; impact: number; }>;
   }
 
   /**
-   * AGENTIC SKILL MANIFEST (THE LAW OF CAPABILITY)
+   * AGENTIC SKILL MANIFEST
    */
   export const SkillManifestSchema = z.object({
-    id: z.string().describe("Unique identifier (e.g., 'omc.skill.audit')"),
-    skill: z.string().min(1).max(100).describe("Human-readable title"),
-    version: z.string().regex(/^\d+\.\d+\.\d+$/).describe("Semver"),
-    description: z.string().min(10).describe("Prompt instructions"),
-    entry_point: z.string().min(1).describe("Execution target path"),
-    tools: z.array(z.string()).default([]).describe("MCP tools"),
+    id: z.string(),
+    skill: z.string(),
+    version: z.string(),
+    description: z.string(),
+    entry_point: z.string(),
+    tools: z.array(z.string()),
     category: z.enum(["governance", "orchestration", "synthesis", "execution", "utility"]),
-    isArmed: z.boolean().default(false).describe("Requires ARMED gate activation")
+    isArmed: z.boolean().default(false)
   });
 
   export type SkillManifest = z.infer<typeof SkillManifestSchema>;
 
   /**
-   * PHYSICS THRESHOLD CONTRACT (THE VAGUS NERVE)
+   * VAMPIRE DNA (SUCCESS ANCHORING)
+   * Canonical patterns extracted from the top 1% all-time games.
+   */
+  export const VampireDnaSchema = z.object({
+    source_rank: z.number().describe("Percentage rank of the source game (e.g., 0.01 for top 1%)"),
+    structural_dna: z.object({
+      ast_node_count: z.number(),
+      complexity_index: z.number(),
+      pattern_signatures: z.array(z.string()).describe("List of identified high-performance logic patterns")
+    }),
+    canonical_mapping: z.record(z.string()).describe("Maps 'Slop' patterns to 'Vampire' successes")
+  });
+
+  export type VampireDna = z.infer<typeof VampireDnaSchema>;
+
+  /**
+   * PHYSICS THRESHOLD CONTRACT
    */
   export const PhysicsThresholdSchema = z.object({
-    id: z.string().describe("Unique physics profile identifier"),
-    maxVelocity: z.number().min(0).max(1).default(0.20).describe("Max allowed % change per mutation"),
-    minSignificance: z.number().min(0).max(1).default(0.05).describe("P-value stability boundary"),
-    driftThreshold: z.number().int().min(1).default(5).describe("Consecutive directional mutations before warning")
+    id: z.string(),
+    maxVelocity: z.number(),
+    minSignificance: z.number(),
+    driftThreshold: z.number()
   });
 
-  export type PhysicsThreshold = z.infer<typeof PhysicsThresholdSchema>;
-
   /**
-   * HEURISTIC SAFETY (PHYLOGENETIC SIGNATURES)
-   * Prevents MCP hijacking by validating the lineage of agentic intent.
+   * HEURISTIC SAFETY
    */
   export const HeuristicSafetySchema = z.object({
-    provenanceHash: z.string().describe("SHA-256 hash of the ancestral prompt/instruction set"),
-    intentSignature: z.string().describe("Mathematical vector representing the authorized mission scope"),
-    maxEntropy: z.number().min(0).max(1).default(0.15).describe("Max allowed deviation from mission-aligned logic")
+    provenanceHash: z.string(),
+    intentSignature: z.string(),
+    maxEntropy: z.number()
   });
-
-  export type HeuristicSafety = z.infer<typeof HeuristicSafetySchema>;
-
-  /**
-   * MEMORY PALACE SPATIAL INDEXING
-   */
-  export interface MemoryPalaceIndex {
-    root: string;
-    rooms: Array<{
-      id: string;
-      label: string;
-      slots: string[];
-      integrity: number;
-    }>;
-  }
-
-  /**
-   * EXECUTION & DEPENDENCIES
-   */
-  export interface ExecutionLogic {
-    timeline: {
-      startDate: string;
-      currentPhase: string;
-      milestones: Array<{
-        name: string;
-        dueDate: string;
-        isCriticalPath: boolean;
-      }>;
-    };
-    dependencyGraph: {
-      nodes: Array<{
-        id: string;
-        type: 'Service' | 'Module' | 'Contract' | 'PalaceRoom' | 'Skill' | 'PhysicsProfile' | 'SafetyCheck';
-        dependencies: string[];
-      }>;
-    };
-  }
 
   /**
    * THE CANONICAL PAYLOAD
    */
   export interface IngestionPayload {
-    version: "3.5.0";
+    version: "3.6.0";
     timestamp: string;
     project: "Roblox Game Automation Pipeline";
-    architecture: "Diamond Stable / OMC / MemPalace";
+    architecture: "Diamond Stable / OMC / MemPalace / Vampire";
     researchData: {
       phaseGates: PhaseGateSystem;
       riskManagement: RiskMitigation;
-      spatialMemory: MemoryPalaceIndex;
+      spatialMemory: { root: string; rooms: Array<{ id: string; label: string; slots: string[]; integrity: number; }>; };
       skills: SkillManifest[];
-      physics: PhysicsThreshold[];
-      safety: HeuristicSafety;
-      execution: ExecutionLogic;
+      physics: z.infer<typeof PhysicsThresholdSchema>[];
+      safety: z.infer<typeof HeuristicSafetySchema>;
+      vampire_context: VampireDna[];
+      execution: { timeline: any; dependencyGraph: any; };
     };
     systemInstructions: string;
   }
 }
 
 /**
- * INSTANTIATED RESEARCH DATA
+ * INSTANTIATED RESEARCH DATA (THE BRAIN LOADOUT)
  */
 export const ResearchInference: AMEM.IngestionPayload = {
-  version: "3.5.0",
+  version: "3.6.0",
   timestamp: new Date().toISOString(),
   project: "Roblox Game Automation Pipeline",
-  architecture: "Diamond Stable / OMC / MemPalace",
+  architecture: "Diamond Stable / OMC / MemPalace / Vampire",
   researchData: {
     phaseGates: {
       gauges: {
@@ -187,8 +130,7 @@ export const ResearchInference: AMEM.IngestionPayload = {
         coverage: { value: 42, status: 'RED', target: 90 }
       },
       metrics: [
-        { id: "M-001", label: "Cycle Time", currentValue: "4.2d", variance: "+0.5d" },
-        { id: "M-002", label: "Defect Density", currentValue: "1.2/kLoC", variance: "-0.2" }
+        { id: "M-001", label: "Cycle Time", currentValue: "4.2d", variance: "+0.5d" }
       ]
     },
     riskManagement: {
@@ -196,63 +138,52 @@ export const ResearchInference: AMEM.IngestionPayload = {
         triggers: [
           { violationType: 'IllegalGlobal', level: AMEM.RiskLevel.HIGH, action: 'HardBlock' },
           { violationType: 'MemoryViolation', level: AMEM.RiskLevel.CRITICAL, action: 'Quarantine' },
-          { violationType: 'PhysicsBreach', level: AMEM.RiskLevel.HIGH, action: 'HardBlock' },
           { violationType: 'ProvenanceFailure', level: AMEM.RiskLevel.CRITICAL, action: 'Quarantine' }
         ]
       },
-      ownershipChain: [
-        { sector: "Core State", ownerId: "Quartermaster", backupId: "Sentry-AI", escalationPath: ["Tech-Lead"] }
-      ],
-      activeRisks: [
-        { cardId: "R-09", description: "Superbullet Hallucination", mitigationStrategy: "Zod ScriptAuditSchema validation", probability: 0.8, impact: 4 }
-      ]
+      ownershipChain: [{ sector: "Core State", ownerId: "Quartermaster", backupId: "Refiner-Agent", escalationPath: ["Tech-Lead"] }],
+      activeRisks: [{ cardId: "R-09", description: "Superbullet Hallucination", mitigationStrategy: "Vampire DNA cross-referencing", probability: 0.8, impact: 4 }]
     },
     skills: [
       {
-        id: "omc.skill.audit",
-        skill: "The Sentry Auditor",
-        version: "1.0.0",
-        description: "Evaluates Luau AST for global leaks and legacy yields.",
-        entry_point: "src/sentry/auditor.ts",
-        category: "governance",
-        tools: ["luaparse", "zod-validator"],
-        isArmed: false
+        id: "omc.skill.refine",
+        skill: "The Diamond Refiner",
+        version: "1.5.0",
+        description: "Uses Vampire DNA to rehabilitate Sentry rejections into Canonical Law.",
+        entry_point: "src/agents/refiner.ts",
+        category: "execution",
+        tools: ["vampire-harvester", "luaparse", "mempalace-mapper"],
+        isArmed: true
       }
     ],
-    physics: [
+    vampire_context: [
       {
-        id: "omc.physics.standard",
-        maxVelocity: 0.20,
-        minSignificance: 0.05,
-        driftThreshold: 5
+        source_rank: 0.01,
+        structural_dna: {
+          ast_node_count: 12500,
+          complexity_index: 0.42,
+          pattern_signatures: ["ReactiveStateSignal", "ImmutableDataStoreWrapper"]
+        },
+        canonical_mapping: {
+          "_G": "OMC.State",
+          "wait": "task.wait"
+        }
       }
     ],
-    safety: {
-      provenanceHash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", // Mock root hash
-      intentSignature: "V(0.85, 0.12, 0.03)", // Mission alignment vector
-      maxEntropy: 0.15
-    },
     spatialMemory: {
       root: "OMC-MAIN-PALACE",
-      rooms: [
-        { id: "ROOM-01", label: "PlayerState", slots: ["Health", "Score", "Location"], integrity: 0.95 }
-      ]
+      rooms: [{ id: "ROOM-01", label: "PlayerState", slots: ["Health", "Score"], integrity: 0.95 }]
+    },
+    physics: [{ id: "omc.physics.standard", maxVelocity: 0.20, minSignificance: 0.05, driftThreshold: 5 }],
+    safety: {
+      provenanceHash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      intentSignature: "V(0.92, 0.05, 0.03)", // High alignment with Refinement protocol
+      maxEntropy: 0.15
     },
     execution: {
-      timeline: {
-        startDate: "2026-03-01",
-        currentPhase: "Ingestion Refinement",
-        milestones: [
-          { name: "Sentry V3 Deployment", dueDate: "2026-04-15", isCriticalPath: true }
-        ]
-      },
-      dependencyGraph: {
-        nodes: [
-          { id: "omc.physics.standard", type: "PhysicsProfile", dependencies: [] },
-          { id: "omc.skill.audit", type: "Skill", dependencies: ["omc.physics.standard"] }
-        ]
-      }
+      timeline: { currentPhase: "Refinement Implementation" },
+      dependencyGraph: { nodes: [{ id: "omc.skill.refine", type: "Skill", dependencies: ["VampireDnaSchema"] }] }
     }
   },
-  systemInstructions: "Integrate research findings. Enforce MemPalace spatial boundaries. Reject code compromising Palace integrity, exceeding PhysicsThreshold limits, or failing Provenance/Intent signature validation."
+  systemInstructions: "Cross-reference all Refinement logic with Vampire Context. If a fix violates PhysicsThreshold or lacks a ProvenanceSignature, quarantine immediately."
 };
