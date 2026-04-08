@@ -1,9 +1,9 @@
 /**
  * OPEN MODEL CONTRACTS (OMC) - A-MEM INGESTION PAYLOAD
- * Version: 3.6.0 - "The Vampire Refinement"
+ * Version: 3.7.0 - "The Immune System Handshake"
  * Integration: MemPalace, Skill Manifests, Physics Thresholds, Heuristic Safety, & Vampire DNA.
  * Purpose: Provides a canonical, type-safe structure for LLM ingestion.
- * Added: Vampire DNA mapping for cross-referencing successful game logic.
+ * Added: Explicit IntentSignature verification for refined canonical bypass.
  */
 
 import { z } from "zod";
@@ -32,7 +32,7 @@ export namespace AMEM {
   export interface RiskMitigation {
     escalationMatrix: {
       triggers: Array<{
-        violationType: 'IllegalGlobal' | 'MemoryViolation' | 'StructuralSlop' | 'RegistryMismatch' | 'PhysicsBreach' | 'ProvenanceFailure';
+        violationType: 'IllegalGlobal' | 'MemoryViolation' | 'StructuralSlop' | 'RegistryMismatch' | 'PhysicsBreach' | 'ProvenanceFailure' | 'SignatureMismatch';
         level: RiskLevel;
         action: 'Warning' | 'Quarantine' | 'HardBlock';
       }>;
@@ -59,7 +59,6 @@ export namespace AMEM {
 
   /**
    * VAMPIRE DNA (SUCCESS ANCHORING)
-   * Canonical patterns extracted from the top 1% all-time games.
    */
   export const VampireDnaSchema = z.object({
     source_rank: z.number().describe("Percentage rank of the source game (e.g., 0.01 for top 1%)"),
@@ -84,11 +83,11 @@ export namespace AMEM {
   });
 
   /**
-   * HEURISTIC SAFETY
+   * HEURISTIC SAFETY (THE IMMUNE SYSTEM)
    */
   export const HeuristicSafetySchema = z.object({
     provenanceHash: z.string(),
-    intentSignature: z.string(),
+    intentSignature: z.string().describe("Mathematical vector for 'Internal Immune System' verification"),
     maxEntropy: z.number()
   });
 
@@ -96,7 +95,7 @@ export namespace AMEM {
    * THE CANONICAL PAYLOAD
    */
   export interface IngestionPayload {
-    version: "3.6.0";
+    version: "3.7.0";
     timestamp: string;
     project: "Roblox Game Automation Pipeline";
     architecture: "Diamond Stable / OMC / MemPalace / Vampire";
@@ -118,7 +117,7 @@ export namespace AMEM {
  * INSTANTIATED RESEARCH DATA (THE BRAIN LOADOUT)
  */
 export const ResearchInference: AMEM.IngestionPayload = {
-  version: "3.6.0",
+  version: "3.7.0",
   timestamp: new Date().toISOString(),
   project: "Roblox Game Automation Pipeline",
   architecture: "Diamond Stable / OMC / MemPalace / Vampire",
@@ -138,11 +137,12 @@ export const ResearchInference: AMEM.IngestionPayload = {
         triggers: [
           { violationType: 'IllegalGlobal', level: AMEM.RiskLevel.HIGH, action: 'HardBlock' },
           { violationType: 'MemoryViolation', level: AMEM.RiskLevel.CRITICAL, action: 'Quarantine' },
-          { violationType: 'ProvenanceFailure', level: AMEM.RiskLevel.CRITICAL, action: 'Quarantine' }
+          { violationType: 'ProvenanceFailure', level: AMEM.RiskLevel.CRITICAL, action: 'Quarantine' },
+          { violationType: 'SignatureMismatch', level: AMEM.RiskLevel.CRITICAL, action: 'HardBlock' }
         ]
       },
       ownershipChain: [{ sector: "Core State", ownerId: "Quartermaster", backupId: "Refiner-Agent", escalationPath: ["Tech-Lead"] }],
-      activeRisks: [{ cardId: "R-09", description: "Superbullet Hallucination", mitigationStrategy: "Vampire DNA cross-referencing", probability: 0.8, impact: 4 }]
+      activeRisks: [{ cardId: "R-09", description: "Superbullet Hallucination", mitigationStrategy: "Vampire DNA + IntentSignature Bypass", probability: 0.8, impact: 4 }]
     },
     skills: [
       {
@@ -164,10 +164,7 @@ export const ResearchInference: AMEM.IngestionPayload = {
           complexity_index: 0.42,
           pattern_signatures: ["ReactiveStateSignal", "ImmutableDataStoreWrapper"]
         },
-        canonical_mapping: {
-          "_G": "OMC.State",
-          "wait": "task.wait"
-        }
+        canonical_mapping: { "_G": "OMC.State", "wait": "task.wait" }
       }
     ],
     spatialMemory: {
@@ -177,7 +174,7 @@ export const ResearchInference: AMEM.IngestionPayload = {
     physics: [{ id: "omc.physics.standard", maxVelocity: 0.20, minSignificance: 0.05, driftThreshold: 5 }],
     safety: {
       provenanceHash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      intentSignature: "V(0.92, 0.05, 0.03)", // High alignment with Refinement protocol
+      intentSignature: "V(0.92, 0.05, 0.03)", // THE IMMUNE SYSTEM SIGNATURE
       maxEntropy: 0.15
     },
     execution: {
@@ -185,5 +182,5 @@ export const ResearchInference: AMEM.IngestionPayload = {
       dependencyGraph: { nodes: [{ id: "omc.skill.refine", type: "Skill", dependencies: ["VampireDnaSchema"] }] }
     }
   },
-  systemInstructions: "Cross-reference all Refinement logic with Vampire Context. If a fix violates PhysicsThreshold or lacks a ProvenanceSignature, quarantine immediately."
+  systemInstructions: "Cross-reference all Refinement logic with Vampire Context. If a fix violates PhysicsThreshold or lacks a ProvenanceSignature, quarantine immediately. MANDATORY: All Refined Canonical output MUST include the header '-- IntentSignature: V(0.92, 0.05, 0.03) [Internal Immune System]' to verify legitimacy."
 };
