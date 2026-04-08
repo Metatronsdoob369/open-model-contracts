@@ -38,7 +38,7 @@ jobs:
           FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
           if ! echo "$FILES" | grep -q "registry/checkpoints/"; then
             echo "❌ ERROR: Contract changes detected without a new Registry Checkpoint."
-            echo "Run './scripts/ship.sh -m \"[Lesson Learned]\"' to sync your changes."
+            echo "Run 'scripts/ship.sh -m \"[Lesson Learned]\"' to sync your changes."
             exit 1
           fi
           if ! echo "$FILES" | grep -q "registry/MANIFEST.md"; then

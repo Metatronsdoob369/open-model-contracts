@@ -10,13 +10,15 @@ import { ResearchInference } from "../spec/contracts/v3/amem-payload.js";
 const execAsync = promisify(exec);
 const CanonicalSchema = OMC_REGISTRY["omc.v3.script-audit"]?.schema || z.any();
 
-// Map directly to Google Drive if environment variable is set, otherwise default to local /incoming
+// Map directly to Google Drive 'Concepts' folder for live fire drops
+const GDRIVE_CONCEPTS_PATH = "/Users/joewales/Library/CloudStorage/GoogleDrive-phooten4@gmail.com/My Drive/Roblox plan/Concepts";
+
 const INCOMING_DIR = process.env.GDRIVE_PATH 
     ? path.resolve(process.env.GDRIVE_PATH) 
-    : path.resolve(process.cwd(), "incoming");
+    : GDRIVE_CONCEPTS_PATH;
 
-const PROCESSED_DIR = path.join(INCOMING_DIR, "processed");
-const DISSECTIONS_DIR = path.join(INCOMING_DIR, "dissections");
+const PROCESSED_DIR = path.resolve(process.cwd(), "incoming/processed");
+const DISSECTIONS_DIR = path.resolve(process.cwd(), "incoming/dissections");
 const CANONICAL_DIR = path.resolve(process.cwd(), "src/canonical");
 const TEMP_AUDIT_DIR = path.resolve(process.cwd(), ".temp_audit");
 
@@ -141,10 +143,39 @@ watcher.on('add', async (filePath) => {
          return; 
        }
     }
+    // New: Handshake for raw .lua drops
+    else if (fileName.endsWith(".lua")) {
+        console.log(`[Sentry Watcher] 📜 Raw Lua script detected. Wrapping for audit...`);
+        const rawContent = await fs.readFile(filePath, "utf-8");
+        const payload = {
+            id: `manual-drop-${Date.now()}`,
+            type: "script",
+            code: rawContent,
+            targetEnvironment: "Server",
+            expectedSlots: ["OMC.State.Core"]
+        };
+        const violations = auditPayload(payload, fileName);
+        if (violations.length > 0) {
+            allViolations.push(...violations);
+        } else {
+            successMoves.push({from: filePath, json: payload});
+        }
+    }
+    // Catch-All: Security Intercept for unrecognized logic carriers
+    else {
+        console.warn(`[Sentry Watcher] ⚠️ SECURITY ALERT: Unrecognized asset detected: ${fileName}`);
+        allViolations.push({
+            script: fileName,
+            line: 0,
+            type: "SecurityViolation",
+            message: "Unrecognized logic carrier. The system only accepts Signed Contracts (.json), Binary Places (.rbxl), or Raw Scripts (.lua).",
+            snippet: "EXTENSION_REJECTED"
+        });
+    }
 
     // Phase 2: Consolidated Reporting
     if (allViolations.length > 0) {
-      console.error(`[Sentry Watcher] ⚠️ CONTRACT VIOLATION: ${fileName} rejected (Total Violations: ${allViolations.length})`);
+       console.error(`[Sentry Watcher] ⚠️ CONTRACT REJECTED: ${fileName} failed security audit.`);
       
       const report = {
         Status: "REJECTED",

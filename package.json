@@ -26,6 +26,10 @@
     "bridge:start": "npm run start --prefix server/bridge",
     "bridge:dev": "npm run dev --prefix server/bridge",
     "gen:schema": "tsx scripts/export-json-schema.ts",
+    "dashboard:start": "tsx dashboard/server.ts",
+    "demo:trace": "tsx scripts/trace-demo.ts",
+    "guard": "tsx scripts/sentry-watcher.ts",
+    "dashboard": "tsx dashboard/server.ts",
     "check:schema": "npm run gen:schema && git diff --exit-code spec/json-schema/",
     "prepare": "husky"
   },
