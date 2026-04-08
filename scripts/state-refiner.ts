@@ -75,6 +75,7 @@ watcher.on('add', async (reportPath) => {
 -- Refined by State Refiner Agent
 -- Original: ${dropFile}
 -- Safety: Enforced
+-- IntentSignature: V(0.92, 0.05, 0.03) [Internal Immune System]
 
 local CanonicalModule = {}
 
