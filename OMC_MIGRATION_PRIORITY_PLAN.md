@@ -9,7 +9,7 @@
 ---
 
 ## Phase 1: Extract Core Constitutional Blueprints
-**Goal:** Rip the remaining "Law" out of the physical garage so that the Informant MCP has complete sovereignty.
+**Goal:** Rip the remaining "Law" out of the physical garage so that the Informant MCP has complete autonomy.
 
 1.  **Migrate the `ai-agent-blueprint.md`**
     *   *Action:* Move from `domicile_live/` to `open-model-contracts/spec/domicile-governance/admission/`.

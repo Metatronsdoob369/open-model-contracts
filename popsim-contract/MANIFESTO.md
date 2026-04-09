@@ -28,5 +28,5 @@ The project utilizes a **Hybrid Loader Architecture** to split level generation 
 *   `npx tsx src/tests/hotfix_pusher.ts`: Direct architectural injection.
 
 ---
-### ⚖️ *Sovereignty via Open Model Contracts*
+### ⚖️ *Autonomy via Open Model Contracts*
 *The city was not built; it was Manifested.*

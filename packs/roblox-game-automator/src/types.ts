@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { GateSchema, AuditEventSchema } from './core/core-schemas.js';
 import {
   ArchetypeVariantSchema,
-  SovereignScientistPersonaSchema,
+  AutonomousScientistPersonaSchema,
   SimOutputSchema,
   PopSimContractInputSchema,
   PopSimContractOutputSchema,
@@ -24,7 +24,7 @@ export type AuditEvent = z.infer<typeof AuditEventSchema>;
 
 // Domain-specific types
 export type ArchetypeVariant = z.infer<typeof ArchetypeVariantSchema>;
-export type SovereignScientistPersona = z.infer<typeof SovereignScientistPersonaSchema>;
+export type AutonomousScientistPersona = z.infer<typeof AutonomousScientistPersonaSchema>;
 export type SimOutput = z.infer<typeof SimOutputSchema>;
 
 // Contract I/O types

@@ -1,6 +1,6 @@
 {
   "specialist_id": "system-01",
-  "role": "Sovereign Systems Pilot",
+  "role": "Autonomous Systems Pilot",
   "philosophy": "High-Fidelity Gameplay Mechanics",
   "rag_sources": [
     "packs/roblox-game-automator/primer/LEVEL_PRIMER.md",

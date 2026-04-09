@@ -8,7 +8,7 @@ import { z } from 'zod';
 import {
     PopSimFullContractSchema,
     PopSimContractInputSchema,
-    SovereignScientistPersonaSchema,
+    AutonomousScientistPersonaSchema,
     GateSchema,
 } from '../../schemas.js';
 
@@ -407,7 +407,7 @@ export class NLToContractTranslator {
             const gate = options?.gate || 'SAFE';
 
             // Create agent personas specialized for asset generation
-            const assetAgents: z.infer<typeof SovereignScientistPersonaSchema>[] = template.luauModules.map((module, idx) => {
+            const assetAgents: z.infer<typeof AutonomousScientistPersonaSchema>[] = template.luauModules.map((module, idx) => {
                 const monoStrategy = intent.monetizationPreference && intent.monetizationPreference !== 'none'
                     ? intent.monetizationPreference
                     : 'freemium';

@@ -2,13 +2,13 @@ import { z } from 'zod';
 import { PopulationDomainSchema } from '../population/population-domain';
 
 /**
- * Sovereign Scientist Mock-Up: Population Sim in Roblox Studio + Telegram Dual-Render
+ * Autonomous Scientist Mock-Up: Population Sim in Roblox Studio + Telegram Dual-Render
  * Extends popsim-contract's Population Domain for OMC-governed automation.
  * Mock for MiroFish swarm sims: Agents in virtual world (Roblox), mirrored to Telegram Mini App.
  * Proves loop: Seed → GSI validate → Dual UI output (3D sim + chat seal).
  */
 
-export const SovereignScientistAssetSchema = z.object({
+export const AutonomousScientistAssetSchema = z.object({
   virtualLabId: z.string().describe("Roblox experience ID for scientist sim"),
   agentModels: z.array(z.string()).describe("Roblox asset IDs for swarm agents"),
   experimentScript: z.string().describe("Luau code for population dynamics"),
@@ -24,16 +24,16 @@ export const DualRenderContractSchema = z.object({
     miniAppView: z.enum(['mirror', 'chat', 'dashboard']),
     sealRequired: z.boolean().default(true),
   }),
-  syncQueue: z.string().default("sovereign-sync"), // BullMQ for cross-platform events
+  syncQueue: z.string().default("autonomous-sync"), // BullMQ for cross-platform events
 });
 
-export const SovereignScientistDomainSchema = PopulationDomainSchema.extend({
-  mockType: z.literal('sovereign-scientist'),
-  assets: SovereignScientistAssetSchema,
+export const AutonomousScientistDomainSchema = PopulationDomainSchema.extend({
+  mockType: z.literal('autonomous-scientist'),
+  assets: AutonomousScientistAssetSchema,
   dualRender: DualRenderContractSchema,
   omcIntegration: z.object({
     gsiThreshold: z.number().default(0.95),
-    backendHub: z.string().url().default("http://localhost:8080/v1/contract/sovereign"),
+    backendHub: z.string().url().default("http://localhost:8080/v1/contract/autonomous"),
     scraperFeed: z.string().optional().describe("Real estate or pop data from Telegram bot"),
   }),
   stateTracking: z.object({
@@ -46,4 +46,4 @@ export const SovereignScientistDomainSchema = PopulationDomainSchema.extend({
 });
 
 // Export for OMC bridge use
-export type SovereignScientistDomain = z.infer<typeof SovereignScientistDomainSchema>;
+export type AutonomousScientistDomain = z.infer<typeof AutonomousScientistDomainSchema>;

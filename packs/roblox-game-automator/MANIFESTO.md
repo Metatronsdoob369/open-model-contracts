@@ -13,7 +13,7 @@ The project utilizes a **Hybrid Loader Architecture** to split level generation 
 ## 🌉 Key Components
 *   **Bridge Server (Node.js)**: The central escrow for AI-generated Luau modules.
 *   **Hybrid Loader (Luau)**: A "Bulletproof" Bypass script for Roblox that executes code directly in memory without security restrictions.
-*   **Metropolis Primer (JSON)**: The "Sovereign Document" that defines the level's theme, palette, and lighting before manifestation.
+*   **Metropolis Primer (JSON)**: The "Canonical Document" that defines the level's theme, palette, and lighting before manifestation.
 
 ## 🏮 Active Mission: Chaos Metropolis
 *   **Contract ID**: `72ff90e9-a3fa-4012-8a07-bbb65e76f16f`
@@ -28,5 +28,5 @@ The project utilizes a **Hybrid Loader Architecture** to split level generation 
 *   `npx tsx src/tests/hotfix_pusher.ts`: Direct architectural injection.
 
 ---
-### ⚖️ *Sovereignty via Open Model Contracts*
+### ⚖️ *Autonomy via Open Model Contracts*
 *The city was not built; it was Manifested.*

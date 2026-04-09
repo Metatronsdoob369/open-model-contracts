@@ -13,13 +13,9 @@ The highest-degree concepts that bind the Open Model Contracts system together:
 ## 🕸️ Community Clusters
 *Clustered via Leiden algorithm based on edge density.*
 
-### Cluster 0: The Vagus Nerve (Physics & Heuristics)
-**Nodes:** `PhysicsThresholdSchema`, `HeuristicSafetySchema`, `maxVelocity`, `intentSignature`, `provenanceHash`
-**Theme:** This cluster entirely isolates runtime physics limits from prompt injection defenses. It is the mathematical immune system.
-
-### Cluster 1: The Frontier Law (Sentry Watcher)
-**Nodes:** `sentry-watcher.ts`, `luaparse`, `chokidar`, `Argon`, `OMC_REGISTRY`
-**Theme:** Focuses exclusively on external system ingestion. It acts as the border patrol for incoming drops from the field (Superbullet `.rbxlx` files).
+### Cluster 2: The Circadian Life-Cycle (Synaptic Memory)
+**Nodes:** `DREAM_CYCLE.md`, `dream-cycle.sh`, `SynapticPruningEngine`, `MemoryLifecycleState`, `CIRCADIAN_LOG.md`, `VampireDnaSchema`
+**Theme:** Biological self-improvement. This cluster manages the transition from short-term "Garage" logic to long-term "Canonical" law. It is the "Brain Tissue" of the system.
 
 ## ⚡ Surprising Connections
 
@@ -29,6 +25,11 @@ The highest-degree concepts that bind the Open Model Contracts system together:
 * **`ROOM-01: PlayerState` ↔ `AMEM.RiskLevel.CRITICAL`**
   *Why:* If code modifies `PlayerState` directly without validating against the MemPalace integrity bounds, the Risk Mitigation matrix automatically tags it as a `MemoryViolation` and enforces a `Quarantine`. 
 
+* **`dream-cycle.sh` (The Garage) ↔ `VampireDnaSchema` (The DNA)**
+  *Why:* Nightly reflection isn't just for logging. Graph analysis proves that the **SynapticPruningEngine** extracts high-signal patterns from the Domicile "Archives" and injects them into the **Vampire DNA** mapping. This is how the system "Wakes up smarter"—by converting historical "Slop" into future "Law."
+
 ## 🗺️ Suggested Node Traversals
 1. Navigate from `sentry-watcher.ts` → `Dissection Report` → `AMEM.IngestionPayload` to understand the standard failure loop.
 2. Filter the graph by `isArmed: true` to visualize which skills require human approval.
+3. Trace from `CIRCADIAN_LOG.md` (Jan 17) → `SynapticPruningEngine` → `src/canonical` to see the complete "Handoff" from history to production.
+

@@ -1,5 +1,5 @@
 --[[
-    Sovereign Scientist — PopSim Demo
+    Autonomous Scientist — PopSim Demo
     This script demonstrates how to plug the "Popsim" domain into the bridge.
 --]]
 
@@ -8,7 +8,7 @@ local ContractBridge = require(script.Parent.Parent.robux_bridge)
 -- Set the domain context to "popsim"
 ContractBridge.CONFIG.DOMAIN = "popsim"
 
-print("🧪 Starting Sovereign Scientist Smoke Test...")
+print("🧪 Starting Autonomous Scientist Smoke Test...")
 
 -- Sample Population Simulation request
 local simRequest = {

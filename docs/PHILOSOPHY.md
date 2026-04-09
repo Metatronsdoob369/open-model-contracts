@@ -13,6 +13,6 @@ By wrapping execution in strict Zod schema contracts (like `omc.v3.specialist`):
 
 ## Domicile vs. OMC Separation
 - **Domicile Live:** The "Garage Workspace" and "Snake Skin". It contains the physical execution engines (Triad-GAT, Vagus Nerve, Memory). It is stateless regarding rules.
-- **Open-Model-Contracts:** The "Supreme Court" and "DNA". It contains the sovereign law, standard blueprints, and the Informant MCP that dynamically feeds rules to the garages.
+- **Open-Model-Contracts:** The "Supreme Court" and "DNA". It contains the canonical law, standard blueprints, and the Informant MCP that dynamically feeds rules to the garages.
 
 *Recorded during the OMC Architecture Migration Session - April 2026*

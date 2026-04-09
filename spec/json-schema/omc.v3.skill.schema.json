@@ -1,0 +1,77 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.skill.schema.json",
+  "$ref": "#/definitions/omc.v3.skill",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.skill": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "description": "Primary functional category determining runtime permissions",
+          "enum": [
+            "governance",
+            "orchestration",
+            "synthesis",
+            "execution",
+            "utility"
+          ],
+          "type": "string"
+        },
+        "description": {
+          "description": "Agentic prompt instructions or capability summary",
+          "minLength": 10,
+          "type": "string"
+        },
+        "entry_point": {
+          "description": "The execution target path (e.g., 'scripts/runner.ts' or 'SKILL.md')",
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique, url-safe identifier for the skill (e.g., 'omc.skill.audit')",
+          "type": "string"
+        },
+        "isArmed": {
+          "default": false,
+          "description": "Flags if the skill contains mutating tools that require ARMED gate activation",
+          "type": "boolean"
+        },
+        "skill": {
+          "description": "Human-readable title of the skill",
+          "maxLength": 100,
+          "minLength": 1,
+          "type": "string"
+        },
+        "tools": {
+          "default": [],
+          "description": "Array of dependent MCP tool strings or explicit executable capabilities",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "version": {
+          "description": "Strict semver versioning for the skill",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "skill",
+        "version",
+        "description",
+        "entry_point",
+        "category"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Canonical schema for a Domicile Agent Skill Manifest. Enforces tool boundaries, entry points, and admission gating.",
+  "title": "omc.v3.skill",
+  "x-omc-capabilities": [
+    "read",
+    "validate"
+  ],
+  "x-omc-version": "3.0.0"
+}

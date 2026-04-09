@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { GateSchema, ContractMetadataSchema, PlatformEconomicContextSchema } from './core/core-schemas.js';
-import { SovereignScientistPersonaSchema, PopSimContractInputSchema } from './domains/popsim/popsim-domain.js';
+import { AutonomousScientistPersonaSchema, PopSimContractInputSchema } from './domains/popsim/popsim-domain.js';
 
-export { GateSchema, ContractMetadataSchema, PlatformEconomicContextSchema, SovereignScientistPersonaSchema, PopSimContractInputSchema };
+export { GateSchema, ContractMetadataSchema, PlatformEconomicContextSchema, AutonomousScientistPersonaSchema, PopSimContractInputSchema };
 
 /**
  * POPSIM FULL CONTRACT SCHEMA
@@ -20,7 +20,7 @@ export const PopSimFullContractSchema = z.object({
             model: z.string(),
             temperature: z.number(),
         }).optional(),
-        agents: z.array(SovereignScientistPersonaSchema),
+        agents: z.array(AutonomousScientistPersonaSchema),
         interpopulationDynamics: z.array(z.any()).default([]),
         platformEconomics: PlatformEconomicContextSchema.optional(),
         crewConfig: z.object({

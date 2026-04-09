@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { GateSchema, AuditEventSchema, PlatformEconomicContextSchema } from '../../core/core-schemas';
 
 /**
- * POPSIM DOMAIN — The "Sovereign Scientist" Simulation Module.
+ * POPSIM DOMAIN — The "Autonomous Scientist" Simulation Module.
  * This is a plug-in module for the @popsim/contract SDK.
  */
 
@@ -14,9 +14,9 @@ export const ArchetypeVariantSchema = z.enum([
   'Skeptical_Archivist',
 ]);
 
-export const SovereignScientistPersonaSchema = z.object({
+export const AutonomousScientistPersonaSchema = z.object({
   id: z.string().uuid(),
-  label: z.string().default('Sovereign Frontier Hacker-Scientist'),
+  label: z.string().default('Autonomous Frontier Hacker-Scientist'),
   role: z.string().optional(),
   goal: z.string().optional(),
   backstory: z.string().optional(),

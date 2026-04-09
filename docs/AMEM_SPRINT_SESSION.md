@@ -1,4 +1,4 @@
-# 🧠 AMEM v3.5 & O.M.C. Sovereignty (Memory Session)
+# 🧠 AMEM v3.5 & O.M.C. Autonomy (Memory Session)
 *Date: 2026-04-08*
 
 ### 1. The Core Architecture Shift

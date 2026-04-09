@@ -20,6 +20,7 @@ import { ScriptAuditSchema } from "./v3/script-audit.js";
 import { AMEM, ResearchInference } from "./v3/amem-payload.js";
 import { SkillManifestSchema } from "./v3/skill.js";
 import { PhysicsThresholdSchema } from "./v3/physics-threshold.js";
+import { EveV2Schema } from "./v3/eve-v2.js";
 
 // ─── Registry Entry Type ──────────────────────────────────────────────────────
 
@@ -106,6 +107,14 @@ export const OMC_REGISTRY: Record<string, ContractEntry> = {
     description:
       "Defines the hard mathematical limits for execution mutation. Governs maxVelocity, minSignificance, and driftThresholds for the Domicile Vagus Nerve.",
     capabilities: ["read", "validate"],
+  },
+  "omc.v3.eve-v2": {
+    id: "omc.v3.eve-v2",
+    version: "2.0.0",
+    schema: EveV2Schema,
+    description:
+      "Canonical schema for the Eve_v2 SpectralGAT brain. Governs spectral thresholds, Roblox Luau admission rules, and Circadian pruning cycles.",
+    capabilities: ["read", "validate", "learn", "prune"],
   },
 } as const;
 

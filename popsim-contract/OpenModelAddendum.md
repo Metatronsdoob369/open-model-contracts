@@ -41,7 +41,7 @@ PopSimFullContractSchema (Schedule A)
 ├── contractMetadata          ← gate declaration, domicile, signedBy
 ├── config
 │   ├── llmConfig             ← provider, model, temperature
-│   ├── agents[]              ← SovereignScientistPersonaSchema[]
+│   ├── agents[]              ← AutonomousScientistPersonaSchema[]
 │   ├── interpopulationDynamics[]  ← trust levels, interaction patterns
 │   ├── crewConfig            ← process: hierarchical | sequential | swarm
 │   ├── dashboardIntegration  ← humanReviewRequired: true (non-negotiable)
@@ -71,7 +71,7 @@ ARMED operations that produce outputs with `riskScore >= maxRiskScoreBeforeFlag`
 ## Approved Use Cases
 
 - Internal scenario planning and capability horizon forecasting
-- Sovereign/ungoverned frontier agent swarm simulation with mandatory disclaimers
+- Autonomous/ungoverned frontier agent swarm simulation with mandatory disclaimers
 - AI capability red-teaming in isolated lab environments
 - 5-year research paradigm migration modeling
 - Interpopulation belief propagation and coalition dynamics research
@@ -93,7 +93,7 @@ ARMED operations that produce outputs with `riskScore >= maxRiskScoreBeforeFlag`
 
 MCP has been treated as a tool-calling interface. This project treats it as a governance substrate. The schema *is* the policy. Zod `.refine()` *is* the compliance check. The SAFE/ARMED gate *is* the access control layer. Nothing runs outside the contract.
 
-This package is proof that contract-first AI architecture scales to real domain complexity — sovereign agent swarms, multi-archetype populations, multi-round execution, risk-scored outputs, and auditable trails — without sacrificing the expressive power that makes the simulation valuable.
+This package is proof that contract-first AI architecture scales to real domain complexity — autonomous agent swarms, multi-archetype populations, multi-round execution, risk-scored outputs, and auditable trails — without sacrificing the expressive power that makes the simulation valuable.
 
 ---
 

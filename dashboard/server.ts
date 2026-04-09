@@ -84,7 +84,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-    console.log(`\n💎 OMC Sovereign Command Centre Online`);
+    console.log(`\n💎 OMC Autonomous Command Centre Online`);
     console.log(`📡 Dashboard: http://localhost:${PORT}`);
     console.log(`🧠 Monitoring Pipeline Telemetry...`);
 });

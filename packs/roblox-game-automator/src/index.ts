@@ -14,7 +14,7 @@ export {
 
 export {
   ArchetypeVariantSchema,
-  SovereignScientistPersonaSchema,
+  AutonomousScientistPersonaSchema,
   SimOutputSchema,
   PopSimContractInputSchema,
   PopSimContractOutputSchema,
@@ -85,7 +85,7 @@ export type {
   Gate,
   AuditEvent,
   ArchetypeVariant,
-  SovereignScientistPersona,
+  AutonomousScientistPersona,
   SimOutput,
   SimOutputType,
   PopSimContractInput,

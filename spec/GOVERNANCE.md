@@ -24,7 +24,7 @@
   "prime_directives": [
     "Ship at 80%",
     "Contract is Sovereign",
-    "Local Sovereignty",
+    "Local Autonomy",
     "Delegate the Chaos"
   ],
   "routing_rules": {
@@ -205,14 +205,14 @@ WHERE id = 'amendment-uuid';
     "prime_directives": [
       "MVP Protocol (80/20)",
       "Compliance Sovereign",
-      "Local Sovereignty"
+      "Local Autonomy"
     ]
   },
   "new_constitution": {
     "prime_directives": [
       "MVP Protocol (80/20)",
       "Compliance Sovereign",
-      "Local Sovereignty",
+      "Local Autonomy",
       "Delegate the Chaos" // NEW
     ]
   },

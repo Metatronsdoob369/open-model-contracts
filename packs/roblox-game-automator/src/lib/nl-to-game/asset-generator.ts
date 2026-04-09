@@ -8,7 +8,7 @@ import { z } from 'zod';
 import OpenAI from 'openai';
 import {
     PopSimFullContract,
-    SovereignScientistPersona,
+    AutonomousScientistPersona,
 } from '../../types.js';
 import { PopSimFullContractSchema } from '../../schemas.js';
 
@@ -475,7 +475,7 @@ export class AssetGeneratorSwarm {
      */
     private async generateModule(
         moduleName: string,
-        agent: SovereignScientistPersona,
+        agent: AutonomousScientistPersona,
         contractId: string
     ): Promise<z.infer<typeof GeneratedAssetSchema>> {
         const cleanModuleName = moduleName.replace('.lua', '');
