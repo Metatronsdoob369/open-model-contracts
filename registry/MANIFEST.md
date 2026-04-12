@@ -31,6 +31,12 @@ This registry tracks the evolution of our "contracts-first" game development—f
 | **PopSim Metropolis** | v1.0 | `popsim-contract` | 2026-04-05 | Sovereign metropolis governance & tag game. |
 | **Director-01 Swarm** | ALPHA | `tbd` | 2026-04-06 | Recursive autonomous asset manifestation. |
 
+## 🏛️ GOVERNANCE PROTOCOLS
+
+| Protocol Name | Version | status | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Roblox Training Protocol** | v1.0 | ✅ ARMED | Governs the 'Vampire' ingestion pipeline, enforcing Shatter Audits and SAFE/ARMED gating on Luau logic. |
+
 ---
 
 ## 🛠️ HOW TO ROLLBACK

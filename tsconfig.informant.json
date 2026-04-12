@@ -16,9 +16,9 @@
     "lib": ["ES2022"]
   },
   "include": [
-    "spec/contracts/**/*",
-    "src/informant/**/*",
-    "scripts/**/*"
+    "spec/contracts/index.ts",
+    "spec/contracts/v3/**/*",
+    "src/informant/**/*"
   ],
   "exclude": ["node_modules", "dist"]
 }

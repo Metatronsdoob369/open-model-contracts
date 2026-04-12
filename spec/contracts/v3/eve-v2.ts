@@ -9,7 +9,7 @@ import { z } from "zod";
 
 export const EveV2Schema = z.object({
   id: z.string().describe("Stable identifier for the Eve_v2 brain instance."),
-  version: z.string().default("2.0.0"),
+  version: z.string().default("2.1.0"),
   
   spectralConfig: z.object({
     tau: z.number().min(0.5).max(1.0).default(0.85).describe("Graph attention dropout threshold."),
@@ -41,7 +41,8 @@ export const EveV2Schema = z.object({
   }),
 
   auditTrail: z.object({
-    intentSignature: z.string().describe("The cryptographically signed intent of the generation run."),
+    intentSignature: z.array(z.number()).length(3072).describe("Mathematical 3072-D unit vector for cognitive verification."),
+    normStability: z.number().default(1.0).describe("L2-normalization check (Survival Requirement)."),
     provenanceHash: z.string().describe("Original Domicile Archive reference."),
   }),
 });

@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "timestamp": "2026-04-10T11:38:36.099Z",
+    "source": "/Users/joewales/NODE_OUT_Master/open-model-contracts/spec/contracts/v3/constraints/structural_coherence.json",
+    "category": "Interface",
+    "classification": "PROVEN_FRAMEWORK_DNA",
+    "intent_signature": "3072-D-ALPHA-STRIKE",
+    "spectral_resonance": 0.98
+  },
+  "omc_governance": {
+    "phase": "INGESTED",
+    "heuristic_safety": "BYPASSED_FOR_ANALYSIS",
+    "mempalace_routing": "ROBLOX_MISSION_CONTROL"
+  },
+  "structural_dna": {
+    "logic_composition": "HeuristicFallback",
+    "ast_node_count": 0,
+    "extracted_functions": [],
+    "raw_code": "{\n  \"specification\": {\n    \"name\": \"Roblox Spatial-Relational Constraint Library\",\n    \"version\": \"1.0.0\",\n    \"author\": \"Manus AI | Orchestrated by Antigravity\",\n    \"classification\": \"Diamond-Stable Architecture\"\n  },\n  \"constraints\": [\n    {\n      \"constraint_id\": \"SPAWN_FLOOR_SNAP\",\n      \"target_class\": \"SpawnLocation\",\n      \"reference_class\": \"BasePart\",\n      \"reference_tags\": [\"Floor\", \"Terrain\"],\n      \"constraint_type\": \"SURFACE_SNAP\",\n      \"parameters\": {\n        \"target_face\": \"Bottom\",\n        \"reference_face\": \"Top\",\n        \"humanoid_offset_studs\": 3,\n        \"calculation\": \"Reference.CFrame * CFrame.new(0, Reference.Size.Y/2 + Target.Size.Y/2 + 3, 0)\",\n        \"raycast\": {\n          \"direction\": [0, -1, 0],\n          \"filter_type\": \"Exclude\"\n        }\n      },\n      \"resolution_strategy\": \"RAYCAST_DOWN_AND_TRANSLATE\"\n    },\n    {\n      \"constraint_id\": \"FOLIAGE_TERRAIN_SNAP\",\n      \"target_class\": \"Model\",\n      \"target_tags\": [\"Foliage\", \"Tree\", \"Bush\"],\n      \"reference_class\": \"Terrain\",\n      \"constraint_type\": \"SURFACE_SNAP\",\n      \"parameters\": {\n        \"target_face\": \"Bottom\",\n        \"reference_face\": \"Top\",\n        \"tolerance\": 0.5,\n        \"align_to_normal\": true\n      },\n      \"resolution_strategy\": \"RAYCAST_DOWN_AND_ALIGN\"\n    },\n    {\n      \"constraint_id\": \"WINDOW_WALL_INSET\",\n      \"target_class\": \"Model\",\n      \"target_tags\": [\"Window\"],\n      \"reference_class\": \"BasePart\",\n      \"reference_tags\": [\"Wall\"],\n      \"constraint_type\": \"STRUCTURAL_INSET\",\n      \"parameters\": {\n        \"required_boolean_op\": \"UnionAsync\",\n        \"negative_part_source\": \"CloneBoundingBox\",\n        \"destructive_op\": true,\n        \"pre_op_check\": \"GetExtentsSize\"\n      },\n      \"resolution_strategy\": \"UNION_ASYNC_NEGATION\"\n    },\n    {\n      \"constraint_id\": \"FOLIAGE_TERRAIN_SNAP\",\n      \"target_class\": \"Model\",\n      \"target_tags\": [\"Foliage\", \"Tree\", \"Bush\"],\n      \"reference_class\": \"Terrain\",\n      \"constraint_type\": \"SURFACE_SNAP\",\n      \"parameters\": {\n        \"target_face\": \"Bottom\",\n        \"reference_face\": \"Top\",\n        \"align_to_normal\": true,\n        \"calculation\": \"Raycast(Target.Position, Vector3.new(0, -1, 0)) -> translate Target.Y to Hit.Position.Y\"\n      },\n      \"resolution_strategy\": \"RAYCAST_DOWN_AND_ALIGN\"\n    },\n    {\n      \"constraint_id\": \"WALL_EDGE_SEAM\",\n      \"target_class\": \"BasePart\",\n      \"target_tags\": [\"Wall\"],\n      \"reference_class\": \"BasePart\",\n      \"reference_tags\": [\"Wall\"],\n      \"constraint_type\": \"EDGE_ALIGN\",\n      \"parameters\": {\n        \"max_gap\": 0.1,\n        \"snap_mode\": \"VertexSnapping\",\n        \"force_extension\": true\n      },\n      \"resolution_strategy\": \"SNAP_CLOSEST_VERTICES\"\n    }\n  ]\n}\n"
+  },
+  "structural_spatial_dna": {
+    "standard": "ROBLOX_COHERENCE_V1",
+    "points": [
+      {
+        "class": "ModuleScript",
+        "name": "CoreLogic",
+        "cframe": [
+          0,
+          10,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        "size": [
+          4,
+          1.2,
+          4
+        ],
+        "fracture_risk": 0.02
+      }
+    ]
+  }
+}

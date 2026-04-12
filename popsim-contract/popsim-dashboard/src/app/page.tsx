@@ -4,6 +4,7 @@ import { Header } from '@/components/Header';
 import { PromptTerminal } from '@/components/PromptTerminal';
 import { SwarmHUD } from '@/components/SwarmHUD';
 import { AssetBridge } from '@/components/AssetBridge';
+import { SpectraRadar } from '@/components/SpectraRadar';
 import { connectSocket, disconnectSocket } from '@/lib/socket';
 
 export default function Dashboard() {
@@ -52,12 +53,15 @@ export default function Dashboard() {
           <PromptTerminal onResult={handleResult} />
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[400px]">
-             {activeRun ? (
+              {activeRun ? (
                 <>
                   <SwarmHUD runId={activeRun.runId} />
-                  <AssetBridge contractId={activeRun.contractId} status={hubStatus} />
+                  <SpectraRadar report={[]} />
+                  <div className="col-span-1 md:col-span-2">
+                    <AssetBridge contractId={activeRun.contractId} status={hubStatus} />
+                  </div>
                 </>
-             ) : (
+              ) : (
                 <div className="glass col-span-2 flex flex-col items-center justify-center p-12 text-center opacity-30 gap-6 border-dashed border-2">
                    <div className="w-16 h-16 rounded-full border-4 border-t-[#00e5ff] animate-spin border-[#00e5ff]/10" />
                    <p className="text-xl font-light tracking-widest uppercase">System Standby // Awaiting Command</p>

@@ -1,0 +1,37 @@
+{
+  "manifest_id": "METROPOLIS_ALPHA_001",
+  "sector": "Commerce_District_Alpha",
+  "math_standard": "TOPOLOGICAL_GEOMETRY_V1",
+  "entities": [
+    {
+      "name": "RetententionHub_Center",
+      "class": "SpawnLocation",
+      "cframe": "0, 3, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+      "math": "SPAWN_CLEARANCE_P1",
+      "resonance": 0.99
+    },
+    {
+      "name": "Retention_Target_01",
+      "class": "Part",
+      "cframe": "2.1, 3, 2.1, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+      "math": "GOLD_RATIO_SPIRAL (n=1)",
+      "resonance": 0.98
+    },
+    {
+      "name": "Retention_Target_02",
+      "class": "Part",
+      "cframe": "-4.2, 3, 0.5, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+      "math": "GOLD_RATIO_SPIRAL (n=2)",
+      "resonance": 0.98
+    },
+    {
+      "name": "StoreFront_Alpha",
+      "class": "Model",
+      "cframe": "20, 0, 20, 0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707",
+      "math": "DOT_PRODUCT_ALIGN (0.999)",
+      "resonance": 0.97
+    }
+  ],
+  "structural_integrity": "DIAMOND_STABLE",
+  "fractures": 0
+}

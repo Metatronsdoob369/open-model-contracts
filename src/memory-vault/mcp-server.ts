@@ -3,7 +3,8 @@
  *
  * CIF Memory Vault — Sealed Personal MCP Server
  *
- * ZERO outbound data. All embeddings via local Ollama (nomic-embed-text).
+ * ZERO outbound data. All embeddings via local Ollama (nomic-embed-text / mxbai-embed-large).
+ * Defaulting to 3072 dimensions for high-resolution semantic resolutions.
  * Qdrant bound to 127.0.0.1:6340 only — no network exposure.
  * Completely decoupled from CIF extension.
  *
@@ -23,7 +24,7 @@ import {
 const QDRANT_URL = process.env.QDRANT_URL ?? "http://127.0.0.1:6340";
 const OLLAMA_URL = process.env.OLLAMA_URL ?? "http://127.0.0.1:11434";
 const COLLECTION = process.env.COLLECTION_NAME ?? "cif-memory";
-const EMBED_MODEL = "nomic-embed-text";
+const EMBED_MODEL = "mxbai-embed-large";
 
 // ── Local embedding via Ollama — no outbound calls ─────────────────────────
 

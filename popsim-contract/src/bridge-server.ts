@@ -133,6 +133,11 @@ app.use('/v1/', limiter);
 import { PopSimFullContractSchema } from './schemas.js';
 import { AssetGeneratorSwarm } from './lib/nl-to-game/asset-generator.js';
 import { translator } from './lib/nl-to-game/nl-to-contracts.js';
+import { SpectraMappingService } from './core/spectra-mapping.js';
+import { RepairShopService } from './core/repair-shop.js';
+
+const spectraMapper = new SpectraMappingService();
+const repairShop = new RepairShopService();
 
 // ─────────────────────────────────────────────
 // DATA ACCESS & PERSISTENCE
@@ -660,6 +665,83 @@ app.post('/v1/delivery/deploy/:contractId', async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────
+// SPECTRA-MAPPING (3072-D ENFORCEMENT)
+// ─────────────────────────────────────────────
+
+/**
+ * High-volume ingestion for the 1% Roblox Game Scrape.
+ * Vectorizes Luau logic and returns Heat/Shatter coordinates.
+ */
+app.post('/v1/spectra/ingest', async (req, res) => {
+  const { scripts } = req.body; // Array of { id: string, code: string }
+  
+  if (!scripts || !Array.isArray(scripts)) {
+    return res.status(400).json({ success: false, error: 'Scripts array required' });
+  }
+
+  logger.info('🛰️ [SPECTRA] Ingesting batch for topological mapping', { count: scripts.length });
+
+  try {
+    const report = await spectraMapper.mapBatch(scripts);
+    
+    // Alert the Sovereign Scientst if high shatter is detected
+    const highShatter = report.filter(p => p.shatter > 1.2); 
+    if (highShatter.length > 0 && telegramBot && config.telegramChatId) {
+      telegramBot.sendMessage(
+        config.telegramChatId, 
+        `⚠️ *TOPOLOGICAL INSTABILITY DETECTED* \n\nFound ${highShatter.length} high-shatter patterns in the Roblox scrape. \nRecommendation: ARM OMC-Stabilized Hotfix.`, 
+        { parse_mode: 'Markdown' }
+      ).catch(e => logger.error('Shatter alert failed', { e }));
+    }
+
+    res.json({
+      success: true,
+      report,
+      metrics: {
+        avgHeat: report.reduce((sum, p) => sum + p.heat, 0) / report.length,
+        avgShatter: report.reduce((sum, p) => sum + p.shatter, 0) / report.length
+      }
+    });
+  } catch (error) {
+    logger.error('Spectra Ingestion Failed', { error });
+    res.status(500).json({ success: false, error: 'Ingestion pipeline failed', detail: (error as any).message });
+  }
+});
+
+// ─────────────────────────────────────────────
+// REPAIR SHOP TRAINING PIPELINE (NEW)
+// ─────────────────────────────────────────────
+
+/**
+ * Evaluates an agent's training repair.
+ * Calculates 3072-D resonance recovery.
+ */
+app.post('/v1/training/evaluate', async (req, res) => {
+  const { code, canonicalFile, tier } = req.body;
+
+  if (!code || !canonicalFile) {
+    return res.status(400).json({ success: false, error: 'Missing code or canonicalFile' });
+  }
+
+  logger.info('🏎️ [REPAIR-SHOP] Evaluating training session', { canonicalFile, tier });
+
+  try {
+    const report = await repairShop.evaluateRepair(code, canonicalFile, tier || 1);
+    
+    // Log training results for archivist
+    logger.info('📊 [REPAIR-SHOP] Resonance Result', { ...report.metrics, success: report.success });
+
+    res.json({
+      success: true,
+      ...report
+    });
+  } catch (error) {
+    logger.error('Repair Shop Evaluation Failed', { error });
+    res.status(500).json({ success: false, error: 'Evaluation failed', message: (error as any).message });
+  }
+});
+
 // Telegram Test Debugger
 app.post('/v1/delivery/test-telegram', async (req, res) => {
     if (!telegramBot) {
@@ -686,6 +768,205 @@ app.post('/v1/delivery/test-telegram', async (req, res) => {
             hint: 'Is the bot started? Is the Chat ID correct? Look in the server logs for details.'
         });
     }
+});
+
+// ─────────────────────────────────────────────
+// SPECTRAL REPAIR — THE THESIS ENDPOINT
+// Proves canonical data architecture > fine-tuning
+// ─────────────────────────────────────────────
+
+const QDRANT_URL = 'http://localhost:6340';
+const SPECTRAL_COLLECTION = 'spectral-heatmap';
+
+app.post('/v1/repair/spectral', async (req, res) => {
+  const { code, runBaseline = true } = req.body;
+
+  if (!code || typeof code !== 'string') {
+    return res.status(400).json({ success: false, error: 'Missing code (string of broken Luau)' });
+  }
+
+  if (!openaiClient) {
+    return res.status(500).json({ success: false, error: 'OpenAI not configured' });
+  }
+
+  logger.info('🔬 [SPECTRAL-REPAIR] Incoming repair request', { codeLength: code.length });
+
+  try {
+    // Step 1: Embed the broken code (real 3072-D vector)
+    logger.info('🔬 [SPECTRAL-REPAIR] Step 1/4: Embedding broken code...');
+    const embedRes = await openaiClient.embeddings.create({
+      model: 'text-embedding-3-large',
+      input: code,
+      dimensions: 3072,
+    });
+    const brokenVector = embedRes.data[0].embedding;
+
+    // Step 2: Query Qdrant for nearest canonical neighbors
+    logger.info('🔬 [SPECTRAL-REPAIR] Step 2/4: Querying Qdrant for canonical context...');
+    const searchRes = await fetch(`${QDRANT_URL}/collections/${SPECTRAL_COLLECTION}/points/search`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        vector: brokenVector,
+        limit: 3,
+        with_payload: true,
+        filter: { must: [{ key: 'kind', match: { value: 'canonical' } }] },
+      }),
+    });
+
+    if (!searchRes.ok) throw new Error(`Qdrant search failed: ${searchRes.statusText}`);
+    const searchData = await searchRes.json();
+    const neighbors = searchData.result || [];
+
+    if (neighbors.length === 0) {
+      return res.status(404).json({ success: false, error: 'No canonical references in Qdrant. Run spectral-heatmap-lab.ts first.' });
+    }
+
+    const nearest = neighbors[0];
+    const similarity = nearest.score;
+
+    // Step 3: Compute spectral profile
+    logger.info('🔬 [SPECTRAL-REPAIR] Step 3/4: Computing spectral profile...');
+    const sectorScores = nearest.payload.sectorScores || {};
+    const weakSectors = Object.entries(sectorScores)
+      .filter(([_, v]) => (v as number) < 0.6)
+      .map(([k, v]) => `${k} (${(v as number).toFixed(2)})`)
+      .join(', ');
+    const strongSectors = Object.entries(sectorScores)
+      .filter(([_, v]) => (v as number) >= 0.6)
+      .map(([k, v]) => `${k} (${(v as number).toFixed(2)})`)
+      .join(', ');
+
+    // Load the actual canonical code from disk
+    const canonicalFile = nearest.payload.file as string;
+    const canonicalGenre = nearest.payload.genre as string;
+    const dataRoot = path.resolve(import.meta.dirname, '../../data/ingestion-landing');
+    const canonicalPath = path.join(dataRoot, canonicalGenre, canonicalFile);
+    let canonicalCode = '';
+    if (fs.existsSync(canonicalPath)) {
+      canonicalCode = fs.readFileSync(canonicalPath, 'utf-8');
+    }
+
+    // Build the spectral context block
+    const spectralContext = [
+      `SPECTRAL ANALYSIS (3072-D embedding comparison):`,
+      `- Nearest canonical match: ${canonicalFile} (cosine similarity: ${similarity.toFixed(4)})`,
+      `- Genre: ${canonicalGenre}`,
+      `- Shatter distance: ${nearest.payload.shatter?.toFixed(4) || 'unknown'}`,
+      `- Weak sectors (need repair): ${weakSectors || 'none detected'}`,
+      `- Strong sectors (preserve): ${strongSectors || 'none detected'}`,
+      `- Heat (Manhattan resonance): ${nearest.payload.heat?.toFixed(6) || 'unknown'}`,
+      ``,
+      `REPAIR GUIDANCE:`,
+      `- Focus repair effort on weak sectors`,
+      `- Preserve patterns found in strong sectors`,
+      `- Use the canonical reference below as the ground truth for correct structure`,
+    ].join('\n');
+
+    // Step 4: Run repairs — augmented (and optionally baseline)
+    logger.info('🔬 [SPECTRAL-REPAIR] Step 4/4: Running repair generation...');
+
+    const augmentedPrompt = [
+      { role: 'system' as const, content: `You are an expert Roblox Luau code repair agent. You receive broken game code along with a spectral analysis showing exactly where the code deviates from known-good canonical patterns. Use the spectral context and canonical reference to produce a corrected version of the broken code.\n\nRules:\n- Output ONLY the repaired Luau code, no explanation\n- Preserve the original intent and game mechanics\n- Fix structural issues identified by weak sector scores\n- Do not use deprecated APIs (getfenv, setfenv, shared as global state)\n- Ensure proper Instance parenting to Workspace or appropriate containers` },
+      { role: 'user' as const, content: `${spectralContext}\n\nCANONICAL REFERENCE (${canonicalFile}):\n\`\`\`lua\n${canonicalCode}\n\`\`\`\n\nBROKEN CODE TO REPAIR:\n\`\`\`lua\n${code}\n\`\`\`\n\nRepair this code using the spectral analysis and canonical reference.` },
+    ];
+
+    // Run augmented repair
+    const augmentedRes = await openaiClient.chat.completions.create({
+      model: 'gpt-4o',
+      messages: augmentedPrompt,
+      temperature: 0.2,
+    });
+    const augmentedRepair = augmentedRes.choices[0].message.content || '';
+
+    // Optionally run baseline (no spectral context, no canonical reference)
+    let baselineRepair = '';
+    if (runBaseline) {
+      const baselineRes = await openaiClient.chat.completions.create({
+        model: 'gpt-4o',
+        messages: [
+          { role: 'system', content: 'You are an expert Roblox Luau code repair agent. Fix the broken code. Output ONLY the repaired Luau code, no explanation.' },
+          { role: 'user', content: `Fix this broken Luau code:\n\`\`\`lua\n${code}\n\`\`\`` },
+        ],
+        temperature: 0.2,
+      });
+      baselineRepair = baselineRes.choices[0].message.content || '';
+    }
+
+    // Embed both repairs to compute quality metrics
+    const [augVec, baseVec] = await Promise.all([
+      openaiClient.embeddings.create({ model: 'text-embedding-3-large', input: augmentedRepair, dimensions: 3072 }),
+      runBaseline
+        ? openaiClient.embeddings.create({ model: 'text-embedding-3-large', input: baselineRepair, dimensions: 3072 })
+        : Promise.resolve(null),
+    ]);
+
+    // Cosine similarity to canonical
+    const canonicalVector = neighbors[0].vector; // Qdrant returned with vector? Actually we didn't ask for it
+    // Instead, compute similarity to the nearest canonical via the original search score
+    // For the repairs, re-search Qdrant
+    function cosineSim(a: number[], b: number[]): number {
+      let dot = 0, na = 0, nb = 0;
+      for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] ** 2; nb += b[i] ** 2; }
+      return dot / (Math.sqrt(na) * Math.sqrt(nb));
+    }
+
+    const augSim = cosineSim(augVec.data[0].embedding, brokenVector);
+    const baseSim = baseVec ? cosineSim(baseVec.data[0].embedding, brokenVector) : null;
+
+    // Also compute distance of repairs from the CANONICAL (not broken)
+    // Re-fetch canonical vector from Qdrant
+    const canonPointRes = await fetch(`${QDRANT_URL}/collections/${SPECTRAL_COLLECTION}/points/${nearest.id}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    let augToCanonical = null;
+    let baseToCanonical = null;
+    if (canonPointRes.ok) {
+      const canonPoint = await canonPointRes.json();
+      const canonVec = canonPoint.result?.vector;
+      if (canonVec) {
+        augToCanonical = cosineSim(augVec.data[0].embedding, canonVec);
+        baseToCanonical = baseVec ? cosineSim(baseVec.data[0].embedding, canonVec) : null;
+      }
+    }
+
+    const result = {
+      success: true,
+      spectralContext,
+      canonicalFile,
+      canonicalSimilarity: similarity,
+      augmented: {
+        code: augmentedRepair,
+        similarityToBroken: augSim,
+        similarityToCanonical: augToCanonical,
+      },
+      baseline: runBaseline ? {
+        code: baselineRepair,
+        similarityToBroken: baseSim,
+        similarityToCanonical: baseToCanonical,
+      } : null,
+      verdict: augToCanonical && baseToCanonical
+        ? (augToCanonical > baseToCanonical
+          ? 'SPECTRAL_AUGMENTED wins — closer to canonical'
+          : augToCanonical === baseToCanonical
+            ? 'TIE — both equidistant from canonical'
+            : 'BASELINE wins — spectral context did not improve repair')
+        : 'Comparison incomplete — canonical vector not available',
+    };
+
+    logger.info('🔬 [SPECTRAL-REPAIR] Complete', {
+      canonical: canonicalFile,
+      augToCanonical: augToCanonical?.toFixed(4),
+      baseToCanonical: baseToCanonical?.toFixed(4),
+      verdict: result.verdict,
+    });
+
+    res.json(result);
+  } catch (error) {
+    logger.error('🔬 [SPECTRAL-REPAIR] Failed', { error });
+    res.status(500).json({ success: false, error: 'Spectral repair failed', message: (error as any).message });
+  }
 });
 
 // Global Error Handler

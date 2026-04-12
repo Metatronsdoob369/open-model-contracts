@@ -2,6 +2,7 @@
   "name": "@popsim/contract",
   "version": "1.0.0",
   "description": "Domain contract package for population-based agent simulation. Schedule A attachment for open-model-contracts. Contract-first AI architecture with MCP as law.",
+  "type": "module",
   "license": "Apache-2.0",
   "author": "Metatronsdoob369",
   "repository": {

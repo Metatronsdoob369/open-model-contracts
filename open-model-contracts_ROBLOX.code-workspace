@@ -2,13 +2,10 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "../../.claude"
-		},
-		{
-			"path": "../domicile_live"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"claudeCode.useTerminal": true
+	}
 }

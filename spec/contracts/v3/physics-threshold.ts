@@ -23,6 +23,11 @@ export const PhysicsThresholdSchema = z.object({
     .max(1)
     .default(0.05)
     .describe("P-value stability boundary required for overriding radical systemic changes"),
+  resonanceThreshold: z
+    .number()
+    .min(0)
+    .default(0.35)
+    .describe("Maximum allowed semantic heat (resonance) before triggering a topological audit (3072-D)"),
   driftThreshold: z
     .number()
     .int()

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { TrainingPipelineSchema } from './training-protocol';
 
 /**
  * Roblox Domain: Dual-Render UI with Telegram Backend
@@ -52,6 +53,7 @@ export const RobloxDomainSchema = z.object({
   script: LuauScriptContractSchema.optional(),
   telegramApp: TelegramMiniAppContractSchema.optional(),
   tagGame: TagGameContractSchema.optional(),
+  training: TrainingPipelineSchema.optional(),
   backendSync: z.object({
     bullQueue: z.string().default("roblox-telegram-sync"),
     omcBridgeUrl: z.string().url().default("http://localhost:8080/v1/contract/validate"),

@@ -136,17 +136,31 @@ body {
   }
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
+/* Spectra Radar Specifics */
+.spectra-overlay {
+  background: linear-gradient(to top, rgba(10, 11, 30, 0.9), transparent);
+  pointer-events: none;
 }
-::-webkit-scrollbar-track {
-  background: var(--background);
+
+.radar-hud-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--accent-cyan);
+  opacity: 0.7;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--border-glass);
-  border-radius: 10px;
+
+/* Scrollbar Custom */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
 }
-::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--accent-cyan);
 }

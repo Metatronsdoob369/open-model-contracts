@@ -10,6 +10,7 @@ export const ScriptManifestationSchema = z.object({
   type: z.literal("script"),
   code: z.string().describe("The raw Luau code from Superbullet"),
   context: ScriptContext.describe("Execution boundaries"),
+  intentSignature: z.array(z.number()).length(3072).optional().describe("3072-D vector signature for cognitive anchoring"),
   requirements: z.array(z.string()).describe("List of Diamond Slots it expects to access")
 }).superRefine((data, ctx) => {
   try {

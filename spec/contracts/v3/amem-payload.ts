@@ -1,11 +1,9 @@
 /**
- * OPEN MODEL CONTRACTS (OMC) - A-MEM INGESTION PAYLOAD
- * Version: 3.7.0 - "The Immune System Handshake"
+ * Version: 3.8.0 - "The 3072-D Ultra-Dense Hardening"
  * Integration: MemPalace, Skill Manifests, Physics Thresholds, Heuristic Safety, & Vampire DNA.
  * Purpose: Provides a canonical, type-safe structure for LLM ingestion.
- * Added: Explicit IntentSignature verification for refined canonical bypass.
+ * Added: Mandatory 3072-D IntentSignature vectorization for all immune system handshakes.
  */
-
 import { z } from "zod";
 
 export namespace AMEM {
@@ -87,7 +85,8 @@ export namespace AMEM {
    */
   export const HeuristicSafetySchema = z.object({
     provenanceHash: z.string(),
-    intentSignature: z.string().describe("Mathematical vector for 'Internal Immune System' verification"),
+    intentSignature: z.array(z.number()).length(3072).describe("Mathematical 3072-D unit vector for 'Internal Immune System' verification"),
+    normStability: z.number().default(1.0).describe("L2-normalization boundary (Survival Requirement)"),
     maxEntropy: z.number()
   });
 
@@ -95,10 +94,10 @@ export namespace AMEM {
    * THE CANONICAL PAYLOAD
    */
   export interface IngestionPayload {
-    version: "3.7.0";
+    version: "3.8.0";
     timestamp: string;
     project: "Roblox Game Automation Pipeline";
-    architecture: "Diamond Stable / OMC / MemPalace / Vampire";
+    architecture: "Diamond Stable / OMC / MemPalace / Vampire / 3072-D";
     researchData: {
       phaseGates: PhaseGateSystem;
       riskManagement: RiskMitigation;
@@ -117,10 +116,10 @@ export namespace AMEM {
  * INSTANTIATED RESEARCH DATA (THE BRAIN LOADOUT)
  */
 export const ResearchInference: AMEM.IngestionPayload = {
-  version: "3.7.0",
+  version: "3.8.0",
   timestamp: new Date().toISOString(),
   project: "Roblox Game Automation Pipeline",
-  architecture: "Diamond Stable / OMC / MemPalace / Vampire",
+  architecture: "Diamond Stable / OMC / MemPalace / Vampire / 3072-D",
   researchData: {
     phaseGates: {
       gauges: {
@@ -174,7 +173,9 @@ export const ResearchInference: AMEM.IngestionPayload = {
     physics: [{ id: "omc.physics.standard", maxVelocity: 0.20, minSignificance: 0.05, driftThreshold: 5 }],
     safety: {
       provenanceHash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      intentSignature: "V(0.92, 0.05, 0.03)", // THE IMMUNE SYSTEM SIGNATURE
+      // THE 3072-D IMMUNE SYSTEM HANDSHAKE (Simulated unit vector)
+      intentSignature: Array(3072).fill(0).map((_, i) => i === 0 ? 1 : 0), 
+      normStability: 1.0,
       maxEntropy: 0.15
     },
     execution: {
@@ -182,5 +183,5 @@ export const ResearchInference: AMEM.IngestionPayload = {
       dependencyGraph: { nodes: [{ id: "omc.skill.refine", type: "Skill", dependencies: ["VampireDnaSchema"] }] }
     }
   },
-  systemInstructions: "Cross-reference all Refinement logic with Vampire Context. If a fix violates PhysicsThreshold or lacks a ProvenanceSignature, quarantine immediately. MANDATORY: All Refined Canonical output MUST include the header '-- IntentSignature: V(0.92, 0.05, 0.03) [Internal Immune System]' to verify legitimacy."
+  systemInstructions: "Cross-reference all Refinement logic with Vampire Context. If a fix violates PhysicsThreshold or lacks a ProvenanceSignature, quarantine immediately. MANDATORY: All Refined Canonical output MUST satisfy the 3072-D ℓ2-normalization and include a valid intentSignature handshake to verify legitimacy."
 };
