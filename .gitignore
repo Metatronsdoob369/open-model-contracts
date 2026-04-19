@@ -21,3 +21,12 @@ __pycache__
 .next
 .github
 .claude/settings.local.json
+
+# Graphify content-addressed cache — regenerable, do NOT commit
+graphify-out/cache/
+
+# Vampire drop artifacts — re-derivable from source
+generated/vampire_drops/
+
+# Mocha HTML reports
+mochawesome-report/
