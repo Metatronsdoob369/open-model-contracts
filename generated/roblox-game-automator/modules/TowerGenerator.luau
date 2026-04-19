@@ -4,7 +4,7 @@ local TowerGenerator = {}
 local Workspace = game:GetService("Workspace")
 
 -- Configuration
-local BASE_POS = Vector3.new(0, 0, 0)
+local BASE_POS = Vector3.new(0, 40, 0)
 local SCALE = 2
 local COLOR_OBSIDIAN = Color3.fromRGB(15, 15, 15)
 local COLOR_NEON_RED = Color3.fromRGB(255, 30, 30)

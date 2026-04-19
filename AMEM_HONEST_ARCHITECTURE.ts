@@ -13,33 +13,43 @@
 type InfraStatus = 'RUNNING' | 'INSTALLED_NOT_RUNNING' | 'MISSING';
 
 const INFRASTRUCTURE = {
-  rojo:           { port: null,  pid: 30283, status: 'RUNNING' as InfraStatus, 
-                    what_it_does: 'Syncs .lua files from src/ INTO Roblox Studio ReplicatedStorage.OMC.Source',
-                    what_it_cannot_do: 'Cannot EXTRACT scripts OUT of a .rbxl binary. One-way push only.',
-                    cwd: '/Users/joewales/NODE_OUT_Master/open-model-contracts' },
+  rojo: {
+    port: null, pid: 30283, status: 'RUNNING' as InfraStatus,
+    what_it_does: 'Syncs .lua files from src/ INTO Roblox Studio ReplicatedStorage.OMC.Source',
+    what_it_cannot_do: 'Cannot EXTRACT scripts OUT of a .rbxl binary. One-way push only.',
+    cwd: '/Users/joewales/NODE_OUT_Master/open-model-contracts'
+  },
 
-  bridge_server:  { port: 8080, pid: 88292, status: 'RUNNING' as InfraStatus,
-                    what_it_does: 'Express server. Takes NL prompt -> calls OpenAI API -> generates Luau code -> stores in escrow',
-                    real_endpoints: [
-                      'POST /v1/delivery/nl-to-game   — REAL: sends prompt to OpenAI, gets Luau back',
-                      'POST /v1/contract/assets/push   — REAL: accepts Luau modules, stores them for Studio pull',
-                      'GET  /v1/contract/assets/pull/:id — REAL: Loader.lua in Studio calls this to fetch code',
-                      'POST /v1/spectra/ingest          — REAL: accepts code arrays, runs SpectraMappingService',
-                      'POST /v1/training/evaluate       — REAL: runs RepairShopService evaluation',
-                    ],
-                    dependencies_connected: { openai: true, telegram: true, redis: true } },
+  bridge_server: {
+    port: 8080, pid: 88292, status: 'RUNNING' as InfraStatus,
+    what_it_does: 'Express server. Takes NL prompt -> calls OpenAI API -> generates Luau code -> stores in escrow',
+    real_endpoints: [
+      'POST /v1/delivery/nl-to-game   — REAL: sends prompt to OpenAI, gets Luau back',
+      'POST /v1/contract/assets/push   — REAL: accepts Luau modules, stores them for Studio pull',
+      'GET  /v1/contract/assets/pull/:id — REAL: Loader.lua in Studio calls this to fetch code',
+      'POST /v1/spectra/ingest          — REAL: accepts code arrays, runs SpectraMappingService',
+      'POST /v1/training/evaluate       — REAL: runs RepairShopService evaluation',
+    ],
+    dependencies_connected: { openai: true, telegram: true, redis: true }
+  },
 
-  dashboard:      { port: 3100, status: 'RUNNING' as InfraStatus,
-                    what_it_does: 'Next.js UI with map visualization, telemetry HUD, protocol radar',
-                    honest_note: 'Maps are static PNGs I generated with image AI. NOT data-driven. The telemetry numbers update but are from the dashboard server, not from actual game metrics.' },
+  dashboard: {
+    port: 3100, status: 'RUNNING' as InfraStatus,
+    what_it_does: 'Next.js UI with map visualization, telemetry HUD, protocol radar',
+    honest_note: 'Maps are static PNGs I generated with image AI. NOT data-driven. The telemetry numbers update but are from the dashboard server, not from actual game metrics.'
+  },
 
-  qdrant:         { port: 6340, status: 'RUNNING' as InfraStatus,
-                    what_it_does: 'Vector database for memory/embeddings',
-                    honest_note: 'Running but NOT wired into the bridge-server or any repair pipeline. It is an island.' },
+  qdrant: {
+    port: 6340, status: 'RUNNING' as InfraStatus,
+    what_it_does: 'Vector database for memory/embeddings',
+    honest_note: 'Running but NOT wired into the bridge-server or any repair pipeline. It is an island.'
+  },
 
-  roblox_studio:  { status: 'RUNNING' as InfraStatus,
-                    game_open: 'gothtag.rbxl (binary, ~840KB)',
-                    rojo_connected: true },
+  roblox_studio: {
+    status: 'RUNNING' as InfraStatus,
+    game_open: 'gothtag.rbxl (binary, ~840KB)',
+    rojo_connected: true
+  },
 };
 
 // ─────────────────────────────────────────────

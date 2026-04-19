@@ -1,0 +1,309 @@
+{
+  "timestamp": "2026-04-15T10:51:10.754Z",
+  "results": [
+    {
+      "phase": "repair-baseline",
+      "variant": "natural-stub",
+      "contractId": "sb-baseline-5f33f87e",
+      "success": false,
+      "durationMs": 3724,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "syntax-error-comments",
+      "contractId": "sb-baseline-ebbd3629",
+      "success": false,
+      "durationMs": 1813,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "missing-end-statement",
+      "contractId": "sb-baseline-3b4f2c67",
+      "success": false,
+      "durationMs": 1717,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "deprecated-api",
+      "contractId": "sb-baseline-f4bffad6",
+      "success": false,
+      "durationMs": 1892,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "undefined-variable",
+      "contractId": "sb-baseline-490436f4",
+      "success": false,
+      "durationMs": 1823,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "malformed-cframe",
+      "contractId": "sb-baseline-fcc66bd8",
+      "success": false,
+      "durationMs": 1704,
+      "errors": [],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "natural-stub",
+      "contractId": "sb-mirofish-088a98a3",
+      "success": false,
+      "durationMs": 1792,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.09288159152233422,
+          -0.5786782963925667,
+          0.4769740132740994
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.09288159152233422,
+          "y": -0.5786782963925667,
+          "z": 0.4769740132740994,
+          "intensity": 0.7367407763994034
+        }
+      }
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "syntax-error-comments",
+      "contractId": "sb-mirofish-cdbca942",
+      "success": false,
+      "durationMs": 1721,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.650877006136853,
+          0.1375734790082821,
+          -0.34643338482506736
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.650877006136853,
+          "y": 0.1375734790082821,
+          "z": -0.34643338482506736,
+          "intensity": 0.7480039450043428
+        }
+      }
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "missing-end-statement",
+      "contractId": "sb-mirofish-31618581",
+      "success": false,
+      "durationMs": 1608,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.8557927005809824,
+          -0.517170325639098,
+          -0.15473157496886425
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.8557927005809824,
+          "y": -0.517170325639098,
+          "z": -0.15473157496886425,
+          "intensity": 0.6115799223011729
+        }
+      }
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "deprecated-api",
+      "contractId": "sb-mirofish-40d4ae5f",
+      "success": false,
+      "durationMs": 1791,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.640741106331703,
+          0.4573483356254129,
+          -0.7470874108006043
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.640741106331703,
+          "y": 0.4573483356254129,
+          "z": -0.7470874108006043,
+          "intensity": 0.7300619896063238
+        }
+      }
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "undefined-variable",
+      "contractId": "sb-mirofish-cadc5c9b",
+      "success": false,
+      "durationMs": 1787,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.29406298551136345,
+          0.279650625354696,
+          -0.24385371186813098
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.29406298551136345,
+          "y": 0.279650625354696,
+          "z": -0.24385371186813098,
+          "intensity": 0.7049301649478282
+        }
+      }
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "malformed-cframe",
+      "contractId": "sb-mirofish-4eef0246",
+      "success": false,
+      "durationMs": 1694,
+      "errors": [],
+      "mirofishContext": true,
+      "spatialMapData": {
+        "queryPoint": [
+          0.28614565818041093,
+          -0.6369461429471479,
+          -0.6025512888764459
+        ],
+        "neighbors": [
+          {
+            "id": "canonical-superbullet",
+            "distance": 0.23,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-weapon-system",
+            "distance": 0.45,
+            "quality": "high"
+          },
+          {
+            "id": "canonical-projectile",
+            "distance": 0.31,
+            "quality": "high"
+          }
+        ],
+        "heatMap": {
+          "x": 0.28614565818041093,
+          "y": -0.6369461429471479,
+          "z": -0.6025512888764459,
+          "intensity": 0.7057075414696624
+        }
+      }
+    },
+    {
+      "phase": "nl-generation",
+      "variant": "full-pipeline",
+      "contractId": "sb-nl-fecb4af3",
+      "success": false,
+      "durationMs": 1635,
+      "errors": [
+        "Director pipeline failed"
+      ],
+      "mirofishContext": false
+    }
+  ],
+  "summary": {
+    "baselineSuccessRate": 0,
+    "mirofishSuccessRate": 0,
+    "nlGenerationSuccess": false
+  }
+}

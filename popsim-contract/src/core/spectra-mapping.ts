@@ -124,7 +124,7 @@ export class SpectraMappingService {
         intentSignature: 'SIG_VEC_' + Math.random().toString(16).substring(2, 8),
         gate: shatter < 0.5 ? 'SAFE' : 'ARMED',
         disclaimer: 'Fictional sim artifact—OMC governed, no real-world application',
-        domain: 'spectra-map',
+        domain: 'shatter-report',
         spatial: {
             intentSignature: 'SIG_SPATIAL',
             gate: 'SAFE',
@@ -135,11 +135,11 @@ export class SpectraMappingService {
             hotspots: []
         },
         structural: { 
-            intentSignature: 'SIG_STRUCT', gate: 'SAFE', disclaimer: '...', domain: 'structural', 
+            intentSignature: 'SIG_STRUCT', gate: 'SAFE', disclaimer: 'Fictional sim artifact—OMC governed, no real-world application', domain: 'structural', 
             graphNodes: [], dependencies: [], glitches: [] 
         },
         research: { 
-            intentSignature: 'SIG_RES', gate: 'SAFE', disclaimer: '...', domain: 'research', 
+            intentSignature: 'SIG_RES', gate: 'SAFE', disclaimer: 'Fictional sim artifact—OMC governed, no real-world application', domain: 'research', 
             embeddedDocs: Array.from(vec), resonanceScores: {}, patterns: [], sourceProvenance: [] 
         },
         overallShatter: shatter,

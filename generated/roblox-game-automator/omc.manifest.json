@@ -1,65 +1,33 @@
 {
   "schema_version": "1.0",
   "pack_id": "roblox-game-automator",
-  "pack_version": "1.0.0",
-  "pipeline_id": "ebac1090-e10a-4cf8-ac9c-047674fd0880",
-  "created_at": "2026-04-05T00:52:46.358Z",
+  "pack_version": "1.1.0",
+  "pipeline_id": "sector-alpha-tag-manifestation",
+  "created_at": "2026-04-15T19:05:00.000Z",
   "files": [
     {
-      "path": "generated/roblox-game-automator/modules/VisualAtmosphere.luau",
+      "path": "generated/roblox-game-automator/modules/TagLogic.luau",
       "type": "luau_module",
-      "sha256": "2b55dfa404711f7c66b3b4bbbe25d249181d974338d4f39b7e19c708d708b20b",
-      "size_bytes": 1251,
-      "description": "Metropolis Component: VisualAtmosphere"
+      "sha256": "pending",
+      "size_bytes": 2200,
+      "description": "Core Tag Game Mechanics"
     },
     {
-      "path": "generated/roblox-game-automator/modules/SoundscapeManager.luau",
+      "path": "generated/roblox-game-automator/modules/TagArena.luau",
       "type": "luau_module",
-      "sha256": "fbe3f6eb2d6d64271c5911f301e070c78564f8aa9e496d646a60dfd7a2d723ee",
-      "size_bytes": 1606,
-      "description": "Metropolis Component: SoundscapeManager"
-    },
-    {
-      "path": "generated/roblox-game-automator/modules/PlayerMechanics.luau",
-      "type": "luau_module",
-      "sha256": "382071e94c5887a8d1339c9ff601184764f0df7441fdc80af58f6dd18d917008",
-      "size_bytes": 1495,
-      "description": "Metropolis Component: PlayerMechanics"
-    },
-    {
-      "path": "generated/roblox-game-automator/modules/TagGameLogic.luau",
-      "type": "luau_module",
-      "sha256": "24424a96d979a4aefb9c40ce8635b0167796f0503f6c5e049f59974b45d078ec",
-      "size_bytes": 1448,
-      "description": "Metropolis Component: TagGameLogic"
-    },
-    {
-      "path": "generated/roblox-game-automator/modules/TowerGenerator.luau",
-      "type": "luau_module",
-      "sha256": "3ebeeef7d227446c2818484b852a58a162c4b42040fdcf2a41e5eb8a5de2506f",
-      "size_bytes": 2657,
-      "description": "Metropolis Component: TowerGenerator"
-    },
-    {
-      "path": "generated/roblox-game-automator/modules/TrafficController.luau",
-      "type": "luau_module",
-      "sha256": "5eb68768f1faaf4a8de29f9cb165dc062f93ad5f5b104d0a4324e8dda70ff6fe",
-      "size_bytes": 2110,
-      "description": "Metropolis Component: TrafficController"
+      "sha256": "pending",
+      "size_bytes": 1800,
+      "description": "Procedural Tag Arena"
     }
   ],
   "specialists": [
     {
-      "id": "architect-01",
-      "role": "Volumetric Construction"
-    },
-    {
-      "id": "sonic-01",
-      "role": "Ambient Reverb Master"
-    },
-    {
       "id": "system-01",
-      "role": "Radiant Player Mechanics"
+      "role": "Game Logic Master"
+    },
+    {
+      "id": "architect-01",
+      "role": "Arena Constructor"
     }
   ]
 }

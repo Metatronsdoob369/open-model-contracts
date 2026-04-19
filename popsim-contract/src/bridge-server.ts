@@ -135,6 +135,7 @@ import { AssetGeneratorSwarm } from './lib/nl-to-game/asset-generator.js';
 import { translator } from './lib/nl-to-game/nl-to-contracts.js';
 import { SpectraMappingService } from './core/spectra-mapping.js';
 import { RepairShopService } from './core/repair-shop.js';
+import { validateEscrowPayload } from '../../src/escrow/validatePayload.js';
 
 const spectraMapper = new SpectraMappingService();
 const repairShop = new RepairShopService();
@@ -742,6 +743,23 @@ app.post('/v1/training/evaluate', async (req, res) => {
   }
 });
 
+// ─────────────────────────────────────────────
+// ARMED ESCROW VALIDATION (PHASE 2)
+// ─────────────────────────────────────────────
+app.post('/v1/escrow', async (req, res) => {
+  try {
+    const result = await validateEscrowPayload(req.body);
+    if (!result.success) {
+      return res.status(403).json({ success: false, errors: result.errors });
+    }
+    // Grant session ID only if everything passes
+    res.json({ success: true, sessionId: result.sessionId });
+  } catch (error: any) {
+    logger.error('Escrow Validation Error', { error });
+    res.status(500).json({ success: false, errors: ['Internal Server Error in Escrow', error.message] });
+  }
+});
+
 // Telegram Test Debugger
 app.post('/v1/delivery/test-telegram', async (req, res) => {
     if (!telegramBot) {
@@ -768,6 +786,31 @@ app.post('/v1/delivery/test-telegram', async (req, res) => {
             hint: 'Is the bot started? Is the Chat ID correct? Look in the server logs for details.'
         });
     }
+});
+
+// ─────────────────────────────────────────────
+// LIVE-FIRE DIAGNOSTICS (THE TELEMETRY BRIDGE)
+// Demonstrates active 4D data ingestion from the Roblox Engine.
+// ─────────────────────────────────────────────
+
+app.post('/telemetry', async (req, res) => {
+  const payload = req.body;
+  logger.info('📡 [LIVE FIRE] Ingress from Roblox', payload);
+  
+  const reportPath = path.join(process.cwd(), 'Sovereign_Live_Fire_Report.md');
+  const timestamp = new Date().toISOString();
+  
+  let content = '';
+  if (!fs.existsSync(reportPath)) {
+      content = `# Sovereign Architecture: Live-Fire Diagnostics\n\nThis artifact physicalizes the continuous canonical state synchronization between the Roblox Engine and the Node Sovereign Escrow Gate.\n\n`;
+  }
+  
+  content += `### Resonance Pulse [${timestamp}]\n`;
+  content += "```json\n" + JSON.stringify(payload, null, 2) + "\n```\n\n";
+  
+  fs.appendFileSync(reportPath, content);
+  
+  res.json({ success: true, message: "Pulse recorded in Live Fire Report." });
 });
 
 // ─────────────────────────────────────────────

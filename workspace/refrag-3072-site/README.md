@@ -1,0 +1,1 @@
+# Refrag 3072 Site - 3D Embed Viz for PopSim\n- Three.js graph for Qdrant 3072D vectors (bed code as nodes).\n- MiroFish integration: Agent communities in 3D (spatial code talk).\n- Setup: npm i three

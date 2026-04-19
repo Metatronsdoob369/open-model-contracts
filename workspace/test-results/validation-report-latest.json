@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-15T11:10:11.017Z",
+  "metrics": [
+    {
+      "name": "Bridge Hub Online",
+      "status": "✅ PASS",
+      "durationMs": 73,
+      "details": "Listening on http://localhost:3099"
+    },
+    {
+      "name": "Repair: Syntax Check",
+      "status": "✅ PASS",
+      "durationMs": 2082,
+      "details": "Provider: heuristic"
+    },
+    {
+      "name": "Repair: API Check",
+      "status": "✅ PASS",
+      "durationMs": 1755,
+      "details": "Provider: heuristic"
+    },
+    {
+      "name": "MiroFish Context Injection",
+      "status": "✅ PASS",
+      "durationMs": 1707,
+      "details": "Resonance: 0.12 (provider: heuristic)"
+    },
+    {
+      "name": "Full Director Pipeline",
+      "status": "✅ PASS",
+      "durationMs": 3,
+      "details": "Contract: sb-nl-9801c943"
+    }
+  ]
+}

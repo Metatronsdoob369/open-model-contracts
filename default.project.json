@@ -5,11 +5,25 @@
     "ReplicatedStorage": {
       "OMC": {
         "$className": "Folder",
-        "Source": {
-          "$path": "src"
-        },
         "Generated": {
           "$path": "generated/roblox-game-automator/modules"
+        },
+        "Client": {
+          "$path": "src/client"
+        }
+      }
+    },
+    "ServerScriptService": {
+      "OMC_Ignition": {
+        "$className": "Folder",
+        "Source": {
+          "$path": "src/server"
+        }
+      },
+      "RepairedAssets": {
+        "$className": "Folder",
+        "Assets": {
+          "$path": "repaired"
         }
       }
     }

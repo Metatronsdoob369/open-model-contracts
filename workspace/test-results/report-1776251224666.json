@@ -1,0 +1,153 @@
+{
+  "timestamp": "2026-04-15T11:07:04.666Z",
+  "results": [
+    {
+      "phase": "repair-baseline",
+      "variant": "natural-stub",
+      "contractId": "sb-baseline-31116365",
+      "success": false,
+      "durationMs": 65,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "syntax-error-comments",
+      "contractId": "sb-baseline-77762809",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "missing-end-statement",
+      "contractId": "sb-baseline-b087420a",
+      "success": false,
+      "durationMs": 1,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "deprecated-api",
+      "contractId": "sb-baseline-8dec35a6",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "undefined-variable",
+      "contractId": "sb-baseline-a63ad89e",
+      "success": false,
+      "durationMs": 1,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-baseline",
+      "variant": "malformed-cframe",
+      "contractId": "sb-baseline-496f9318",
+      "success": false,
+      "durationMs": 1,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "natural-stub",
+      "contractId": "sb-mirofish-c31daf05",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "syntax-error-comments",
+      "contractId": "sb-mirofish-b1c0f471",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "missing-end-statement",
+      "contractId": "sb-mirofish-9f4ae0ce",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "deprecated-api",
+      "contractId": "sb-mirofish-74141b2d",
+      "success": false,
+      "durationMs": 4,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "undefined-variable",
+      "contractId": "sb-mirofish-844aa133",
+      "success": false,
+      "durationMs": 1,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "repair-mirofish",
+      "variant": "malformed-cframe",
+      "contractId": "sb-mirofish-70aeb9a2",
+      "success": false,
+      "durationMs": 2,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": true
+    },
+    {
+      "phase": "nl-generation",
+      "variant": "full-pipeline",
+      "contractId": "sb-nl-e24d8803",
+      "success": false,
+      "durationMs": 1,
+      "errors": [
+        "fetch failed"
+      ],
+      "mirofishContext": false
+    }
+  ],
+  "summary": {
+    "baselineSuccessRate": 0,
+    "mirofishSuccessRate": 0,
+    "nlGenerationSuccess": false
+  }
+}

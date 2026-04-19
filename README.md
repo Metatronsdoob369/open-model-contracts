@@ -10,6 +10,13 @@ Open Model Contracts (OMC) is the constitutional layer for autonomous game devel
 
 **Philosophy:** Memory is an asset. This repository is a self-archiving laboratory. Every contract iteration and logic shift is automatically captured—no manual effort required.
 
+**Knowledge sources for agents:**  
+- Governance/spec law: `spec/`, `constitution/`, `packs/roblox-game-automator/primer/LEVEL_PRIMER.md`  
+- Operational policies: `packs/roblox-game-automator/policies/phase*.policy.yaml`  
+- Research/context: `notes/research/index.jsonl` + `notes/research/summaries/` (cite when policies/contracts rely on external papers)  
+- Decisions/memos: `notes/conversations/`, ideas in `notes/ideas/`
+- Quick note CLI: `scripts/note.sh` (e.g., `./scripts/note.sh conversation \"slug\" \"text\"`). You can alias to `omcnote` in your shell.
+
 ### 🚀 ELITE TEAM ONBOARDING (Quick Start)
 
 To join the registry protocol and activate high-fidelity mission tracking, run these three commands:

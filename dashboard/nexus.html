@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CHRONE³ OS | 4D Spatio-Temporal Orchestrator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e0e3e5",
+                        "on-secondary-container": "#abb9d2",
+                        "surface-container-low": "#1c1b1c",
+                        "secondary": "#b9c7e0",
+                        "tertiary-container": "#53acd3",
+                        "surface-container": "#201f20",
+                        "outline": "#8e9197",
+                        "background": "#131314",
+                        "on-surface-variant": "#c4c6cd",
+                        "on-surface": "#e5e2e3",
+                        "inverse-on-surface": "#313031",
+                        "on-primary-fixed": "#191c1e",
+                        "primary": "#c4c7c9",
+                        "secondary-fixed": "#d5e3fd",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "surface-dim": "#131314",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#7bd1fa",
+                        "on-primary": "#2d3133",
+                        "surface-container-highest": "#353436",
+                        "surface": "#131314",
+                        "inverse-primary": "#5c5f61",
+                        "surface-container-lowest": "#0e0e0f",
+                        "error-container": "#93000a",
+                        "secondary-container": "#3c4a5e",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "on-primary-container": "#35393b",
+                        "primary-fixed-dim": "#c4c7c9",
+                        "tertiary-fixed-dim": "#7bd1fa",
+                        "on-tertiary-container": "#003d52",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "on-tertiary-fixed": "#001e2b",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#444749",
+                        "on-background": "#e5e2e3",
+                        "primary-container": "#9fa2a4",
+                        "tertiary-fixed": "#c0e8ff",
+                        "on-secondary": "#233144",
+                        "surface-variant": "#353436",
+                        "outline-variant": "#44474c",
+                        "surface-container-high": "#2a2a2b",
+                        "on-tertiary": "#003547",
+                        "surface-bright": "#3a393a",
+                        "on-tertiary-fixed-variant": "#004d66",
+                        "inverse-surface": "#e5e2e3",
+                        "surface-tint": "#c4c7c9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-panel {
+            background: rgba(53, 52, 54, 0.6);
+            backdrop-filter: blur(20px);
+        }
+
+        .glow-hover:hover {
+            box-shadow: 0 0 20px rgba(123, 209, 250, 0.3);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(229, 226, 227, 0.2);
+        }
+
+        .card-veneer {
+            background: linear-gradient(145deg, #1f1f21 0%, #0d0d0e 100%);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 1px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-veneer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            z-index: 10;
+        }
+
+        .card-veneer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transform: skewX(-25deg));
+            transition: left 0.8s ease-in-out;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .card-veneer:hover {
+            transform: translateY(-4px);
+            background: linear-gradient(145deg, #262628 0%, #0f0f10 100%);
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), inset 0 -1px 2px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .card-veneer:hover::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .card-veneer:hover::after {
+            left: 150%;
+        }
+
+        /* Scroll animations */
+        .fade-up-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-up-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-tertiary/30 font-extralight scroll-smooth">
+    <!-- TopAppBar -->
+    <nav
+        class="fixed top-0 z-50 w-full h-20 px-8 flex justify-between items-center bg-zinc-950/60 backdrop-blur-2xl border-b border-white/5 shadow-[0_10px_40px_-15px_rgba(123,209,250,0.1)]">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-slate-300 text-xl">view_in_ar</span>
+            <span class="text-xl font-light tracking-tighter text-slate-100 font-headline uppercase">CHRONE³ OS</span>
+        </div>
+        <div class="hidden md:flex items-center gap-12">
+            <a class="text-sky-400 font-light border-b-2 border-sky-400 pb-1 font-headline uppercase tracking-widest text-xs transition-colors duration-300"
+                href="#">ORCHESTRATE</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">TOPOLOGY</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">DIMENSIONS</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">PROTOCOLS</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">sensors</span>
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">speed</span>
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">settings</span>
+        </div>
+    </nav>
+    <main class="relative min-h-screen pt-20 overflow-hidden">
+        <!-- Hero Section -->
+        <section class="relative h-[921px] flex flex-col justify-center px-8 md:px-24 fade-up-element">
+            <!-- Background Visual Layer -->
+            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] opacity-20"
+                    id="hero-img-container" style="transition: transform 1s ease-out;">
+                    <img alt="Abstract 3D wireframe" class="w-full h-full object-cover"
+                        data-alt="Intricate glowing abstract 3D wireframe mesh representing complex data structures on a dark charcoal background with ice blue light paths"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc0TJB791E3PXpMzTiR-lqD_bYF3FYxWOnuMd9QFobv38IExXCSaivQSnFxfp7QQ69zix3yJi2uAvXk7o0MKKUVS16OiP50daqWQ_4Uv8WB1BzVhfXSGqEgQbjTnXg7WLkY29z3uZeX-js3wobbPTz9yw7OkhZpYFVzwAnJ4lJenhC1YtVtq-KYGpgOsS-FQkaQfH39mFLWIq8EqHKsb-tbLV76EFYlOLlhLFJPRN2jZA9Qg397UjESZ6U0aaQBsDtk0r72-9tNbw" />
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
+            </div>
+            <div class="relative z-10 max-w-5xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-12 h-[1px] bg-tertiary"></span>
+                    <span class="font-headline text-tertiary text-xs tracking-[0.4em] uppercase font-light">Protocol
+                        Active: 4D Spatio-Temporal</span>
+                </div>
+                <h1
+                    class="font-headline text-6xl md:text-8xl font-light tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-400 leading-[0.9] mb-8 text-glow">
+                    THE FUTURE OF <br />CODE UNDERSTANDING <br /><span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tertiary">IS
+                        4D.</span>
+                </h1>
+                <p
+                    class="font-body text-on-surface-variant text-lg md:text-xl max-w-2xl mb-12 leading-relaxed font-thin">
+                    Navigate multi-dimensional software architectures directly. Experience real-time topological
+                    fracture analysis powered by our proprietary 3072-D Ollama Node Engine.
+                </p>
+                <div class="flex flex-wrap gap-6">
+                    <button id="btn-init-hero"
+                        class="group relative px-10 py-5 bg-primary text-on-primary font-headline font-light uppercase tracking-widest text-sm transition-all duration-300 active:scale-95 hover:shadow-[0_0_30px_rgba(123,209,250,0.4)]">
+                        <span class="relative z-10">INITIALIZE ORCHESTRATION</span>
+                        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity">
+                        </div>
+                    </button>
+                    <button
+                        class="px-10 py-5 border border-outline-variant hover:border-tertiary/50 text-on-surface font-headline font-light uppercase tracking-widest text-sm transition-all duration-300">
+                        ACCESS TERMINAL
+                    </button>
+                </div>
+            </div>
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer"
+                onclick="window.scrollTo({top: window.innerHeight, behavior: 'smooth'})">
+                <span
+                    class="font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase font-light hover:text-tertiary transition-colors">System
+                    Descent</span>
+                <div class="w-[1px] h-16 bg-gradient-to-b from-tertiary to-transparent animate-pulse"></div>
+            </div>
+        </section>
+        <!-- Feature Bento Grid -->
+        <section class="relative px-8 md:px-24 py-32 bg-surface">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Main Engine Card -->
+                <div class="md:col-span-8 group relative aspect-video md:aspect-auto overflow-hidden card-veneer p-8 fade-up-element"
+                    style="transition-delay: 0.1s;">
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="mb-auto">
+                            <span
+                                class="material-symbols-outlined text-tertiary text-4xl mb-6 transform group-hover:scale-110 transition-transform">hub</span>
+                            <h3 class="font-headline text-3xl font-light text-on-surface mb-4">3072-D OLLAMA NODE ENGINE
+                            </h3>
+                            <p class="text-on-surface-variant max-w-md font-thin">Our neural backbone processes code
+                                logic through high-dimensional vector spaces, revealing hidden dependencies invisible to
+                                traditional 2D static analysis.</p>
+                        </div>
+                        <div class="pt-8 flex items-center gap-4">
+                            <span
+                                class="px-3 py-1 bg-surface-container-highest text-[10px] font-headline tracking-tighter text-tertiary font-light">STABLE_V4.2</span>
+                            <span
+                                class="px-3 py-1 bg-surface-container-highest text-[10px] font-headline tracking-tighter text-secondary font-light"
+                                id="latency-metric">LATENCY: 0.04MS</span>
+                        </div>
+                    </div>
+                    <!-- Ambient Light Element -->
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-tertiary/5 rounded-full blur-[80px] group-hover:bg-tertiary/10 transition-all duration-500">
+                    </div>
+                </div>
+                <!-- Analysis Card -->
+                <div class="md:col-span-4 card-veneer p-8 group fade-up-element" style="transition-delay: 0.2s;">
+                    <span class="material-symbols-outlined text-secondary text-4xl mb-6">analytics</span>
+                    <h3 class="font-headline text-2xl font-light text-on-surface mb-4 uppercase">TOPOLOGICAL FRACTURE
+                        ANALYSIS</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-thin">Real-time identification
+                        of architectural stress points. Predict system failures before they occur in the temporal
+                        stream.</p>
+                    <div
+                        class="w-full h-32 bg-surface-container-lowest mt-auto relative overflow-hidden flex items-center justify-center">
+                        <div class="w-full h-[1px] bg-secondary/30 absolute"></div>
+                        <div id="fracture-wave"
+                            class="w-12 h-12 border border-secondary rounded-full absolute mix-blend-screen scale-0 opacity-0">
+                        </div>
+                        <div class="font-mono text-secondary/40 text-[10px] absolute bottom-2 left-2 tracking-widest">
+                            SCANNING_FRACTURES...</div>
+                    </div>
+                </div>
+                <!-- Security Card -->
+                <div class="md:col-span-4 card-veneer p-8 flex flex-col justify-between group hover:border-error/20 transition-colors fade-up-element"
+                    style="transition-delay: 0.3s;">
+                    <div>
+                        <span
+                            class="material-symbols-outlined text-4xl mb-6 text-transparent bg-clip-text bg-gradient-to-br from-zinc-300 via-zinc-500 to-zinc-900 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]"
+                            style="font-variation-settings: 'FILL' 1, 'wght' 500;">shield_lock</span>
+                        <h3 class="font-headline text-2xl font-light text-on-surface mb-4 uppercase">ARMED ESCROW
+                            PROTECTION</h3>
+                    </div>
+                    <p class="text-on-surface-variant text-sm font-thin mb-4">Military-grade cold-storage for
+                        mission-critical orchestration keys. Automated neutralization of unauthorized access attempts.
+                    </p>
+                    <div class="w-full h-1 bg-white/5 rounded-full mt-auto">
+                        <div class="h-full bg-error w-full shadow-[0_0_10px_#ffb4ab]"></div>
+                    </div>
+                </div>
+                <!-- Kinetic Visualization Card -->
+                <div class="md:col-span-8 card-veneer p-8 relative overflow-hidden flex flex-col md:flex-row items-center gap-8 group fade-up-element"
+                    style="transition-delay: 0.4s;">
+                    <div class="flex-1 z-10">
+                        <h3 class="font-headline text-4xl font-light text-on-surface mb-2">SPATIAL LINK</h3>
+                        <p
+                            class="text-on-secondary-container font-headline tracking-widest text-[10px] mb-6 font-light">
+                            SYSTEM ADMINISTRATOR AUTHORIZED</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-3 text-sm text-on-surface-variant font-thin">
+                                <span class="w-1 h-1 bg-tertiary"></span>
+                                Synchronous 4D Mapping
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-on-surface-variant font-thin">
+                                <span class="w-1 h-1 bg-tertiary"></span>
+                                Multi-Threaded Epoch Analysis
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-on-surface-variant font-thin">
+                                <span class="w-1 h-1 bg-tertiary"></span>
+                                Zero-Knowledge Verification
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                        class="w-full md:w-64 h-48 bg-background border border-outline-variant/20 rounded-lg p-4 font-mono text-[10px] text-tertiary/70 overflow-hidden relative z-10">
+                        <div class="animate-pulse flex items-center justify-between"><span
+                                id="terminal-init-text">Initializing spatial_tunnel...</span><span
+                                class="w-2 h-2 rounded-full bg-tertiary"></span></div>
+                        <div class="mt-4 text-on-surface-variant font-thin" id="term-line-1">0x4F22 &gt;&gt; CONNECTED
+                        </div>
+                        <div class="mt-1 text-on-surface-variant font-thin" id="term-line-2">T-MINUS 0.0004s</div>
+                        <div class="mt-4 h-1 w-full bg-surface-container-highest">
+                            <div class="h-full bg-tertiary w-2/3 transition-all duration-1000 ease-out"
+                                id="term-progress-bar"></div>
+                        </div>
+                        <div class="mt-4 text-secondary font-thin" id="term-line-3">ACTIVE: NODE_3072</div>
+                    </div>
+                    <div class="absolute right-0 bottom-0 w-64 h-64 bg-tertiary/5 rounded-full blur-[100px] z-0"></div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA Section -->
+        <section class="relative py-40 flex flex-col items-center text-center px-8 fade-up-element">
+            <div
+                class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(123,209,250,0.05)_0%,_transparent_70%)]">
+            </div>
+            <div class="relative z-10">
+                <h2 class="font-headline text-4xl md:text-6xl font-light text-on-surface mb-8 tracking-tighter">READY TO
+                    TRANSCEND <br />3D ARCHITECTURES?</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                    <div class="flex flex-col items-center">
+                        <button
+                            class="px-16 py-6 bg-gradient-to-r from-primary to-secondary text-on-primary font-headline font-light uppercase tracking-[0.2em] text-sm glow-hover transition-all duration-300 hover:scale-105 active:scale-95">
+                            INITIALIZE ORCHESTRATION
+                        </button>
+                        <span class="mt-4 text-[10px] font-headline tracking-widest text-slate-500 font-light">4D
+                            SPATIAL LINK ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- SideNavBar (Orchestrator Style) -->
+    <aside
+        class="fixed left-0 top-0 h-full w-20 hidden lg:flex flex-col pt-24 pb-8 bg-[#131314] border-r border-white/5 z-40 transition-all duration-300 hover:w-64 group">
+        <div class="flex-1 flex flex-col">
+            <!-- Navigation Items -->
+            <div
+                class="flex items-center gap-4 px-6 py-4 bg-slate-800/50 text-sky-400 border-l-4 border-sky-400 shadow-[0_0_15px_rgba(123,209,250,0.1)] cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">east</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">X-AXIS</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">north</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">Y-AXIS</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">layers</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">Z-DEPTH</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">schedule</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">T-CHRONO</span>
+            </div>
+            <div class="mt-auto flex flex-col w-full pb-4">
+                <div class="px-6 mb-8 hidden group-hover:block transition-all">
+                    <div class="p-4 bg-surface-container-high border border-white/5">
+                        <div class="text-[10px] font-headline text-slate-400 uppercase tracking-widest mb-1 font-light">
+                            Status</div>
+                        <div class="text-tertiary text-xs font-light font-headline uppercase animate-pulse">Operational
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 space-y-4">
+                    <div
+                        class="flex items-center gap-4 text-slate-500 cursor-pointer hover:text-slate-200 transition-colors">
+                        <span class="material-symbols-outlined min-w-[24px]">list_alt</span>
+                        <span
+                            class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">LOGS</span>
+                    </div>
+                    <div
+                        class="flex items-center gap-4 text-slate-500 cursor-pointer hover:text-slate-200 transition-colors">
+                        <span class="material-symbols-outlined min-w-[24px]">terminal</span>
+                        <span
+                            class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">TERMINAL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <footer
+        class="bg-surface-container-lowest border-t border-white/5 px-8 md:px-24 py-12 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+        <div class="flex items-center gap-4">
+            <span class="font-headline text-slate-100 font-light uppercase tracking-widest text-xs">CHRONE³ OS</span>
+            <span class="text-slate-600">|</span>
+            <span class="font-headline text-[10px] tracking-widest text-slate-500 uppercase font-light">Ver.
+                0.9.2-ALPHA</span>
+        </div>
+        <div class="flex gap-12 font-headline text-[10px] tracking-widest text-slate-400 uppercase font-light">
+            <a class="hover:text-tertiary transition-colors" href="#">Security Protocol</a>
+            <a class="hover:text-tertiary transition-colors" href="#">Fracture Terms</a>
+            <a class="hover:text-tertiary transition-colors" href="#">Spatial Privacy</a>
+        </div>
+        <div class="text-slate-600 font-headline text-[10px] tracking-widest uppercase font-light">
+            © 2104 NEURAL LINK CORP
+        </div>
+    </footer>
+
+    <script>
+        // 1. Intersection Observer for Scroll Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up-element').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 2. Parallax effects on MouseMove for Hero
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            const heroContainer = document.getElementById('hero-img-container');
+            if (heroContainer) heroContainer.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) scale(1.05)`;
+        });
+
+        // 3. Dynamic Telemetry Server Sync (PORT 3100)
+        async function syncTelemetry() {
+            try {
+                const res = await fetch('http://localhost:3100/api/telemetry');
+                if (res.ok) {
+                    const data = await res.json();
+                    const stability = data.phaseGates?.gauges?.stability?.value || 98.4;
+                    const latencyMetric = document.getElementById('latency-metric');
+                    if (latencyMetric) latencyMetric.innerText = `STABILITY: ${stability.toFixed(1)}%`;
+
+                    if (data.vampireDrains && data.vampireDrains.length > 0) {
+                        const topDrain = data.vampireDrains[0];
+                        const termLine1 = document.getElementById('term-line-1');
+                        const termLine2 = document.getElementById('term-line-2');
+                        const termLine3 = document.getElementById('term-line-3');
+
+                        if (termLine1) termLine1.innerText = `${topDrain.name.substring(0, 15)}... >> CONNECTED`;
+                        if (termLine2) termLine2.innerText = `Nodes: ${topDrain.nodes} | DNA: ${topDrain.composition}`;
+                        if (termLine3) termLine3.innerText = `SIGNATURE: ${data.safety?.intentSignature || 'VERIFIED'}`;
+
+                        const bar = document.getElementById('term-progress-bar');
+                        if (bar) bar.style.width = '100%';
+                    }
+                }
+            } catch (e) {
+                const bar = document.getElementById('term-progress-bar');
+                if (bar) {
+                    const currentWidth = parseInt(bar.style.width || '66');
+                    bar.style.width = currentWidth >= 95 ? '10%' : (currentWidth + Math.random() * 15) + '%';
+                }
+            }
+        }
+        setInterval(syncTelemetry, 2500);
+        syncTelemetry();
+
+        // 4. Fracture Wave Animation Logic
+        setInterval(() => {
+            const wave = document.getElementById('fracture-wave');
+            if (wave) {
+                wave.animate([
+                    { transform: 'scale(0)', opacity: 0 },
+                    { transform: 'scale(3)', opacity: 0.5 },
+                    { transform: 'scale(6)', opacity: 0 }
+                ], {
+                    duration: 2500,
+                    easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
+                });
+            }
+        }, 3000);
+
+        // 5. Initialize Action Button
+        document.getElementById('btn-init-hero')?.addEventListener('click', () => {
+            const icon = document.querySelector('.material-symbols-outlined');
+            if (icon) {
+                icon.innerText = 'sync';
+                icon.classList.add('animate-spin');
+                setTimeout(() => {
+                    icon.classList.remove('animate-spin');
+                    icon.innerText = 'architecture';
+                    alert('Nexus Bridge Handshake Verified. Routing to Command Deck...');
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+
+</html>

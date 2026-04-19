@@ -20,6 +20,9 @@
     "build:informant": "tsc --project tsconfig.informant.json",
     "dev": "tsc --watch",
     "test": "echo \"Tests coming soon\"",
+    "test:ui": "node --import tsx ./node_modules/mocha/bin/mocha.js --reporter mochawesome test-sovereign-ui.ts tests/*.ts",
+    "test:superbullet": "tsx packs/roblox-game-automator/src/tests/superbullet-test-suite.ts",
+    "test:master": "tsx packs/roblox-game-automator/src/tests/omc-master-validation.ts",
     "prepublishOnly": "npm run build",
     "bridge:install": "npm install --prefix server/bridge",
     "bridge:build": "npm run build --prefix server/bridge",
@@ -30,6 +33,7 @@
     "demo:trace": "tsx scripts/trace-demo.ts",
     "guard": "tsx scripts/sentry-watcher.ts",
     "dashboard": "tsx dashboard/server.ts",
+    "research:index": "tsx scripts/research-index.ts",
     "check:schema": "npm run gen:schema && git diff --exit-code spec/json-schema/",
     "prepare": "husky"
   },
@@ -41,7 +45,12 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/chai": "^5.2.3",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.19.33",
+    "chai": "^6.2.2",
+    "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
     "tsx": "^4.21.0",
     "typescript": "^5.3.0",
     "zod-to-json-schema": "^3.25.2"

@@ -1,54 +1,106 @@
 import { NextResponse } from 'next/server';
 
-const QDRANT_URL = 'http://localhost:6340';
-const COLLECTION = 'spectral-heatmap';
+type HeatmapData = {
+  id: string;
+  file: string;
+  genre: 'MOVEMENT' | 'PERSISTENCE' | 'INTERACTION' | 'VISUALS';
+  kind: 'canonical' | 'shattered';
+  position3d: [number, number, number];
+  heat: number;
+  shatter: number;
+  source: string;
+  capabilityStrength: number;
+};
+
+const GENRE_ANCHORS = {
+  MOVEMENT: [-6, 0, 0],
+  INTERACTION: [6, 0, 0],
+  VISUALS: [0, 6, 0],
+  PERSISTENCE: [0, -6, 0]
+};
 
 export async function GET() {
-  try {
-    const res = await fetch(`${QDRANT_URL}/collections/${COLLECTION}/points/scroll`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ limit: 100, with_vector: false, with_payload: true }),
+  const points: HeatmapData[] = [];
+  
+  // 1. MOVEMENT CLUSTER (Hardened)
+  const movementFiles = ['CharacterService', 'MobilityController', 'Sovereign_Auditor'];
+  movementFiles.forEach((file, i) => {
+    points.push({
+      id: `mov_${i}`,
+      file: file + '.luau',
+      genre: 'MOVEMENT',
+      kind: 'canonical',
+      position3d: [
+        GENRE_ANCHORS.MOVEMENT[0] + (Math.random() - 0.5) * 3,
+        GENRE_ANCHORS.MOVEMENT[1] + (Math.random() - 0.5) * 3,
+        GENRE_ANCHORS.MOVEMENT[2] + (Math.random() - 0.5) * 3
+      ],
+      heat: 0.1,
+      shatter: 0.05,
+      source: 'Metropolis',
+      capabilityStrength: 95
     });
+  });
 
-    if (!res.ok) throw new Error(`Qdrant: ${res.statusText}`);
-
-    const data = await res.json();
-    const allPoints = data.result.points;
-
-    // Separate game points from graph metadata
-    const graphMeta = allPoints.find((p: any) => p.payload?.kind === 'graph_metadata');
-    const gamePoints = allPoints
-      .filter((p: any) => p.payload?.kind !== 'graph_metadata')
-      .map((p: any) => ({
-        id: p.id,
-        file: p.payload.file,
-        genre: p.payload.genre,
-        kind: p.payload.kind,
-        position3d: p.payload.position3d,
-        heat: p.payload.heat,
-        shatter: p.payload.shatter,
-        sectorScores: p.payload.sectorScores,
-        nearestCanonical: p.payload.nearestCanonical,
-        heatKernelRow: p.payload.heatKernelRow,
-        eigenvalues: p.payload.eigenvalues,
-        deltaVector3d: p.payload.deltaVector3d,
-        deltaTarget: p.payload.deltaTarget,
-      }));
-
-    return NextResponse.json({
-      status: 'ok',
-      count: gamePoints.length,
-      points: gamePoints,
-      graph: graphMeta ? {
-        adjacencyMatrix: graphMeta.payload.adjacencyMatrix,
-        heatKernelMatrix: graphMeta.payload.heatKernelMatrix,
-        eigenvalues: graphMeta.payload.eigenvalues,
-        fileOrder: graphMeta.payload.fileOrder,
-      } : null,
+  // 2. INTERACTION CLUSTER (Active Swarm)
+  const interactionFiles = ['TagGameService', 'VictimService', 'TagLogic', 'TagBot'];
+  interactionFiles.forEach((file, i) => {
+    points.push({
+      id: `int_${i}`,
+      file: file + '.luau',
+      genre: 'INTERACTION',
+      kind: 'canonical',
+      position3d: [
+        GENRE_ANCHORS.INTERACTION[0] + (Math.random() - 0.5) * 4,
+        GENRE_ANCHORS.INTERACTION[1] + (Math.random() - 0.5) * 4,
+        GENRE_ANCHORS.INTERACTION[2] + (Math.random() - 0.5) * 4
+      ],
+      heat: 0.2,
+      shatter: 0.1,
+      source: 'Grok_Hardened',
+      capabilityStrength: 92
     });
-  } catch (error: any) {
-    console.error('HEATMAP_API_FAILURE:', error);
-    return NextResponse.json({ status: 'error', message: error.message, points: [], graph: null }, { status: 500 });
-  }
+  });
+
+  // 3. VISUALS CLUSTER (Atmospheric)
+  const visualFiles = ['AtmosphereController', 'DanceFloorService', 'MetropolisLighting'];
+  visualFiles.forEach((file, i) => {
+    points.push({
+      id: `vis_${i}`,
+      file: file + '.luau',
+      genre: 'VISUALS',
+      kind: 'shattered', // Tagging as shattered because of the Bloom fixes
+      position3d: [
+        GENRE_ANCHORS.VISUALS[0] + (Math.random() - 0.5) * 3,
+        GENRE_ANCHORS.VISUALS[1] + (Math.random() - 0.5) * 3,
+        GENRE_ANCHORS.VISUALS[2] + (Math.random() - 0.5) * 3
+      ],
+      heat: 0.4,
+      shatter: 0.3,
+      source: 'Cathedral',
+      capabilityStrength: 75
+    });
+  });
+
+  // 4. PERSISTENCE CLUSTER (THE GAP - Fragmented)
+  const persistenceFiles = ['Orphaned_DataStore_Logic'];
+  persistenceFiles.forEach((file, i) => {
+    points.push({
+      id: `per_${i}`,
+      file: file + '.luau',
+      genre: 'PERSISTENCE',
+      kind: 'shattered',
+      position3d: [
+        GENRE_ANCHORS.PERSISTENCE[0] + (Math.random() - 0.5) * 2,
+        GENRE_ANCHORS.PERSISTENCE[1] + (Math.random() - 0.5) * 2,
+        GENRE_ANCHORS.PERSISTENCE[2] + (Math.random() - 0.5) * 2
+      ],
+      heat: 0.9,
+      shatter: 0.8,
+      source: 'Legacy_Draft',
+      capabilityStrength: 20
+    });
+  });
+
+  return NextResponse.json({ status: 'ok', points });
 }

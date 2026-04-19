@@ -1,0 +1,9 @@
+{
+  "id": "marsh-001",
+  "type": "script",
+  "code": "local PS = require(ProfileService)\n_G.Hack = true\nprint('Dangerous global slop')",
+  "targetEnvironment": "Server",
+  "expectedSlots": [
+    "OMC.State"
+  ]
+}
