@@ -18,6 +18,7 @@ import {
 } from '../escrow-store';
 import { writeAuditRecord } from '../audit-logger';
 import { validateEscrowRequest } from '../schema-validator';
+import { GovernanceGate } from '../governance-gate';
 import type {
   CreateEscrowRequest,
   CreateEscrowResponse,
@@ -29,11 +30,12 @@ import type {
 } from '../types';
 
 const router = Router();
+const gate = new GovernanceGate();
 
 // ─── POST /escrow ─────────────────────────────────────────────────────────────
 // Create a new escrow session and store the module bundle in memory.
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
   const ip = req.ip ?? 'unknown';
   const body = req.body as CreateEscrowRequest;
 
@@ -52,6 +54,25 @@ router.post('/', (req: Request, res: Response) => {
     };
     res.status(400).json({ ...err, details: validation.errors });
     return;
+  }
+
+  // GOVERNANCE VALIDATION (Circuit Breaker)
+  for (const module of body.modules) {
+    const report = await gate.validateSovereignty(module.module_id, module.content);
+    if (!report.authorized) {
+       writeAuditRecord({
+         timestamp: new Date().toISOString(),
+         event_type: 'governance.violation',
+         ip_address: ip,
+         detail: `Stability Warning! ${module.module_id} | Tier: ${report.tier} | Resonance: ${report.resonanceScore.toFixed(3)}v`,
+       });
+       const err: ErrorResponse = {
+         error: `Sovereignty Breach: ${report.reason}`,
+         code: 'GOVERNANCE_BREACH',
+       };
+       res.status(403).json(err);
+       return;
+    }
   }
 
   // Generate session id and one-time token
