@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">37 nodes &middot; 61 edges &middot; 7 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "pipeline_shatter_velocity", "label": "Shatter Velocity (Topological Fracture Parameters)", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Shatter Velocity (Topological Fracture Parameters)", "community": 5, "community_name": "Pipeline Orchestration", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 4}, {"id": "pipeline_ollama_embedding", "label": "3072-D Ollama Node Embedding Engine", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "3072-D Ollama Node Embedding Engine", "community": 5, "community_name": "Pipeline Orchestration", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 6}, {"id": "pipeline_crossroom_rewire", "label": "Architectural Cross-Room Rewire (QuadMap Sever & Bridge)", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 36.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Architectural Cross-Room Rewire (QuadMap Sever & Bridge)", "community": 4, "community_name": "QuadMap Room Topology", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 7}, {"id": "pipeline_zod_bridge", "label": "Zod-Guarded Bridge Payload", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Zod-Guarded Bridge Payload", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 4}, {"id": "pipeline_escrow_gate", "label": "Armed Escrow Validation Gate", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 36.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Armed Escrow Validation Gate", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 7}, {"id": "pipeline_session_manifest", "label": "SHA-256 Session Manifest", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "SHA-256 Session Manifest", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 4}, {"id": "gate_trusted", "label": "TRUSTED Gate (shatter < 0.65v)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "TRUSTED Gate (shatter < 0.65v)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 4}, {"id": "gate_staged", "label": "STAGED Gate (0.65v - 0.95v)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "STAGED Gate (0.65v - 0.95v)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "gate_breach", "label": "BREACH Gate (shatter >= 0.95v)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "BREACH Gate (shatter >= 0.95v)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "modifier_loyalty_credit", "label": "Loyalty Credit (-0.30v for OMC Markers)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Loyalty Credit (-0.30v for OMC Markers)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "modifier_loyalty_floor", "label": "Loyalty Score Floor (cannot go below 0.0)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Loyalty Score Floor (cannot go below 0.0)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 1}, {"id": "modifier_vacuity_penalty", "label": "Vacuity Penalty (+0.30v for heat < 0.15)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Vacuity Penalty (+0.30v for heat < 0.15)", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "math_calculate_shatter", "label": "calculateShatter() - Euclidean Distance from STABLE_CENTROID", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "calculateShatter() - Euclidean Distance from STABLE_CENTROID", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "math_calculate_heat", "label": "calculateHeat() - Manhattan Resonance (Sum of Abs Values)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "calculateHeat() - Manhattan Resonance (Sum of Abs Values)", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "math_stable_centroid", "label": "STABLE_CENTROID (Float32Array from Canonical Corpus)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "STABLE_CENTROID (Float32Array from Canonical Corpus)", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "layer_embedding_engine", "label": "Layer 1: Embedding Engine", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 32.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 1: Embedding Engine", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 6}, {"id": "layer_spectra_math", "label": "Layer 2: Spectra Math", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 2: Spectra Math", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 5}, {"id": "layer_governance_gate", "label": "Layer 3: GovernanceGate", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 3: GovernanceGate", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 8}, {"id": "layer_escrow", "label": "Layer 4: Escrow", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 4: Escrow", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 5}, {"id": "layer_quadmap", "label": "Layer 5: QuadMap Rooms", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Layer 5: QuadMap Rooms", "community": 4, "community_name": "QuadMap Room Topology", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 5}, {"id": "room_worldstate", "label": "ROOM-02_WorldState", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "ROOM-02_WorldState", "community": 6, "community_name": "Canonical Node Space", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "room_client_visual", "label": "Client_Visual Room", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Client_Visual Room", "community": 4, "community_name": "QuadMap Room Topology", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "room_threading", "label": "Threading Room", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Threading Room", "community": 4, "community_name": "QuadMap Room Topology", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 1}, {"id": "contract_omc_bridge_statesync", "label": "OMC_Bridge_StateSync Contract", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "OMC_Bridge_StateSync Contract", "community": 4, "community_name": "QuadMap Room Topology", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 1}, {"id": "feature_recursive_chunking", "label": "Recursive Resonance Chunking (files > 1000 chars)", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Recursive Resonance Chunking (files > 1000 chars)", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "feature_ollama_binding", "label": "Ollama localhost binding 127.0.0.1:11434", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Ollama localhost binding 127.0.0.1:11434", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "feature_ollama_model", "label": "mxbai-embed-large Model", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "mxbai-embed-large Model", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "threshold_catastrophic", "label": "Catastrophic Threshold (velocity > 1.0)", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Catastrophic Threshold (velocity > 1.0)", "community": 5, "community_name": "Pipeline Orchestration", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 1}, {"id": "threshold_trusted_boundary", "label": "TRUSTED Boundary (0.65v)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "TRUSTED Boundary (0.65v)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "threshold_breach_boundary", "label": "BREACH Boundary (0.95v)", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "BREACH Boundary (0.95v)", "community": 0, "community_name": "GovernanceGate Tiers", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "threshold_heat_vacuity", "label": "Heat Vacuity Threshold (< 0.15)", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Heat Vacuity Threshold (< 0.15)", "community": 3, "community_name": "Spectra Math Core", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 1}, {"id": "suite_sovereign_orchestrator", "label": "Test Suite 1: Sovereign 4D Orchestrator", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Test Suite 1: Sovereign 4D Orchestrator", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "suite_architect_probe", "label": "Test Suite 2: Architect Probe", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "Test Suite 2: Architect Probe", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}, {"id": "suite_governance_gate", "label": "Test Suite 3: GovernanceGate Circuit Breaker", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Test Suite 3: GovernanceGate Circuit Breaker", "community": 2, "community_name": "Ollama Embedding Engine", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "suite_integration", "label": "Test Suite 4: Integration Summary", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 28.8, "font": {"size": 12, "color": "#ffffff"}, "title": "Test Suite 4: Integration Summary", "community": 5, "community_name": "Pipeline Orchestration", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 5}, {"id": "constraint_zero_io_latency", "label": "Zero-IO Latency Constraint (< 20ms)", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Zero-IO Latency Constraint (< 20ms)", "community": 1, "community_name": "Escrow & Session Layer", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 3}, {"id": "node_canonical4d", "label": "CanonicalNode4D (Embedded Graph Node)", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "CanonicalNode4D (Embedded Graph Node)", "community": 6, "community_name": "Canonical Node Space", "source_file": "mochawesome-report/graphify-src/pipeline-tests.md", "file_type": "document", "degree": 2}];
+const RAW_EDGES = [{"from": "pipeline_shatter_velocity", "to": "threshold_catastrophic", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_shatter_velocity", "to": "pipeline_ollama_embedding", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_shatter_velocity", "to": "suite_integration", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_shatter_velocity", "to": "constraint_zero_io_latency", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_ollama_embedding", "to": "node_canonical4d", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_ollama_embedding", "to": "pipeline_crossroom_rewire", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_ollama_embedding", "to": "layer_embedding_engine", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_ollama_embedding", "to": "feature_recursive_chunking", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_ollama_embedding", "to": "suite_integration", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "room_worldstate", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "room_client_visual", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "contract_omc_bridge_statesync", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "pipeline_zod_bridge", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "layer_quadmap", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_crossroom_rewire", "to": "suite_integration", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_zod_bridge", "to": "pipeline_escrow_gate", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_zod_bridge", "to": "layer_escrow", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_zod_bridge", "to": "suite_architect_probe", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "pipeline_session_manifest", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "gate_trusted", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "gate_breach", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "layer_escrow", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "suite_integration", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_escrow_gate", "to": "constraint_zero_io_latency", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_session_manifest", "to": "gate_trusted", "label": "calls", "title": "calls [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_session_manifest", "to": "layer_escrow", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "pipeline_session_manifest", "to": "suite_integration", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_trusted", "to": "layer_governance_gate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_trusted", "to": "threshold_trusted_boundary", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_staged", "to": "layer_governance_gate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_staged", "to": "threshold_trusted_boundary", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_staged", "to": "threshold_breach_boundary", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_breach", "to": "layer_governance_gate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "gate_breach", "to": "threshold_breach_boundary", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "modifier_loyalty_credit", "to": "layer_governance_gate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "modifier_loyalty_credit", "to": "modifier_loyalty_floor", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "modifier_vacuity_penalty", "to": "layer_governance_gate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "modifier_vacuity_penalty", "to": "threshold_heat_vacuity", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "modifier_vacuity_penalty", "to": "math_calculate_heat", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "math_calculate_shatter", "to": "layer_spectra_math", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "math_calculate_shatter", "to": "math_stable_centroid", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "math_calculate_heat", "to": "layer_spectra_math", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "math_stable_centroid", "to": "layer_spectra_math", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_embedding_engine", "to": "feature_ollama_binding", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_embedding_engine", "to": "feature_ollama_model", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_embedding_engine", "to": "feature_recursive_chunking", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_embedding_engine", "to": "layer_spectra_math", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "layer_embedding_engine", "to": "suite_sovereign_orchestrator", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_spectra_math", "to": "layer_governance_gate", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "layer_governance_gate", "to": "layer_escrow", "label": "calls", "title": "calls [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "layer_governance_gate", "to": "suite_governance_gate", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_escrow", "to": "suite_sovereign_orchestrator", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_quadmap", "to": "room_worldstate", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_quadmap", "to": "room_client_visual", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_quadmap", "to": "room_threading", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "layer_quadmap", "to": "suite_sovereign_orchestrator", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "room_worldstate", "to": "node_canonical4d", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "feature_recursive_chunking", "to": "suite_governance_gate", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "feature_ollama_binding", "to": "feature_ollama_model", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "feature_ollama_binding", "to": "suite_governance_gate", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "suite_architect_probe", "to": "constraint_zero_io_latency", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "GovernanceGate Tiers", "count": 8}, {"cid": 1, "color": "#F28E2B", "label": "Escrow & Session Layer", "count": 6}, {"cid": 2, "color": "#E15759", "label": "Ollama Embedding Engine", "count": 6}, {"cid": 3, "color": "#76B7B2", "label": "Spectra Math Core", "count": 6}, {"cid": 4, "color": "#59A14F", "label": "QuadMap Room Topology", "count": 5}, {"cid": 5, "color": "#EDC948", "label": "Pipeline Orchestration", "count": 4}, {"cid": 6, "color": "#B07AA1", "label": "Canonical Node Space", "count": 2}];
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${color}" onclick="focusNode('${nid}')">${nb ? nb.label : nid}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${n.label}</b></div>
+    <div class="field">Type: ${n._file_type || 'unknown'}</div>
+    <div class="field">Community: ${n._community_name}</div>
+    <div class="field">Source: ${n._source_file || '-'}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+network.on('click', params => {
+  if (params.nodes.length > 0) showInfo(params.nodes[0]);
+  else document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.onclick = () => {
+    if (hiddenCommunities.has(c.cid)) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: hiddenCommunities.has(c.cid) }));
+    nodesDS.update(updates);
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [{"id": "pipeline_flow", "label": "Core Pipeline: Shatter > Embed > Gate > Escrow > Session", "nodes": ["pipeline_shatter_velocity", "pipeline_ollama_embedding", "layer_governance_gate", "pipeline_escrow_gate", "pipeline_session_manifest"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "mochawesome-report/graphify-src/pipeline-tests.md"}, {"id": "governance_gate_thresholds", "label": "GovernanceGate Tiered Threshold System", "nodes": ["gate_trusted", "gate_staged", "gate_breach", "threshold_trusted_boundary", "threshold_breach_boundary"], "relation": "implement", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "mochawesome-report/graphify-src/pipeline-tests.md"}, {"id": "score_modifiers", "label": "Shatter Score Modifier System", "nodes": ["modifier_loyalty_credit", "modifier_loyalty_floor", "modifier_vacuity_penalty", "threshold_heat_vacuity"], "relation": "implement", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "mochawesome-report/graphify-src/pipeline-tests.md"}, {"id": "quadmap_room_rewire", "label": "QuadMap Cross-Room Rewire WorldState to Client_Visual", "nodes": ["room_worldstate", "room_client_visual", "pipeline_crossroom_rewire", "contract_omc_bridge_statesync"], "relation": "participate_in", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "mochawesome-report/graphify-src/pipeline-tests.md"}, {"id": "ollama_spectra_gate_chain", "label": "Ollama Embedding to Spectra Math to GovernanceGate Chain", "nodes": ["layer_embedding_engine", "feature_ollama_model", "layer_spectra_math", "math_calculate_shatter", "math_calculate_heat", "math_stable_centroid", "layer_governance_gate"], "relation": "implement", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "mochawesome-report/graphify-src/pipeline-tests.md"}];
+function drawHyperedges() {
+    const canvas = network.canvas.frame.canvas;
+    const ctx = canvas.getContext('2d');
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        // Draw convex hull as filled polygon
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        const scale = network.getScale();
+        const offset = network.getViewPosition();
+        const toCanvas = (p) => ({
+            x: (p.x - offset.x) * scale + canvas.width / 2,
+            y: (p.y - offset.y) * scale + canvas.height / 2
+        });
+        const pts = positions.map(toCanvas);
+        // Expand hull slightly
+        const cx = pts.reduce((s, p) => s + p.x, 0) / pts.length;
+        const cy = pts.reduce((s, p) => s + p.y, 0) / pts.length;
+        const expanded = pts.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+}
+network.on('afterDrawing', drawHyperedges);
+</script>
+</body>
+</html>

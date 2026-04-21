@@ -1,0 +1,17 @@
+# 💎 CHRONE³ Sovereign Ignore 💎
+# Stop Claude from drowning in the 11GB cache bloat
+
+registry/
+services/
+popsim-contract/
+graphify-out/
+packs/
+node_modules/
+dist/
+.tsx/
+shattered/
+*.png
+*.webp
+*.jpg
+temp/
+logs/
