@@ -27,7 +27,7 @@ function MobilityController:Init()
 		
 		local state = humanoid:GetState()
 		
-		if state == Enum.HumanoidStateType.Landing or state == Enum.HumanoidStateType.Landed then
+		if state == Enum.HumanoidStateType.Landed then
 			self.State.jumpCount = 0
 		elseif state == Enum.HumanoidStateType.Freefall or state == Enum.HumanoidStateType.Jumping then
 			if self.State.jumpCount < self.Config.MAX_JUMPS - 1 then

@@ -121,12 +121,6 @@ const server = http.createServer(async (req, res) => {
         '/': 'views/orchestrator.html',
         '/index.html': 'views/orchestrator.html',
         '/nexus.html': 'views/orchestrator.html',
-        '/sovereign-core.html': 'views/orchestrator.html',
-        '/portal': 'views/orchestrator.html',
-        '/orchestrate': 'views/orchestrator.html',
-        '/topology': 'views/topology.html',
-        '/dimensions': 'views/dimensions.html',
-        '/protocols': 'views/protocols.html'
     };
 
     if (routes[req.url || '/']) {
@@ -149,6 +143,19 @@ const server = http.createServer(async (req, res) => {
         const telemetry = await getTelemetry();
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(telemetry));
+        return;
+    }
+
+    if (req.url === '/api/graph') {
+        try {
+            const graphPath = path.resolve(process.cwd(), 'graphify-out/graph.json');
+            const graph = readFileSync(graphPath, 'utf-8');
+            res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
+            res.end(graph);
+        } catch (e) {
+            res.writeHead(404);
+            res.end(JSON.stringify({ error: 'graph.json not found — run /graphify first' }));
+        }
         return;
     }
 

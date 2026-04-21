@@ -29,15 +29,14 @@ end
 
 local CharacterController = require(getClientModule("CharacterController"))
 local MobilityController = require(getClientModule("SovereignMobilityController"))
+local InventoryController = require(getClientModule("InventoryController"))
+local CoOpController = require(getClientModule("CoOpController"))
 
 -- 3. Dependency Injection & Ignition
 local services = {
-	-- Client-side stubs for Server Services
 	CharacterService = {
 		CharacterLoaded = {
-			Connect = function(_, fn)
-				-- Bridge to server signal could go here if needed
-			end
+			Connect = function(_, fn) end
 		},
 		GetCharacter = function() return game.Players.LocalPlayer.Character end
 	}
@@ -45,8 +44,13 @@ local services = {
 
 CharacterController:Init(services)
 MobilityController:Init(services)
+InventoryController:Init(services)
+CoOpController:Init()
+
 CharacterController:Start()
 MobilityController:Start()
+InventoryController:Start()
+CoOpController:Start()
 
 Telemetry.dispatchPulse({ event = "Client_Manifest_Success" })
 print("🏮 [CLIENT-IGNITION] Sovereign Frequency Locked.")

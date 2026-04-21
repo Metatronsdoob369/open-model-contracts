@@ -1,5 +1,6 @@
 -- [[ SECTOR ALPHA: TELEMETRY & AUDIT ENGINE ]]
 local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
 
 local Telemetry = {}
 
@@ -44,11 +45,13 @@ function Telemetry.dispatchPulse(input)
 	payload.uptime = os.clock()
 	payload.memory_kb = collectgarbage("count")
 	
+	if not RunService:IsServer() then return end
+
 	task.spawn(function()
 		local success, result = pcall(function()
 			return HttpService:PostAsync(BRIDGE_URL, HttpService:JSONEncode(payload))
 		end)
-		
+
 		if success then
 			print("📡 [TELEMETRY] Pulse Dispatched to Bridge (127.0.0.1).")
 		else

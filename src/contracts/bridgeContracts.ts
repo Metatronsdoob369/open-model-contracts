@@ -43,6 +43,58 @@ export const BridgeContracts = {
     },
     required: ["type", "timestamp", "playerId", "action"]
   }
+  // 4. Inventory slot sync (server → client HUD)
+  OMC_Bridge_InventorySync: {
+    type: "object",
+    properties: {
+      slots: {
+        type: "object",
+        description: "Map of slot index (1-3) to item definition or null",
+        additionalProperties: {
+          oneOf: [
+            {
+              type: "object",
+              properties: {
+                id:          { type: "string" },
+                displayName: { type: "string" },
+                icon:        { type: "string" },
+                duration:    { type: "number" }
+              },
+              required: ["id", "displayName", "icon", "duration"]
+            },
+            { type: "null" }
+          ]
+        }
+      }
+    },
+    required: ["slots"]
+  },
+
+  // 5. Co-Op request broadcast (server → client popup)
+  OMC_Bridge_CoOpRequest: {
+    type: "object",
+    properties: {
+      type:          { type: "string", enum: ["coopRequest"] },
+      initiatorId:   { type: "number" },
+      initiatorName: { type: "string" },
+      itemId:        { type: "string" },
+      actionType:    { type: "string" },
+      isPublic:      { type: "boolean" }
+    },
+    required: ["initiatorId", "initiatorName", "itemId", "actionType", "isPublic"]
+  },
+
+  // 6. Co-Op response (client → server accept/decline)
+  OMC_Bridge_CoOpResponse: {
+    type: "object",
+    properties: {
+      type:            { type: "string", enum: ["coopResponse"] },
+      initiatorUserId: { type: "number" },
+      accepted:        { type: "boolean" }
+    },
+    required: ["initiatorUserId", "accepted"]
+  }
+
 } as const;
 
 // Helper for Luau-side validation (mirrored from your existing TagGameContracts)

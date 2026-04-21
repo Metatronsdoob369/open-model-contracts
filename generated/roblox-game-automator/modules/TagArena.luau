@@ -29,7 +29,7 @@ function TagArena.generate()
 	local floor = Instance.new("Part")
 	floor.Name = "Floor"
 	floor.Size = Vector3.new(CONFIG.ARENA_SIZE, 1, CONFIG.ARENA_SIZE)
-	floor.Position = Vector3.new(0, 39.5, 0)
+	floor.Position = Vector3.new(0, -0.5, 0)
 	floor.Color = CONFIG.COLORS.FLOOR
 	floor.Anchored = true
 	floor.Material = Enum.Material.Metal

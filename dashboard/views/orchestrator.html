@@ -92,14 +92,14 @@
             <span class="text-xl font-light tracking-tighter text-slate-100 font-headline uppercase">CHRONE³ OS</span>
         </div>
         <div class="hidden md:flex items-center gap-12">
-            <a class="text-sky-400 font-light border-b-2 border-sky-400 pb-1 font-headline uppercase tracking-widest text-xs transition-colors duration-300"
-                href="#">ORCHESTRATE</a>
-            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
-                href="#">TOPOLOGY</a>
-            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
-                href="#">DIMENSIONS</a>
-            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
-                href="#">PROTOCOLS</a>
+            <a id="tab-orchestrate" class="text-sky-400 font-light border-b-2 border-sky-400 pb-1 font-headline uppercase tracking-widest text-xs transition-colors duration-300 cursor-pointer"
+                onclick="switchView('orchestrator')">ORCHESTRATE</a>
+            <a id="tab-topology" class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300 cursor-pointer"
+                onclick="switchView('sentinel')">TOPOLOGY</a>
+            <a id="tab-dimensions" class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300 cursor-pointer"
+                onclick="switchView('theater')">DIMENSIONS</a>
+            <a id="tab-protocols" class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300 cursor-pointer"
+                onclick="switchView('protocols')">PROTOCOLS</a>
         </div>
         <div class="flex items-center gap-6">
             <span
@@ -190,10 +190,10 @@
                 </div>
                 <div class="flex items-center gap-8">
                     <div class="flex gap-6">
-                        <span id="axis-x" data-axis="x" class="axis-btn text-[10px] font-headline tracking-[0.2em] text-tertiary border-b border-tertiary pb-1 cursor-pointer transition-colors duration-200">X-AXIS</span>
-                        <span id="axis-y" data-axis="y" class="axis-btn text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer transition-colors duration-200">Y-AXIS</span>
-                        <span id="axis-z" data-axis="z" class="axis-btn text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer transition-colors duration-200">Z-DEPTH</span>
-                        <span id="axis-t" data-axis="t" class="axis-btn text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer transition-colors duration-200">T-CHRONE</span>
+                        <span class="text-[10px] font-headline tracking-[0.2em] text-tertiary border-b border-tertiary pb-1 cursor-pointer">X-AXIS</span>
+                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">Y-AXIS</span>
+                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">Z-DEPTH</span>
+                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">T-CHRONE</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -289,58 +289,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Graph Context Panel — slides in on node click -->
-                    <div id="graph-panel" class="hidden fixed top-20 right-0 bottom-0 z-50 w-[380px] bg-zinc-950/95 backdrop-blur-2xl border-l border-white/[0.06] flex flex-col shadow-[-20px_0_60px_rgba(0,0,0,0.6)]" style="transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); transform: translateX(100%);">
-                        <!-- Panel Header -->
-                        <div class="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
-                            <div class="flex items-center gap-3">
-                                <div class="w-1 h-4 bg-sky-400/60"></div>
-                                <span class="font-headline text-[10px] tracking-[0.3em] text-slate-400 uppercase">Node Context</span>
-                            </div>
-                            <button id="graph-panel-close" class="text-slate-600 hover:text-slate-300 transition-colors">
-                                <span class="material-symbols-outlined text-base">close</span>
-                            </button>
-                        </div>
-
-                        <!-- Node Identity -->
-                        <div class="px-6 py-5 border-b border-white/[0.04]">
-                            <p id="gp-node-id" class="font-mono text-[9px] text-slate-600 mb-1 truncate"></p>
-                            <h3 id="gp-node-label" class="font-headline text-sm font-light text-slate-100 leading-snug mb-3"></h3>
-                            <div class="flex items-center gap-2">
-                                <span id="gp-community-badge" class="font-headline text-[8px] tracking-[0.2em] uppercase px-2 py-1 bg-sky-400/10 text-sky-400/80 border border-sky-400/20"></span>
-                                <span id="gp-centrality" class="font-mono text-[8px] text-slate-600"></span>
-                            </div>
-                        </div>
-
-                        <!-- God Node Alert -->
-                        <div id="gp-god-alert" class="hidden mx-6 mt-4 px-4 py-3 bg-amber-500/5 border border-amber-500/20 flex items-start gap-3">
-                            <span class="material-symbols-outlined text-amber-400/70 text-sm mt-px">hub</span>
-                            <div>
-                                <p class="font-headline text-[9px] tracking-widest text-amber-400/80 uppercase mb-1">High-Centrality Node</p>
-                                <p id="gp-god-reason" class="font-mono text-[8px] text-slate-500 leading-relaxed"></p>
-                            </div>
-                        </div>
-
-                        <!-- Connections -->
-                        <div class="px-6 py-4 flex-1 overflow-y-auto" id="gp-connections-wrap">
-                            <p class="font-headline text-[8px] tracking-[0.3em] text-slate-600 uppercase mb-3">Connections</p>
-                            <div id="gp-connections" class="space-y-1"></div>
-                        </div>
-
-                        <!-- Community Bridges -->
-                        <div id="gp-bridges-wrap" class="hidden px-6 py-4 border-t border-white/[0.04]">
-                            <p class="font-headline text-[8px] tracking-[0.3em] text-slate-600 uppercase mb-3">Community Bridges</p>
-                            <div id="gp-bridges" class="space-y-2"></div>
-                        </div>
-
-                        <!-- Footer hint -->
-                        <div class="px-6 py-4 border-t border-white/[0.04]">
-                            <p class="font-mono text-[8px] text-slate-700 leading-relaxed">Source: graphify-out/graph.json · click outside to dismiss</p>
-                        </div>
-                    </div>
-                    <!-- Graph Panel Backdrop -->
-                    <div id="graph-panel-backdrop" class="hidden fixed inset-0 z-40" onclick="closeGraphPanel()"></div>
 
                     <!-- Bottom Escrow Control -->
                     <div class="mt-8 grid grid-cols-3 gap-6 w-full max-w-4xl px-2">
@@ -637,13 +585,127 @@
         </div>
     </main>
 
-    <!-- Visual Theater View (Visuals Page) -->
-    <main id="view-theater" class="relative w-full h-screen bg-black hidden">
-        <div id="theater-renderer" class="w-full h-full"></div>
-        <div class="absolute top-12 left-12 z-50">
-            <h2 class="text-2xl font-headline tracking-[0.5em] text-slate-200">HYPERSPATIAL_THEATER</h2>
-            <div class="flex items-center gap-4 mt-2">
-                <div class="bg-tertiary px-3 py-1 text-[10px] text-black font-bold uppercase tracking-widest">Spectral_Mode</div>
+    <!-- DIMENSIONS View — Spatio-Temporal Fabric (was /portal) -->
+    <main id="view-theater" class="relative w-full h-screen bg-[#0a0a0b] pt-20 hidden overflow-hidden">
+        <div class="grid grid-cols-12 gap-8 h-full p-8 pb-20">
+            <!-- Left: Status + Node Health -->
+            <div class="col-span-12 lg:col-span-3 flex flex-col gap-8">
+                <div class="card-veneer p-6 rounded-xl group relative">
+                    <h3 class="font-headline text-[10px] tracking-[0.2em] text-slate-400 mb-6 uppercase">System Orchestrator Status</h3>
+                    <div class="flex items-end gap-2 mb-2">
+                        <span id="dim-stat-latency" class="text-4xl font-light font-headline text-slate-100">19</span>
+                        <span class="text-lg font-light font-headline text-tertiary mb-1">ms</span>
+                    </div>
+                    <p class="text-xs text-slate-500 font-light">Latency Spectrum: Nominal</p>
+                    <div class="mt-8 pt-6 border-t border-white/5 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] font-headline tracking-widest text-slate-400 uppercase">Passed Tests</p>
+                            <p class="text-xl font-light text-slate-100" id="dim-passed-tests">12 / 12</p>
+                        </div>
+                        <span class="material-symbols-outlined text-tertiary text-3xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+                    </div>
+                </div>
+                <div class="card-veneer p-6 rounded-xl flex-1 flex flex-col">
+                    <h3 class="font-headline text-[10px] tracking-[0.2em] text-slate-400 mb-4 uppercase">Node Health (3072-D Vector)</h3>
+                    <div class="flex-1 bg-[#0a0a0c] rounded-lg overflow-y-auto border border-white/5 shadow-[inset_0_4px_20px_rgba(0,0,0,0.8)] p-4">
+                        <div id="dim-node-health-list" class="space-y-1">
+                            <div class="text-[9px] text-slate-600 font-mono animate-pulse">Awaiting spectral sync...</div>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-2">
+                        <div class="flex justify-between text-[10px] font-headline text-slate-400 uppercase">
+                            <span>Signal Stability</span>
+                            <span id="dim-stability-pct" class="text-tertiary">--</span>
+                        </div>
+                        <div class="h-1 bg-black/50 rounded-full overflow-hidden border border-white/5">
+                            <div id="dim-stability-bar" class="h-full bg-tertiary w-0 shadow-[0_0_10px_#7bd1fa] transition-all duration-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Center: Three.js Fabric -->
+            <div class="col-span-12 lg:col-span-6">
+                <div class="h-full card-veneer rounded-xl p-8 flex flex-col relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-tertiary/40 to-transparent"></div>
+                    <div class="flex justify-between items-start mb-8 relative z-10">
+                        <div>
+                            <h2 class="text-2xl font-light font-headline tracking-[0.15em] text-slate-100">SPATIO-TEMPORAL FABRIC</h2>
+                            <p class="text-xs text-slate-500 font-headline tracking-[0.1em] uppercase mt-2">Real-time Code Context Synchronization</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <div class="px-4 py-1.5 bg-black/40 border border-white/10 rounded text-[10px] text-slate-400">EPOCH: 1.48.0</div>
+                            <div id="dim-sync-status" class="px-4 py-1.5 bg-tertiary/10 border border-tertiary/30 rounded text-[10px] font-medium text-tertiary">SYNCING...</div>
+                        </div>
+                    </div>
+                    <div id="fabric-visual" class="flex-1 relative z-10">
+                        <div class="absolute top-4 left-1/2 -translate-x-1/2 font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase pointer-events-none z-10">Y : DIMENSION</div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase pointer-events-none z-10">T : CHRONE</div>
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 rotate-90 font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase pointer-events-none z-10">X : VECTOR</div>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 -rotate-90 font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase pointer-events-none z-10">Z : DEPTH</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Pipeline -->
+            <div class="col-span-12 lg:col-span-3">
+                <div class="h-full card-veneer rounded-xl p-6 flex flex-col">
+                    <div class="flex items-center justify-between mb-8">
+                        <h3 class="font-headline text-[10px] tracking-[0.2em] text-slate-400 uppercase">Test Pipeline</h3>
+                        <span id="dim-pipeline-timer" class="text-[10px] text-tertiary font-light tracking-widest">RUNNING: 8 NODES</span>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <div class="p-4 bg-surface-container-highest rounded-lg border-l-2 border-tertiary border border-white/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-headline text-slate-200 uppercase">Spectral Mapping</span>
+                                <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </div>
+                            <span id="dim-stage-shatter" class="text-[10px] text-slate-500 font-headline">Awaiting sync...</span>
+                        </div>
+                        <div class="p-4 bg-surface-container-highest rounded-lg border-l-2 border-tertiary border border-white/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-headline text-slate-200 uppercase">Ollama Node</span>
+                                <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <span class="text-[10px] text-slate-500 font-headline">Context Ready</span>
+                                <span class="text-[10px] text-tertiary font-headline">/ SYNCED</span>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-surface-container-highest rounded-lg border-l-2 border-tertiary border border-white/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-headline text-slate-200 uppercase">Rewire</span>
+                                <span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-headline">Graph Mapped</span>
+                        </div>
+                        <div class="p-4 bg-surface-container-high rounded-lg border-l-2 border-secondary border border-white/5 animate-pulse">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-headline text-secondary uppercase">Injection</span>
+                                <span class="material-symbols-outlined text-secondary text-sm">pending</span>
+                            </div>
+                            <div class="w-full bg-black/50 h-1.5 rounded-full mt-3 border border-white/5">
+                                <div class="bg-secondary h-full w-2/3 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-lg border-l-2 border-outline-variant border border-white/5">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs font-headline text-slate-400 uppercase">Escrow Validation Gate</span>
+                                <span class="material-symbols-outlined text-slate-300 text-sm" style="font-variation-settings: 'FILL' 1;">lock</span>
+                            </div>
+                            <div id="dim-stage-escrow" class="text-[10px] text-slate-500 font-headline mt-1">Awaiting sync...</div>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-white/5">
+                        <div class="bg-[#0a0a0c] p-4 rounded border border-white/5">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] font-headline tracking-widest text-slate-500 uppercase">Total Efficiency</span>
+                                <span id="dim-efficiency-display" class="text-xs font-light text-slate-100">98.2%</span>
+                            </div>
+                            <div class="h-1 bg-black/50 rounded-full overflow-hidden border border-white/5">
+                                <div id="dim-efficiency-bar" class="h-full bg-gradient-to-r from-secondary to-tertiary w-[98.2%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -715,6 +777,145 @@
             © 2104 NEURAL LINK CORP
         </div>
     </footer>
+
+    <!-- Protocols View -->
+    <main id="view-protocols" class="relative min-h-screen pt-32 px-8 lg:pl-32 hidden">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-headline tracking-[0.3em] text-slate-100 mb-2">GOVERNANCE PROTOCOLS</h2>
+            <p class="text-slate-500 font-mono text-xs tracking-widest mb-12">SOVEREIGN CONSTITUTION · CIRCUIT LAWS · BRIDGE THROTTLING</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card-veneer p-6">
+                    <div class="text-[10px] font-headline tracking-widest text-sky-400 mb-3">§1 CONTRACT MIRRORING</div>
+                    <p class="text-slate-400 text-xs font-mono leading-relaxed">All client queries must pass through the Sovereign Bridge. No direct execution without governance registration.</p>
+                </div>
+                <div class="card-veneer p-6">
+                    <div class="text-[10px] font-headline tracking-widest text-amber-400 mb-3">§4 BRIDGE THROTTLING</div>
+                    <p class="text-slate-400 text-xs font-mono leading-relaxed">Minimum 450ms temporal spacing between executions. Overlap is classified as temporal fracture — HIGH severity.</p>
+                </div>
+                <div class="card-veneer p-6">
+                    <div class="text-[10px] font-headline tracking-widest text-emerald-400 mb-3">TRUSTED BAND ≤ 0.65v</div>
+                    <p class="text-slate-400 text-xs font-mono leading-relaxed">Resonance score below 0.65v. Full canonical alignment. Diamond stable. Authorized for escrow.</p>
+                </div>
+                <div class="card-veneer p-6">
+                    <div class="text-[10px] font-headline tracking-widest text-rose-400 mb-3">BREACH THRESHOLD &gt; 0.95v</div>
+                    <p class="text-slate-400 text-xs font-mono leading-relaxed">Resonance score above 0.95v. GovernanceGate blocks escrow. Audit record written. Module rejected.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    const VIEWS = {
+        orchestrator: { el: 'view-orchestrator', tab: 'tab-orchestrate' },
+        sentinel:     { el: 'view-sentinel',     tab: 'tab-topology' },
+        theater:      { el: 'view-theater',       tab: 'tab-dimensions' },
+        protocols:    { el: 'view-protocols',     tab: 'tab-protocols' },
+    };
+
+    // DIMENSIONS view — lazy-init fabric renderer on first switch
+    let fabricRenderer = null;
+    let dimensionsInitialized = false;
+
+    function initDimensions() {
+        if (dimensionsInitialized) return;
+        dimensionsInitialized = true;
+        try {
+            // Dynamically import Three.js + QuadMapRenderer
+            import('/QuadMapRenderer.js').then(({ QuadMapRenderer }) => {
+                fabricRenderer = new QuadMapRenderer('fabric-visual');
+                const canvas = document.querySelector('#fabric-visual canvas');
+                if (canvas) {
+                    canvas.style.position = 'absolute';
+                    canvas.style.inset = '0';
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.zIndex = '0';
+                }
+                syncDimensions();
+            }).catch(e => console.error('[DIMENSIONS] Renderer failed:', e));
+        } catch(e) { console.error('[DIMENSIONS] Init failed:', e); }
+    }
+
+    function adaptPointsForFabric(points) {
+        return points.map((p, i) => {
+            const shatter = p.overallShatter || 0;
+            const angle = (i / (points.length || 1)) * Math.PI * 2;
+            const radius = 0.2 + shatter * 0.65;
+            return {
+                id: p.id || `node-${i}`,
+                room: ['ROOM-01_WorldState','ROOM-02_Client_Visual','ROOM-03_Threading'][i % 3],
+                heat: Math.min(shatter, 1.0),
+                spatialEmbedding: [0.5 + Math.cos(angle) * radius * 0.5, 0.4 + shatter * 0.3, 0.5 + Math.sin(angle) * radius * 0.5],
+                temporalSignatures: [{ phase: shatter > 0.65 ? 'chaosEvent' : 'scriptLoad', shatterVelocity: Math.min(shatter, 1.0) }]
+            };
+        });
+    }
+
+    async function syncDimensions() {
+        try {
+            const [statsRes, telRes] = await Promise.all([fetch('/api/stats'), fetch('/api/telemetry')]);
+            const stats = statsRes.ok ? await statsRes.json() : null;
+            const tel = await telRes.json();
+            if (stats) {
+                document.getElementById('dim-stat-latency').innerText = stats.latency || 19;
+                const stability = ((stats.stability || 0.98) * 100).toFixed(1);
+                document.getElementById('dim-stability-bar').style.width = stability + '%';
+                document.getElementById('dim-stability-pct').textContent = stability + '%';
+                const efficiency = ((stats.efficiency || 0.982) * 100).toFixed(1);
+                document.getElementById('dim-efficiency-display').innerText = efficiency + '%';
+                document.getElementById('dim-efficiency-bar').style.width = efficiency + '%';
+            }
+            const points = tel.spectralReport || [];
+            if (points.length > 0) {
+                if (fabricRenderer) fabricRenderer.updateNodes(adaptPointsForFabric(points));
+                // Node health list
+                const container = document.getElementById('dim-node-health-list');
+                if (container) {
+                    container.innerHTML = '';
+                    points.forEach((p, i) => {
+                        const shatter = p.overallShatter || 0;
+                        const gate = shatter > 0.95 ? 'BREACH' : shatter > 0.65 ? 'STAGED' : 'TRUSTED';
+                        const color = gate === 'BREACH' ? '#ff2244' : gate === 'STAGED' ? '#ffaa00' : '#00ffcc';
+                        container.innerHTML += `<div class="mb-3"><div class="flex justify-between items-center mb-1"><span class="font-mono text-[9px] text-slate-400 truncate max-w-[120px]">${p.id || `node-${i}`}</span><span class="font-mono text-[9px] font-bold" style="color:${color}">${gate}</span></div><div class="flex items-center gap-2"><div class="flex-1 h-1 bg-black/60 rounded-full overflow-hidden border border-white/5"><div class="h-full rounded-full" style="width:${Math.round(shatter*100)}%;background:${color};box-shadow:0 0 6px ${color}88;"></div></div><span class="font-mono text-[9px] text-slate-500 w-10 text-right">${shatter.toFixed(3)}v</span></div></div>`;
+                    });
+                }
+                // Pipeline
+                const trusted = points.filter(p => (p.overallShatter||0) <= 0.65).length;
+                const staged = points.filter(p => (p.overallShatter||0) > 0.65 && (p.overallShatter||0) <= 0.95).length;
+                const breach = points.filter(p => (p.overallShatter||0) > 0.95).length;
+                const sv = document.getElementById('dim-stage-shatter');
+                if (sv) sv.textContent = `${points.length} scripts mapped · avg ${(points.reduce((a,p)=>a+(p.overallShatter||0),0)/points.length).toFixed(3)}v`;
+                const escrow = document.getElementById('dim-stage-escrow');
+                if (escrow) escrow.innerHTML = `<span style="color:#00ffcc">${trusted} TRUSTED</span> · <span style="color:#ffaa00">${staged} STAGED</span> · <span style="color:#ff2244">${breach} BREACH</span>`;
+                const timer = document.getElementById('dim-pipeline-timer');
+                if (timer) timer.textContent = breach > 0 ? `BREACH DETECTED: ${breach}` : `RUNNING: ${points.length} NODES`;
+            }
+            document.getElementById('dim-sync-status').textContent = 'LIVE';
+        } catch(e) {
+            document.getElementById('dim-sync-status').textContent = 'OFFLINE';
+        }
+    }
+    setInterval(() => { if (dimensionsInitialized) syncDimensions(); }, 4000);
+
+    function switchView(name) {
+        Object.values(VIEWS).forEach(({ el, tab }) => {
+            document.getElementById(el)?.classList.add('hidden');
+            const t = document.getElementById(tab);
+            if (t) {
+                t.classList.remove('text-sky-400', 'border-b-2', 'border-sky-400');
+                t.classList.add('text-slate-500');
+            }
+        });
+        const target = VIEWS[name];
+        if (!target) return;
+        document.getElementById(target.el)?.classList.remove('hidden');
+        const activeTab = document.getElementById(target.tab);
+        if (activeTab) {
+            activeTab.classList.remove('text-slate-500');
+            activeTab.classList.add('text-sky-400', 'border-b-2', 'border-sky-400');
+        }
+    }
+    </script>
 
     <script type="importmap">
   { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }

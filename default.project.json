@@ -7,7 +7,11 @@
         "$className": "Folder",
         "Generated": {
           "$path": "generated/roblox-game-automator/modules"
-        },
+        }
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
         "Client": {
           "$path": "src/client"
         }

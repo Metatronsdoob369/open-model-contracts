@@ -57,6 +57,10 @@ local TagGameService = require(getModule("TagGameService"))
 local DanceFloorService = require(getModule("DanceFloorService"))
 local AtmosphereController = require(getModule("AtmosphereController"))
 local VictimService = require(getModule("VictimService"))
+local InventoryService = require(getModule("InventoryService"))
+local CoOpHistoryService = require(getModule("CoOpHistoryService"))
+local PickupService = require(getModule("PickupService"))
+local EnemyService = require(getModule("EnemyService"))
 
 -- Shared logic
 local TagBot = require(Generated:WaitForChild("TagBot"))
@@ -79,8 +83,24 @@ if success then
 	CathedralRaveService:Init()
 	TagGameService:Init()
 	DanceFloorService:Init()
+	-- [[ GROK_ SOVEREIGN SERVICES ]]
+	local grokServices = {
+		InventoryService = InventoryService,
+		CoOpHistoryService = CoOpHistoryService,
+		PickupService = PickupService,
+		CharacterService = CharacterService,
+	}
+	
+	InventoryService:Init(grokServices)
+	CoOpHistoryService:Init(grokServices)
+	PickupService:Init(grokServices)
+	EnemyService:Init(grokServices)
 	
 	CharacterService:Start()
+	InventoryService:Start()
+	CoOpHistoryService:Start()
+	PickupService:Start()
+	EnemyService:Start()
 	TagGameService:Start()
 	DanceFloorService:Start()
 	AtmosphereController:Manifest()

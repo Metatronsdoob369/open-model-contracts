@@ -17,7 +17,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local OMC = ReplicatedStorage:WaitForChild("OMC")
 local Generated = OMC:WaitForChild("Generated")
 local Telemetry = require(Generated:WaitForChild("Telemetry"))
-local Governance = require(script.Parent:WaitForChild("MetropolisGovernance"))
+-- local Governance = require(script.Parent:WaitForChild("MetropolisGovernance")) -- Server-side only
 
 local CharacterController = {
 	Name = "CharacterController",
@@ -29,10 +29,10 @@ local function handleCharacterLoaded(success, usedFallback)
 	if success then
 		print("🏮 [CHAR-CONTROLLER] Character manifest successfully.")
 		if usedFallback then
-			Governance.RegisterIssue("LOAD_FALLBACK", "Using basic character fallback", "LOW")
+			warn("🏮 [CHAR-CONTROLLER] Using basic character fallback")
 		end
 	else
-		Governance.RegisterIssue("LOAD_FAIL", "Character manifestation failed in world", "MEDIUM")
+		warn("🏮 [CHAR-CONTROLLER] Character manifestation failed in world")
 	end
 	
 	Telemetry.dispatchPulse({
@@ -59,7 +59,7 @@ function CharacterController:Start()
 	if self.CharacterService and self.CharacterService.CharacterLoaded then
 		self.CharacterService.CharacterLoaded:Connect(handleCharacterLoaded)
 	else
-		Governance.RegisterIssue("SERVICE_DESYNC", "CharacterService manifest lacks CharacterLoaded signal", "HIGH")
+		warn("🏮 [CHAR-CONTROLLER] CharacterService manifest lacks CharacterLoaded signal")
 	end
 	
 	Telemetry.dispatchPulse({ event = "Controller_Ignition", name = self.Name })

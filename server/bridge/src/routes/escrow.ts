@@ -67,7 +67,7 @@ router.post('/', async (req: Request, res: Response) => {
          detail: `Stability Warning! ${module.module_id} | Tier: ${report.tier} | Resonance: ${report.resonanceScore.toFixed(3)}v`,
        });
        const err: ErrorResponse = {
-         error: `Sovereignty Breach: ${report.reason}`,
+         error: `Sovereignty Breach: ${report.status}`,
          code: 'GOVERNANCE_BREACH',
        };
        res.status(403).json(err);

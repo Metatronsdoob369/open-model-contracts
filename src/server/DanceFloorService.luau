@@ -58,11 +58,34 @@ function DanceFloorService:_manifestGrid()
 	f.Name = "Sovereign_Floor_Manifest"
 	f.Parent = Workspace
 	self.State.manifest = f
-	
+
 	local c = self.Config
+
+	-- [[ SAFETY BASEPLATE — solid catch layer under the full tile grid ]]
+	-- Margin must exceed half a tile + spacing on every edge to cover corner gaps
+	local tileStepX = c.TILE_SIZE.X + c.SPACING
+	local tileStepZ = c.TILE_SIZE.Z + c.SPACING
+	local gridWidth  = c.COLS * tileStepX
+	local gridDepth  = c.ROWS * tileStepZ
+	local edgeMargin = math.max(c.TILE_SIZE.X, c.TILE_SIZE.Z) -- one full tile margin each side
+	local baseplate = Instance.new("Part")
+	baseplate.Name = "Sovereign_Baseplate"
+	baseplate.Size = Vector3.new(gridWidth + edgeMargin * 2, 4, gridDepth + edgeMargin * 2)
+	baseplate.Anchored = true
+	baseplate.CanCollide = true
+	baseplate.Material = Enum.Material.SmoothPlastic
+	baseplate.Color = Color3.fromRGB(5, 5, 10)
+	baseplate.Reflectance = 0.05
+	baseplate.CFrame = CFrame.new(
+		c.DATA_CENTER.X + (tileStepX / 2),
+		c.DATA_CENTER.Y - (c.TILE_SIZE.Y / 2) - 2,
+		c.DATA_CENTER.Z + (tileStepZ / 2)
+	)
+	baseplate.Parent = f
+
 	local startX = c.DATA_CENTER.X - ((c.COLS * (c.TILE_SIZE.X + c.SPACING)) / 2)
 	local startZ = c.DATA_CENTER.Z - ((c.ROWS * (c.TILE_SIZE.Z + c.SPACING)) / 2)
-	
+
 	for r = 1, c.ROWS do
 		self.State.tiles[r] = {}
 		for col = 1, c.COLS do
@@ -72,7 +95,7 @@ function DanceFloorService:_manifestGrid()
 			p.Material = Enum.Material.SmoothPlastic -- Swapped from Neon to stop bloom washout
 			p.Reflectance = 0.3 -- Bounces the Rave lasers luxuriously
 			p.CFrame = CFrame.new(startX + (col * (c.TILE_SIZE.X + c.SPACING)), c.DATA_CENTER.Y, startZ + (r * (c.TILE_SIZE.Z + c.SPACING)))
-			
+
 			-- [[ BMW XENON HIGHLIGHTING ]]
 			local edge = Instance.new("SelectionBox")
 			edge.Name = "Xenon_Edge"
@@ -81,7 +104,7 @@ function DanceFloorService:_manifestGrid()
 			edge.LineThickness = 0.02
 			edge.Transparency = 0.5
 			edge.Parent = p
-			
+
 			p.Parent = f
 			self.State.tiles[r][col] = p
 		end
@@ -122,5 +145,6 @@ end
 function DanceFloorService:Init()
 	print("🏮 [DANCE] 4D Resonator Anchored.")
 end
+
 
 return DanceFloorService
