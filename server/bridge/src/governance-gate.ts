@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { SpectraMappingService } from './core/spectra-mapping.ts';
+import { SpectraMappingService } from './core/spectra-mapping';
 
 export type SovereigntyTier = 'TRUSTED' | 'STAGED' | 'BREACH';
 

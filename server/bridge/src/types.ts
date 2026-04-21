@@ -97,7 +97,9 @@ export type AuditEventType =
   | 'session.not_found'
   | 'session.already_consumed'
   | 'governance.violation'
-  | 'validation.failed';
+  | 'validation.failed'
+  | 'submit.success'
+  | 'submit.error';
 
 export interface AuditRecord {
   session_id?: string;
