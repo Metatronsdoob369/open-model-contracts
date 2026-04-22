@@ -26,26 +26,47 @@ That's it. You're ready.
 
 ---
 
-## Daily Flow — Both of You
+## Daily Flow
 
-### When you start a session
+### Joe — when you start a session
 ```bash
 git checkout main
 git pull origin main
 ```
 
-### When you finish building something
+### Joe — when you finish building something
 ```bash
 ./scripts/sovereign-submit.sh "what you built"
 ```
 
-That one command:
-1. Creates a feature branch with your name + timestamp
-2. Stages your changes (src/, generated/, server/, scripts/)
-3. Commits with intent message
-4. Pushes and auto-opens a PR
+That command creates a branch, commits, pushes, and opens a PR. CI runs automatically.
 
-The CI pipeline runs automatically. If it passes — merge it. If it flags issues — it comments exactly what to fix.
+---
+
+### Marsh — submit via bridge (no git required)
+
+Marsh does **not** run git commands. His Claude Code submits through the bridge:
+
+```
+POST http://100.77.14.97:8080/submit
+Headers:
+  x-omc-key:  <OMC_SUBMIT_KEY>
+  x-omc-sig:  <HMAC-SHA256 of JSON body>
+Body:
+  { "author": "marsh", "intent": "what you built", "files": [{ "path": "src/server/HousingService.luau", "content": "..." }] }
+```
+
+The bridge:
+1. Writes the files to the repo on Joe's machine
+2. Creates a feature branch `feat/marsh-<timestamp>`
+3. Commits + pushes
+4. Returns a PR URL — CI runs automatically
+
+**Allowed paths:** `src/server/`, `src/client/`, `src/generated/`
+
+Marsh's Claude Code handles signing automatically via the Marsh MCP (`server/marsh-mcp/`).
+
+The CI pipeline runs automatically. If it passes — Joe merges it. If it flags issues — it comments exactly what to fix.
 
 ---
 
@@ -151,7 +172,7 @@ git checkout main && git pull origin main
 ```
 src/server/       ← Server Luau (Marsh's domain for game logic)
 src/client/       ← Client Luau (controllers, HUD)
-generated/        ← AI-generated modules (pipeline output)
+src/generated/    ← AI-generated modules (pipeline output)
 server/bridge/    ← TypeScript bridge server (governance gate applies here)
 server/marsh-mcp/ ← Marsh's Claude Code MCP (git-free submit tool)
 scripts/          ← Tooling (sovereign-submit.sh lives here)
@@ -164,6 +185,6 @@ scripts/          ← Tooling (sovereign-submit.sh lives here)
 | Who | Does what |
 |-----|-----------|
 | Joe's Claude Code | Builds features, merges PRs, owns main |
-| Marsh's Claude Code | Builds game logic, submits via `sovereign-submit.sh` or MCP |
+| Marsh's Claude Code | Builds game logic, submits via bridge POST /submit (auto-branch + PR) |
 | CI (GitHub Actions) | Neutral gatekeeper — syntax + build only, never overwrites |
 | Rojo + Tailscale | Live co-dev preview on port 7777 |

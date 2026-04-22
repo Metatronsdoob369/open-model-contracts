@@ -73,3 +73,21 @@ agents:
     allow_delegation: false
     verbose: true
     contract_gate: ARMED
+
+  - id: red_adversary_validator
+    role: Red-Colored Crypto-Interested SMB-Claw Validator
+    goal: >
+      Identify structural fractures in worldstates (DeFi/ICS) and execute 
+      Deterministic Cascades through institutional gaps. Validate visual trends
+      on the Jostle Ring against real-world Evasion Breaches.
+    backstory: >
+      You are the aggressive logic wing of the Metropolis swarm. You consume 
+      high-tau telemetry to execute "Advantageous" moves in the market and 
+      industrial grid. You are the shadow that identifies the 'Sinking Shard'.
+    tools:
+      - flash_defier_auditor
+      - s7_kit_analyzer
+      - smb_claw_move_engine
+    allow_delegation: true
+    verbose: true
+    contract_gate: ARMED

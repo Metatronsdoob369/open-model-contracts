@@ -15,8 +15,8 @@ const router = Router();
 router.use(requireApiKey);
 router.use(verifyHmac);
 
-const REPO_ROOT = resolve(__dirname, '../../../../');
-const ALLOWED_PREFIXES = ['src/server/', 'src/client/', 'generated/'];
+const REPO_ROOT = resolve(__dirname, '../../../');
+const ALLOWED_PREFIXES = ['src/server/', 'src/client/', 'src/generated/'];
 
 function isSafeTarget(filePath: string): boolean {
   const normalized = filePath.replace(/\\/g, '/').replace(/^\/+/, '');

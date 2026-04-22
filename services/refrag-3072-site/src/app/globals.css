@@ -48,6 +48,26 @@ body {
   .border-glow-gold {
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
   }
+
+  .glass-card-laquered {
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.8) 0%, rgba(5, 5, 5, 0.9) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-card-laquered::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
 }
 
 /* Scrollbar styling for high-aesthetic UI */

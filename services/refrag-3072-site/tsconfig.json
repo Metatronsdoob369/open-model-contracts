@@ -18,8 +18,10 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "animejs": ["./node_modules/animejs/lib/anime.es.js"]
     }
   },
   "include": [

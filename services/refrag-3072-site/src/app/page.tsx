@@ -3,8 +3,11 @@
 import React from 'react';
 import { ShieldCheck, Activity, Zap, ExternalLink } from 'lucide-react';
 import SovereignCube from '@/components/SovereignCube';
+import SpectralRadar3072 from '@/components/SpectralRadar3072';
 
 export default function Home() {
+  const [viewState, setViewState] = React.useState('X-AXIS');
+
   return (
     <div className="min-h-screen bg-black text-foreground flex flex-col font-mono selection:bg-gold selection:text-black">
       {/* Header Bar: The Sovereign Brief */}
@@ -37,7 +40,7 @@ export default function Home() {
 
         {/* Left Rail: Structural Intent */}
         <div className="flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
-          <section className="glass-card mb-2 flex flex-col items-center">
+          <section className="glass-card-laquered mb-2 flex flex-col items-center p-4">
             <h2 className="text-[9px] text-zinc-600 uppercase tracking-[0.4em] mb-4 font-bold">Cognitive_Core</h2>
             <SovereignCube />
           </section>
@@ -71,7 +74,7 @@ export default function Home() {
         </div>
 
         {/* Center: The Sovereign Blueprint */}
-        <div className="flex-1 glass-card relative overflow-hidden flex flex-col bg-zinc-950/20 border border-zinc-900/50">
+        <div className="flex-1 glass-card-laquered relative overflow-hidden flex flex-col">
           <div className="absolute top-8 left-8 z-10">
             <h2 className="text-[14px] text-zinc-100 font-bold tracking-[0.4em] uppercase mb-1">
               SYSTEMIC_CATHEDRAL_ARCHITECTURAL_BLUEPRINT
@@ -81,12 +84,8 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="flex-1 flex items-center justify-center p-16 bg-black relative">
-            <img 
-              src="/Users/joewales/.gemini/antigravity/brain/b3f8fbdd-5a29-41c3-998b-e42f053e96b2/sovereign_architecture_blueprint_1776404324964.png" 
-              alt="Sovereign Architecture Blueprint"
-              className="max-w-full max-h-full object-contain opacity-60 mix-blend-screen"
-            />
+          <div className="flex-1 flex items-center justify-center bg-black relative">
+            <SpectralRadar3072 axis={viewState} />
             {/* Geometric Grid Overlay */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none" />
           </div>
@@ -109,8 +108,10 @@ export default function Home() {
       {/* Terminal Footer */}
       <footer className="h-8 border-t border-zinc-900 px-8 flex items-center justify-between bg-black text-[8px] text-zinc-700 uppercase tracking-[0.4em]">
         <div className="flex gap-6">
-          <span>Localhost:6340_ONLINE</span>
-          <span>Integrity: DIAMOND_PENDING</span>
+          <button onClick={() => setViewState('X-AXIS')} className={viewState === 'X-AXIS' ? 'text-cyan' : ''}>X-AXIS</button>
+          <button onClick={() => setViewState('Y-AXIS')} className={viewState === 'Y-AXIS' ? 'text-cyan' : ''}>Y-AXIS</button>
+          <button onClick={() => setViewState('Z-DEPTH')} className={viewState === 'Z-DEPTH' ? 'text-cyan' : ''}>Z-DEPTH</button>
+          <button onClick={() => setViewState('T-CHRONE')} className={viewState === 'T-CHRONE' ? 'text-cyan' : ''}>T-CHRONE</button>
         </div>
         <div>
           <span>REFRAG_AUDIT_PIPELINE v1.0.1</span>

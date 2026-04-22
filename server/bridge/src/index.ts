@@ -4,6 +4,7 @@
 
 import express from 'express';
 import escrowRouter from './routes/escrow';
+import metropolisEscrowRouter from './routes/metropolis-escrow';
 import telemetryRouter from './routes/telemetry';
 import submitRouter from './routes/submit';
 import { getAuditLogPath } from './audit-logger';
@@ -26,6 +27,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/escrow', escrowRouter);
+app.use('/metropolis-escrow', metropolisEscrowRouter);
 app.use('/telemetry', telemetryRouter);
 app.use('/submit', submitRouter);
 

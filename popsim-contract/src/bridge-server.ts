@@ -136,9 +136,11 @@ import { translator } from './lib/nl-to-game/nl-to-contracts.js';
 import { SpectraMappingService } from './core/spectra-mapping.js';
 import { RepairShopService } from './core/repair-shop.js';
 import { validateEscrowPayload } from '../../src/escrow/validatePayload.js';
+import { AttackTreeManifest } from './domains/analysis/attack-tree.js';
 
 const spectraMapper = new SpectraMappingService();
-const repairShop = new RepairShopService();
+let repairShop = new RepairShopService(); // Initialized without OpenAI first
+
 
 // ─────────────────────────────────────────────
 // DATA ACCESS & PERSISTENCE
@@ -222,8 +224,10 @@ if (config.telegramBotToken) {
 let openaiClient: OpenAI | null = null;
 if (config.openaiApiKey) {
   openaiClient = new OpenAI({ apiKey: config.openaiApiKey });
-  logger.info('✅ OpenAI client initialized');
+  repairShop = new RepairShopService(openaiClient); // RE-ARM WITH OPENAI
+  logger.info('✅ OpenAI client initialized & RepairShop ARMED');
 } else {
+
   logger.warn('⚠️ No OpenAI API key configured, using heuristic NL parser');
 }
 
@@ -686,7 +690,7 @@ app.post('/v1/spectra/ingest', async (req, res) => {
   try {
     const report = await spectraMapper.mapBatch(scripts);
     
-    // Alert the Sovereign Scientst if high shatter is detected
+    // Alert the Sovereign Scientist if high shatter is detected
     const highShatter = report.filter(p => p.shatter > 1.2); 
     if (highShatter.length > 0 && telegramBot && config.telegramChatId) {
       telegramBot.sendMessage(
@@ -695,6 +699,19 @@ app.post('/v1/spectra/ingest', async (req, res) => {
         { parse_mode: 'Markdown' }
       ).catch(e => logger.error('Shatter alert failed', { e }));
     }
+
+    // REAL-TIME DASHBOARD SATURATION: Sinking Shards
+    const armedReports = report.filter(p => p.gate === 'ARMED');
+    if (armedReports.length > 0) {
+      io.emit('sinking-shard', {
+        timestamp: new Date().toISOString(),
+        severity: 'CRITICAL',
+        totalArmed: armedReports.length,
+        reports: armedReports
+      });
+      logger.warn(`🔥 [TELEMETRY] Emitted Sinking Shard alert for ${armedReports.length} artifacts`);
+    }
+
 
     res.json({
       success: true,
@@ -709,6 +726,46 @@ app.post('/v1/spectra/ingest', async (req, res) => {
     res.status(500).json({ success: false, error: 'Ingestion pipeline failed', detail: (error as any).message });
   }
 });
+
+/**
+ * SOVEREIGN SDK: Live Collaboration Endpoint (Rojo-Ready)
+ * Receives fragments from Roblox Studio and returns Hept-Division Heat.
+ */
+app.post('/sdk/analyze', async (req, res) => {
+  const { id, code } = req.body;
+  if (!code) return res.status(400).json({ success: false, error: 'No code fragment provided' });
+  
+  logger.info('🧪 [SDK-ANALYSIS] Detonating manifold for Roblox fragment', { id });
+
+  try {
+    const report = await spectraMapper.mapBatch([{ id: id || 'SDK-FRAGMENT', code }]);
+    const result = report[0];
+    
+    // Repurpose DNA into a Tactical Attack Tree (Bookify Concept)
+    const manifesto = new AttackTreeManifest(
+        `Tactical Brief: ${id || 'Unknown'}`, 
+        "Repurposed from Hept-Division Manifold",
+        "Protocol Compromise"
+    );
+    
+    if (result.spatial.hotspots.length > 0) {
+        manifesto.ingestFracture(id || 'FRAGMENT', result.spatial.hotspots);
+    }
+
+    res.json({
+      success: true,
+      gate: result.gate,
+      heat: result.heat,
+      shatter: result.shatter,
+      hotspots: result.spatial.hotspots || [],
+      tacticalMap: manifesto.exportMermaid()
+    });
+  } catch (error: any) {
+    logger.error('SDK Analysis Failed', { error });
+    res.status(500).json({ success: false, error: 'SDK Analysis failed', message: error.message });
+  }
+});
+
 
 // ─────────────────────────────────────────────
 // REPAIR SHOP TRAINING PIPELINE (NEW)
@@ -742,6 +799,32 @@ app.post('/v1/training/evaluate', async (req, res) => {
     res.status(500).json({ success: false, error: 'Evaluation failed', message: (error as any).message });
   }
 });
+
+/**
+ * AUTOMATED MUTATION: Generates a forensic patch for ARMED code.
+ */
+app.post('/v1/repair/patch', async (req, res) => {
+    const { code, report } = req.body;
+
+    if (!code || !report) {
+        return res.status(400).json({ success: false, error: 'Missing code or ARMED report' });
+    }
+
+    logger.info('🩹 [REPAIR-SHOP] Generating surgical patch for ARMED artifact', { id: report.id });
+
+    try {
+        const result = await repairShop.generatePatch(code, report);
+        res.json({
+            success: true,
+            patch: result.patch,
+            rationale: result.rationale
+        });
+    } catch (error: any) {
+        logger.error('Patch Generation Failed', { error });
+        res.status(500).json({ success: false, error: 'Patch generation failed', message: error.message });
+    }
+});
+
 
 // ─────────────────────────────────────────────
 // ARMED ESCROW VALIDATION (PHASE 2)
@@ -810,8 +893,25 @@ app.post('/telemetry', async (req, res) => {
   
   fs.appendFileSync(reportPath, content);
   
+  // Compute resonance on live-fire logic if provided
+  if (payload.scriptId && payload.code) {
+    spectraMapper.mapBatch([{ id: payload.scriptId, code: payload.code }]).then(reports => {
+      const report = reports[0];
+      if (report.gate === 'ARMED') {
+          io.emit('sinking-shard', {
+              timestamp: new Date().toISOString(),
+              severity: 'LIVE-FIRE',
+              scriptId: payload.scriptId,
+              report
+          });
+          logger.warn(`🔥 [LIVE-FIRE] Sinking Shard detected in production logic: ${payload.scriptId}`);
+      }
+    });
+  }
+  
   res.json({ success: true, message: "Pulse recorded in Live Fire Report." });
 });
+
 
 // ─────────────────────────────────────────────
 // SPECTRAL REPAIR — THE THESIS ENDPOINT

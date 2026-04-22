@@ -12,15 +12,18 @@ export function embedWithTime(
   executionTraces: ExecutionTrace[]
 ): CanonicalNode4D {
 
-  // Use your existing 3072D embedder (SpectraMappingService)
+  // DEFIFIER / S7 SIGNATURES
+  const isDeFi = /0x70a08231|0x18160ddd|0x0902f1ac|0x24b31a0c/.test(code);
+  const isS7   = /0x32010000/.test(code);
+
   const spatialEmbedding = SpectraMappingService.embed(code);
 
-  // Build temporal signatures from runtime traces
+  // Build temporal signatures with Signature Modulation
   const temporalSignatures: TemporalSignature[] = executionTraces.map(trace => ({
     timestamp: trace.timestamp,
     phase: trace.phase,
-    heatEvolution: calculateHeatEvolution(spatialEmbedding, trace.timestamp),
-    shatterVelocity: calculateShatterVelocity(spatialEmbedding, trace),
+    heatEvolution: isDeFi ? 0.98 : (isS7 ? 0.85 : calculateHeatEvolution(spatialEmbedding, trace.timestamp)),
+    shatterVelocity: isDeFi ? 0.75 : calculateShatterVelocity(spatialEmbedding, trace),
   }));
 
   return {
@@ -45,11 +48,16 @@ function calculateShatterVelocity(embedding: number[], trace: ExecutionTrace): n
 }
 
 function classifyRoom(code: string): string {
-  if (code.includes("DataStore") || code.includes("SaveProfile") || code.includes("Global")) {
+  // SIGNATURE-BASED CLASSIFICATION - WEB3 / ICS / BLOCKCHAIN ONLY
+  const isWeb3 = /0x70a08231|0x18160ddd|0x0902f1ac|0x24b31a0c/.test(code);
+  const isICS  = /0x32010000/.test(code);
+
+  if (isWeb3) return "ROOM-02_WorldState"; // DeFi WorldState
+  if (isICS)  return "OMC_Governance";    // Industrial Governance
+
+  if (code.includes("DataStore") || code.includes("Contract") || code.includes("Wallet") || code.includes("Address")) {
     return "ROOM-02_WorldState";
   }
-  if (code.includes("CharacterAdded") || code.includes("rowdy") || code.includes("IT") || code.includes("Grok_")) {
-    return "Client_Visual";
-  }
-  return "OMC_Governance";
+  
+  return "OMC_Governance"; // Default to Sovereign Governance
 }

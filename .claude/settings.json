@@ -7,5 +7,18 @@
     "opsera-devsecops@claude-plugins-official": true,
     "huggingface-skills@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "FILE=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; if echo \"$FILE\" | grep -qE 'spec/contracts/domicile/|popsim-contract/src/domains/mirofish\\.contract'; then echo ''; echo '⚠️  ════════════════════════════════════════════════════'; echo '⚠️  CONTRACT EDIT DETECTED — Contracts are Law in OMC'; echo '⚠️  ════════════════════════════════════════════════════'; echo '⚠️  File: '\"$FILE\"; echo '⚠️  ARMED gates, caller enums, and fingerprint shapes'; echo '⚠️  may be affected. Run /zod-contract-auditor after.'; echo '⚠️  ════════════════════════════════════════════════════'; echo ''; fi; exit 0"
+          }
+        ]
+      }
+    ]
   }
 }

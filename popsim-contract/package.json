@@ -31,6 +31,16 @@
     }
   },
   "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "bridge": "tsx src/bridge-server.ts",
+    "sovereign-core": "tsx src/bridge-server.ts",
+    "test:v9": "tsx src/tests/test_cross_domain_v9.ts",
+    "test:v10": "tsx src/tests/test_bookbrain_v10.ts",
+    "test:arb-v3": "tsx src/tests/test_sovereign_arb_v3.ts",
+    "test:hal": "tsx src/tests/test_honest_assessment_logger.ts",
+    "test:recognition": "tsx src/tests/test_luau_recognition_loop.ts",
+    "drift-server": "tsx src/sovereign-drift-server.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "validate": "ts-node src/validate-contract.ts",

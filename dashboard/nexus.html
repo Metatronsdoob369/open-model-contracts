@@ -190,10 +190,11 @@
                 </div>
                 <div class="flex items-center gap-8">
                     <div class="flex gap-6">
-                        <span class="text-[10px] font-headline tracking-[0.2em] text-tertiary border-b border-tertiary pb-1 cursor-pointer">X-AXIS</span>
-                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">Y-AXIS</span>
-                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">Z-DEPTH</span>
-                        <span class="text-[10px] font-headline tracking-[0.2em] text-slate-500 hover:text-slate-300 cursor-pointer">T-CHRONE</span>
+                        <span data-axis="X-AXIS"   class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">X-AXIS</span>
+                        <span data-axis="Y-AXIS"   class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">Y-AXIS</span>
+                        <span data-axis="Z-DEPTH"  class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">Z-DEPTH</span>
+                        <span data-axis="T-CHRONE" class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1 uppercase">T-Chrone</span>
+                        <span data-axis="VULN"     class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1 text-rose-500 font-bold">VULN</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
@@ -208,27 +209,27 @@
                 
                 <!-- Left Sidebar Nav -->
                 <div class="w-16 border-r border-white/5 flex flex-col items-center py-12 gap-10 bg-black/20">
+                    <span data-axis="X-AXIS"   class="material-symbols-outlined text-tertiary cursor-pointer border-r-2 border-tertiary pr-0 hover:text-sky-300 transition-colors" title="X-AXIS">arrow_right_alt</span>
+                    <span data-axis="Y-AXIS"   class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="Y-AXIS">north</span>
+                    <span data-axis="Z-DEPTH"  class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="Z-DEPTH">layers</span>
+                    <span data-axis="T-CHRONE" class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="T-CHRONE">schedule</span>
                     <span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors">account_circle</span>
-                    <span class="material-symbols-outlined text-tertiary cursor-pointer border-r-2 border-tertiary pr-0">arrow_right_alt</span>
-                    <span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors">hub</span>
-                    <span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors">layers</span>
-                    <span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors">schedule</span>
                 </div>
 
                 <!-- Column 1: Orchestrator Status & Node Health -->
                 <div class="w-80 h-full border-r border-white/5 p-6 flex flex-col gap-6 z-20 overflow-y-auto bg-black/10">
                     <div class="card-veneer p-6 rounded-lg bg-zinc-900/20">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="material-symbols-outlined text-tertiary text-lg">deployed_code</span>
-                            <h3 class="text-[10px] font-headline tracking-[0.2em] text-slate-400 uppercase">Orchestrator</h3>
+                            <span class="material-symbols-outlined text-tertiary text-lg">memory</span>
+                            <h3 class="text-[10px] font-headline tracking-[0.2em] text-slate-400 uppercase">System Resonance</h3>
                         </div>
                         <div class="flex justify-between items-end">
                             <div>
-                                <p class="text-2xl font-light text-slate-100" id="latency-display">18 ms</p>
-                                <p class="text-[8px] font-headline text-slate-500 tracking-wider">Latency Spectrum Nominal</p>
+                                <p class="text-2xl font-light text-slate-100" id="latency-display">69.5v</p>
+                                <p class="text-[8px] font-headline text-slate-500 tracking-wider" id="gpu-status-text">V3D_OFFLINE</p>
                             </div>
                             <div class="w-10 h-10 border border-tertiary/20 rounded-full flex items-center justify-center">
-                                <span class="material-symbols-outlined text-tertiary text-sm">verified</span>
+                                <span class="material-symbols-outlined text-tertiary text-sm" id="pi-status-icon">shutter_speed</span>
                             </div>
                         </div>
                     </div>
@@ -263,6 +264,50 @@
                              <span class="text-[8px] font-mono text-slate-500 uppercase">Epoch: 1.48.0</span>
                              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                              <span class="text-[8px] font-mono text-emerald-400 uppercase font-bold">Live</span>
+                        </div>
+
+                        <!-- Label overlay — top-left of reactor -->
+                        <div class="absolute top-4 left-6 z-20 pointer-events-none">
+                            <div class="flex items-center gap-3 mb-1">
+                                <div class="w-2 h-2 rounded-full bg-tertiary animate-ping"></div>
+                                <span class="font-headline text-[10px] tracking-[0.4em] text-tertiary uppercase">Live_Spectral_Stream</span>
+                            </div>
+                            <h2 class="font-headline text-xl font-light text-on-surface uppercase tracking-tighter">Sovereignty_Radar_V3</h2>
+                        </div>
+
+                        <!-- Legend — bottom-center of reactor -->
+                        <div id="radar-legend" class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                            <div id="radar-legend-panel" class="hidden mb-2 p-4 bg-black/80 backdrop-blur-md border border-white/10 w-96 text-left order-first">
+                                <p class="font-headline text-[10px] tracking-widest text-tertiary uppercase mb-3">Sovereignty Radar — Orientation</p>
+                                <ul class="space-y-2 font-mono text-[10px] text-slate-400 leading-relaxed">
+                                    <li><span class="text-[#00ffcc]">● Green-cyan nodes</span> — WorldState scripts (game logic layer)</li>
+                                    <li><span class="text-[#ffaa00]">● Amber nodes</span> — Client Visual scripts (render layer)</li>
+                                    <li><span class="text-[#cc44ff]">● Purple nodes</span> — Threading scripts (async layer)</li>
+                                    <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Node size</span> — shatter velocity (larger = more fracture risk)</li>
+                                    <li><span class="text-slate-300">Node glow</span> — thermal heat (hotter = higher anomaly score)</li>
+                                    <li><span class="text-slate-300">Drop lines</span> — spatial anchor to the grid floor</li>
+                                    <li><span class="text-slate-300">Ribbons</span> — active fracture paths between high-velocity nodes</li>
+                                    <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Grid floor</span> — 3D embedding space (X/Z = semantic axes, Y = time depth)</li>
+                                    <li><span class="text-emerald-400">● Green glow</span> — Diamond Stable centroid: ideal convergence target (shatter &lt; 0.2)</li>
+                                    <li><span class="text-rose-400">— Red ring</span> — Breach perimeter: 0.95v threshold. Nodes outside = escrow rejected</li>
+                                    <li class="pt-1 border-t border-white/5 text-slate-500">Drag to orbit · Scroll to zoom</li>
+                                </ul>
+                            </div>
+                            <button id="radar-legend-toggle" class="font-mono text-[9px] tracking-widest text-slate-500 hover:text-tertiary uppercase border border-white/10 hover:border-tertiary/40 px-3 py-1.5 bg-black/60 backdrop-blur-md transition-all">
+                                ? READING THIS VIEW
+                            </button>
+                        </div>
+
+                        <!-- Metadata HUD — bottom-right of reactor -->
+                        <div class="absolute bottom-4 right-4 z-20 flex flex-col gap-2 text-right pointer-events-none">
+                            <div class="bg-black/60 backdrop-blur-md px-3 py-2 border border-white/5">
+                                <span class="font-mono text-[8px] text-slate-500 uppercase block mb-0.5">Active_Node_Count</span>
+                                <span id="node-count-display" class="font-headline text-xl text-tertiary">000</span>
+                            </div>
+                            <div class="bg-black/60 backdrop-blur-md px-3 py-2 border border-white/5">
+                                <span class="font-mono text-[8px] text-slate-500 uppercase block mb-0.5">Mean_Shatter_Velocity</span>
+                                <span id="velocity-display" class="font-headline text-xl text-secondary">0.00v</span>
+                            </div>
                         </div>
                         
                         <!-- Axis Labels as seen in screenshot -->
@@ -339,10 +384,20 @@
                     <div class="card-veneer p-5 rounded-lg bg-zinc-900/20 border-l border-tertiary/40">
                          <div class="flex justify-between items-start mb-4">
                              <div>
-                                 <p class="text-[10px] font-headline tracking-widest text-slate-200">REWIRE</p>
-                                 <p class="text-[8px] font-mono text-slate-500 mt-1">GRAPH MAPPED</p>
+                                 <p class="text-[10px] font-headline tracking-widest text-slate-200 uppercase">SEC Pipeline</p>
+                                 <p class="text-[8px] font-mono text-slate-500 mt-1">INBOX: <span id="pi-inbox-count" class="text-emerald-400">0</span> | TRIAGE: <span id="pi-triage-count">0</span> | FINDINGS: <span id="pi-findings-count">0</span></p>
                              </div>
-                             <span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                             <span class="material-symbols-outlined text-tertiary text-sm">package_2</span>
+                         </div>
+                    </div>
+
+                    <div class="card-veneer p-5 rounded-lg bg-zinc-900/20 border-l border-amber-400/40">
+                         <div class="flex justify-between items-start mb-4">
+                             <div>
+                                 <p class="text-[10px] font-headline tracking-widest text-slate-200">REWIRE</p>
+                                 <p class="text-[8px] font-mono text-slate-500 mt-1">INDUSTRIAL GRAPH MAPPED</p>
+                             </div>
+                             <span class="material-symbols-outlined text-amber-500 text-sm">hub</span>
                          </div>
                     </div>
 
@@ -360,54 +415,8 @@
             </div>
         </section>
 
-        <!-- Command Console overlay -->
-        <section class="fixed bottom-0 left-0 w-full z-[70]">
-            <div id="command-console" class="group h-12 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/5 transition-all duration-500 ease-out overflow-hidden">
+        <!-- Command Console overlay (collapsed bar only — full console is at bottom of page) -->
 
-            <!-- Label overlay — sits on top of canvas, clears sidebar -->
-            <div class="absolute top-0 right-0 pt-8 pl-8 pr-8 z-20 pointer-events-none" style="left: 5rem;">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="w-2 h-2 rounded-full bg-tertiary animate-ping"></div>
-                    <span class="font-headline text-[10px] tracking-[0.4em] text-tertiary uppercase">Live_Spectral_Stream</span>
-                </div>
-                <h2 class="font-headline text-2xl font-light text-on-surface uppercase tracking-tighter">Sovereignty_Radar_V3</h2>
-            </div>
-
-            <!-- Legend — hover to reveal orientation guide -->
-            <div id="radar-legend" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
-                <button id="radar-legend-toggle" class="font-mono text-[9px] tracking-widest text-slate-500 hover:text-tertiary uppercase border border-white/10 hover:border-tertiary/40 px-3 py-1.5 bg-black/60 backdrop-blur-md transition-all">
-                    ? READING THIS VIEW
-                </button>
-                <div id="radar-legend-panel" class="hidden mb-2 p-4 bg-black/80 backdrop-blur-md border border-white/10 w-96 text-left order-first">
-                    <p class="font-headline text-[10px] tracking-widest text-tertiary uppercase mb-3">Sovereignty Radar — Orientation</p>
-                    <ul class="space-y-2 font-mono text-[10px] text-slate-400 leading-relaxed">
-                        <li><span class="text-[#00ffcc]">● Green-cyan nodes</span> — WorldState scripts (game logic layer)</li>
-                        <li><span class="text-[#ffaa00]">● Amber nodes</span> — Client Visual scripts (render layer)</li>
-                        <li><span class="text-[#cc44ff]">● Purple nodes</span> — Threading scripts (async layer)</li>
-                        <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Node size</span> — shatter velocity (larger = more fracture risk)</li>
-                        <li><span class="text-slate-300">Node glow</span> — thermal heat (hotter = higher anomaly score)</li>
-                        <li><span class="text-slate-300">Drop lines</span> — spatial anchor to the grid floor</li>
-                        <li><span class="text-slate-300">Ribbons</span> — active fracture paths between high-velocity nodes</li>
-                        <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Grid floor</span> — 3D embedding space (X/Z = semantic axes, Y = time depth)</li>
-                        <li><span class="text-emerald-400">● Green glow</span> — Diamond Stable centroid: ideal convergence target (shatter &lt; 0.2)</li>
-                        <li><span class="text-rose-400">— Red ring</span> — Breach perimeter: 0.95v threshold. Nodes outside = escrow rejected</li>
-                        <li class="pt-1 border-t border-white/5 text-slate-500">Drag to orbit · Scroll to zoom</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Metadata — bottom right -->
-            <div class="absolute bottom-8 right-8 z-20 flex flex-col gap-3 text-right pointer-events-none">
-                <div class="bg-black/60 backdrop-blur-md px-4 py-3 border border-white/5">
-                    <span class="font-mono text-[9px] text-slate-500 uppercase block mb-1">Active_Node_Count</span>
-                    <span id="node-count-display" class="font-headline text-2xl text-tertiary">000</span>
-                </div>
-                <div class="bg-black/60 backdrop-blur-md px-4 py-3 border border-white/5">
-                    <span class="font-mono text-[9px] text-slate-500 uppercase block mb-1">Mean_Shatter_Velocity</span>
-                    <span id="velocity-display" class="font-headline text-2xl text-secondary">0.00v</span>
-                </div>
-            </div>
-        </section>
 
         <!-- Feature Bento Grid (Sovereignty Deck) -->
         <section id="sovereignty-deck" class="relative px-8 md:px-24 py-32 bg-surface">
@@ -623,6 +632,12 @@
                 <span class="material-symbols-outlined min-w-[24px]">schedule</span>
                 <span
                     class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">T-CHRONO</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-rose-500/60 hover:bg-rose-950/20 hover:text-rose-400 transition-all duration-300 cursor-pointer" data-axis="VULN">
+                <span class="material-symbols-outlined min-w-[24px]">adjust</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-bold">VULN_SNIPER</span>
             </div>
             </div>
         </div>
