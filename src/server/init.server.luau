@@ -63,6 +63,7 @@ local TagBot = require(Generated:WaitForChild("TagBot"))
 local MetropolisLighting = require(Generated:WaitForChild("MetropolisLighting"))
 local TagArena = require(Generated:WaitForChild("TagArena"))
 local TagLogic = require(Generated:WaitForChild("TagLogic"))
+local HousingService = require(Generated:WaitForChild("HousingService"))
 
 -- [[ 3. IGNITION SEQUENCE ]]
 
@@ -84,6 +85,8 @@ if success then
 	TagGameService:Start()
 	DanceFloorService:Start()
 	AtmosphereController:Manifest()
+	HousingService:Init()
+	HousingService:Start()
 	VictimService:Start()
 	
 	-- Purge ghost manifestations in Workspace

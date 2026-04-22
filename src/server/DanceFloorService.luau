@@ -60,6 +60,20 @@ function DanceFloorService:_manifestGrid()
 	self.State.manifest = f
 	
 	local c = self.Config
+	
+	-- Solid ground beneath the tile grid so players cannot fall through gaps
+	local totalWidth = c.COLS * (c.TILE_SIZE.X + c.SPACING) + 20
+	local totalDepth = c.ROWS * (c.TILE_SIZE.Z + c.SPACING) + 20
+	local ground = Instance.new("Part")
+	ground.Name = "SolidGround"
+	ground.Size = Vector3.new(totalWidth, 2, totalDepth)
+	ground.CFrame = CFrame.new(c.DATA_CENTER.X, c.DATA_CENTER.Y - 1, c.DATA_CENTER.Z)
+	ground.Anchored = true
+	ground.CanCollide = true
+	ground.Material = Enum.Material.SmoothPlastic
+	ground.Color = Color3.fromRGB(15, 15, 25)
+	ground.Parent = f
+	
 	local startX = c.DATA_CENTER.X - ((c.COLS * (c.TILE_SIZE.X + c.SPACING)) / 2)
 	local startZ = c.DATA_CENTER.Z - ((c.ROWS * (c.TILE_SIZE.Z + c.SPACING)) / 2)
 	

@@ -93,20 +93,11 @@ function VictimService:_evasionLoop()
 
 						if dist < 8 then
 							victim:SetAttribute("Tagged", true)
-							freezeMonster(victim)
-							hrp.Color = Color3.fromRGB(50, 255, 50)
-
-							local bg = Instance.new("BillboardGui", hrp)
-							bg.Size = UDim2.new(4, 0, 2, 0)
-							bg.AlwaysOnTop = true
-							local txt = Instance.new("TextLabel", bg)
-							txt.Size = UDim2.new(1, 0, 1, 0)
-							txt.BackgroundTransparency = 1
-							txt.TextScaled = true
-							txt.TextColor3 = Color3.fromRGB(50, 255, 50)
-							txt.Text = "FROZEN"
-
-							task.delay(10, function()
+							-- Move underground immediately so it can't clip through the player
+							if hrp then
+								hrp.CFrame = CFrame.new(hrp.Position.X, -60, hrp.Position.Z)
+							end
+							task.delay(0.1, function()
 								victim:Destroy()
 							end)
 
