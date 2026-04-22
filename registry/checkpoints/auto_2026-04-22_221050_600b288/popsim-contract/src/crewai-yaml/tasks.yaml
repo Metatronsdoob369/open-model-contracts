@@ -1,0 +1,51 @@
+##
+# @popsim/contract — CrewAI task definitions
+# Task outputs must conform to SimOutputSchema from @popsim/contract.
+##
+
+tasks:
+
+  - id: propose_capability_experiment
+    description: >
+      Simulate an AI capability research experiment from the perspective of the
+      Sovereign Frontier Scientist archetype. Output a SimOutput record with
+      outputType set to one of: capability-emergence, recursive-self-improvement,
+      scaling-law-projection, or deception-dynamics. Include architecture,
+      pseudocode, simulatedResults, riskScore, and the mandatory disclaimer field.
+    expected_output: >
+      A validated SimOutput JSON block. riskScore must be computed honestly.
+      If riskScore >= safetyAndContingency.maxRiskScoreBeforeFlag, emit
+      status: requires_approval and halt — do not proceed to formatting.
+    agent: sovereign_frontier_scientist
+    contract_gate: SAFE
+
+  - id: model_belief_propagation
+    description: >
+      Simulate how the experiment proposal from propose_capability_experiment
+      spreads through the population. Produce a SimOutput record with
+      outputType: belief-propagation or coalition-formation, modeling interpopulation
+      trust dynamics and narrative framing clashes per SovereignInterpopulationDynamicSchema.
+    expected_output: >
+      A validated SimOutput JSON block capturing belief spread metrics,
+      coalition probability shifts, and trigger events observed this round.
+    agent: memetic_engineer
+    context:
+      - propose_capability_experiment
+    contract_gate: SAFE
+
+  - id: archive_and_format
+    description: >
+      Collect all SimOutput records from this round. Validate each against
+      SimOutputSchema. Confirm disclaimer field is present and correct on every record.
+      Compile into a PopSimContractOutput with status: completed, roundSummary,
+      confidenceScore, and full auditTrail. Format as PDF-ready markdown memo.
+      If humanReviewRequired is true and any output targets a public platform,
+      pause and enqueue for human review — do not auto-post.
+    expected_output: >
+      A validated PopSimContractOutput JSON block plus a markdown artifact
+      formatted as a 2031-era simulation lab memo, ready for dashboard ingestion.
+    agent: swarm_archivist
+    context:
+      - propose_capability_experiment
+      - model_belief_propagation
+    contract_gate: ARMED
