@@ -1,0 +1,22 @@
+{
+  "default": "local",
+  "targets": {
+    "local": {
+      "type": "cli",
+      "command": [
+        "openclaw"
+      ]
+    },
+    "pi": {
+      "type": "ssh-cli",
+      "host": "throttleneck-15",
+      "remote_command_prefix": [
+        "kali",
+        "pnpm",
+        "--dir",
+        "/opt/openclaw",
+        "openclaw"
+      ]
+    }
+  }
+}
