@@ -1,0 +1,78 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.asset.schema.json",
+  "$ref": "#/definitions/omc.v3.asset",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.asset": {
+      "additionalProperties": false,
+      "properties": {
+        "auditRequired": {
+          "default": false,
+          "description": "Whether mutations require an audit checkpoint",
+          "type": "boolean"
+        },
+        "createdAt": {
+          "description": "ISO-8601 creation timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "id": {
+          "description": "Stable unique identifier for this asset",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "description": "Human-readable asset name",
+          "maxLength": 120,
+          "minLength": 1,
+          "type": "string"
+        },
+        "ownerId": {
+          "description": "Agent or user ID that owns the asset",
+          "type": "string"
+        },
+        "tags": {
+          "default": [],
+          "description": "Searchable metadata tags",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "description": "Asset type category",
+          "enum": [
+            "model",
+            "texture",
+            "audio",
+            "script",
+            "bundle"
+          ],
+          "type": "string"
+        },
+        "version": {
+          "description": "Semver of this asset revision",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "type",
+        "version",
+        "ownerId",
+        "createdAt"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Canonical schema for a spawnable / transferable digital asset in OMC.",
+  "title": "omc.v3.asset",
+  "x-omc-capabilities": [
+    "read",
+    "write",
+    "spawn"
+  ],
+  "x-omc-version": "3.0.0"
+}

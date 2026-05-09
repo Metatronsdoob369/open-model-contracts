@@ -1,0 +1,5 @@
+# In your repo root or a /tools/omc-classifier folder
+npm init -y
+npm install typescript @types/node commander fs-extra
+npm install --save-dev ts-node
+npx tsc --init
