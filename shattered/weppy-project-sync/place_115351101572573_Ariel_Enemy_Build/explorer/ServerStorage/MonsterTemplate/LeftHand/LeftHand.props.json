@@ -1,0 +1,42 @@
+{
+  "name": "LeftHand",
+  "className": "MeshPart",
+  "properties": {
+    "Rotation": {
+      "y": -90,
+      "x": 0,
+      "z": 0
+    },
+    "CanCollide": false,
+    "BrickColor": "Really black",
+    "RenderFidelity": "Enum.RenderFidelity.Precise",
+    "Color": {
+      "b": 17,
+      "g": 17,
+      "r": 17
+    },
+    "CFrame": [
+      -61.07468032836914,
+      -22.710073471069336,
+      -393.493408203125,
+      0,
+      0,
+      -1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "Material": "Enum.Material.Fabric",
+    "Size": {
+      "y": 0.0010000000474974513,
+      "x": 0.15401208400726318,
+      "z": 0.12259626388549805
+    }
+  },
+  "attributes": {
+    "Rojo_Id": "141348a2716baeeb09f48a6b00001127"
+  }
+}

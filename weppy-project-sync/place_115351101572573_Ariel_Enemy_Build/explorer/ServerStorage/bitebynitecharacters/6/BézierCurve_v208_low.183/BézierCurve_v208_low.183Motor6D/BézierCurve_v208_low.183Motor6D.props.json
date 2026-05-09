@@ -1,0 +1,23 @@
+{
+  "name": "BézierCurve_v208_low.183Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.023244500160217285,
+      -1.0109091997146606,
+      0.1105828583240509,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.6.BézierCurve_v208_low.183",
+    "Part0": "ServerStorage.bitebynitecharacters.6.RootPart"
+  }
+}

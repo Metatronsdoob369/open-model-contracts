@@ -1,0 +1,40 @@
+{
+  "name": "RightShoulder",
+  "className": "Motor6D",
+  "properties": {
+    "C1": [
+      -0.14039021730422974,
+      0.4285622239112854,
+      -0.000983119010925293,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "C0": [
+      0.6127345561981201,
+      0.3547006845474243,
+      0.23890788853168488,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.MonsterTemplate.RightUpperArm",
+    "Part0": "ServerStorage.MonsterTemplate.UpperTorso"
+  },
+  "attributes": {
+    "Rojo_Target_Part0": "141348a2716baeeb09f48a6b00001116",
+    "Rojo_Target_Part1": "141348a2716baeeb09f48a6b00001100"
+  }
+}

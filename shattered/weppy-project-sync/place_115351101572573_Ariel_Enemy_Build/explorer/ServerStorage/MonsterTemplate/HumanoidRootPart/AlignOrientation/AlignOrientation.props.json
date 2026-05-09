@@ -1,0 +1,17 @@
+{
+  "name": "AlignOrientation",
+  "className": "AlignOrientation",
+  "properties": {
+    "Enabled": false,
+    "Attachment0": "ServerStorage.MonsterTemplate.HumanoidRootPart.RootRigAttachment",
+    "RigidityEnabled": true,
+    "MaxTorque": 100000,
+    "PrimaryAxisOnly": true,
+    "Responsiveness": 200,
+    "AlignType": "Enum.AlignType.Parallel",
+    "MaxAngularVelocity": 0
+  },
+  "attributes": {
+    "Rojo_Target_Attachment0": "141348a2716baeeb09f48a6b00001154"
+  }
+}

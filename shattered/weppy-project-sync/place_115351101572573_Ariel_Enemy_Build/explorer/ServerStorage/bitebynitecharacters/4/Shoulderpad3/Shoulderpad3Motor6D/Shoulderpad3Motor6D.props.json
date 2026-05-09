@@ -1,0 +1,23 @@
+{
+  "name": "Shoulderpad3Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      1.4637101888656616,
+      2.0135819911956787,
+      -0.025761589407920837,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.4.Shoulderpad3",
+    "Part0": "ServerStorage.bitebynitecharacters.4.RootPart"
+  }
+}

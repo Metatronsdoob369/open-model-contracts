@@ -1,0 +1,70 @@
+
+[staging] Pipeline start — 8 input(s) — Target: vuln-heatmap
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/audit-logger.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] heat=0.537  shatter=0.020  room=OMC_Governance  nearest=owasp-a09-2021
+[staging] Upserted → Qdrant id=2477230  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_audit_logger_1777863836271
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/audit-logger.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5366  (proximity to canonical top-1%)
+  shatter   : 0.0201  (dispersion velocity across space)
+  nearest   : owasp-a09-2021  (score=0.5366)
+  shatterMap: [0.027, 0.025, 0.027, 0.023, 0.023, 0.024, 0.022, 0.022, 0.024, 0.026, 0.025, 0.026, 0.023, 0.023, 0.029, 0.024]
+────────────────────────────────────────────────────────────
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/escrow-store.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] heat=0.549  shatter=0.022  room=OMC_Governance  nearest=pattern-auth-bypass
+[staging] Upserted → Qdrant id=84844898  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_escrow_store_1777863836272
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/escrow-store.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5490  (proximity to canonical top-1%)
+  shatter   : 0.0219  (dispersion velocity across space)
+  nearest   : pattern-auth-bypass  (score=0.5490)
+  shatterMap: [0.027, 0.022, 0.025, 0.026, 0.023, 0.027, 0.022, 0.024, 0.023, 0.027, 0.025, 0.021, 0.025, 0.023, 0.028, 0.021]
+────────────────────────────────────────────────────────────
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/governance-gate.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] heat=0.547  shatter=0.030  room=OMC_Governance  nearest=owasp-a08-2021
+[staging] Upserted → Qdrant id=972656591  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_governance_gate_1777863836272
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/governance-gate.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5466  (proximity to canonical top-1%)
+  shatter   : 0.0299  (dispersion velocity across space)
+  nearest   : owasp-a08-2021  (score=0.5466)
+  shatterMap: [0.023, 0.023, 0.021, 0.028, 0.025, 0.023, 0.021, 0.024, 0.025, 0.025, 0.028, 0.021, 0.024, 0.025, 0.031, 0.019]
+────────────────────────────────────────────────────────────
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/index.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] Failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/index.ts: Error: [staging] Embedding failed: Error: Ollama parse error: {"error":{"message":"the input length exceeds the context length","type":"invalid_request_error","param":null,"code":null}}
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/metropolis-gate.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] Failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/metropolis-gate.ts: Error: [staging] Embedding failed: Error: Ollama parse error: {"error":{"message":"the input length exceeds the context length","type":"invalid_request_error","param":null,"code":null}}
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/schema-validator.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] Failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/schema-validator.ts: Error: [staging] Embedding failed: Error: Ollama parse error: {"error":{"message":"the input length exceeds the context length","type":"invalid_request_error","param":null,"code":null}}
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/submit-auth.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] Failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/submit-auth.ts: Error: [staging] Embedding failed: Error: Ollama parse error: {"error":{"message":"the input length exceeds the context length","type":"invalid_request_error","param":null,"code":null}}
+
+[staging] Embedding: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/types.ts — Targeting: vuln-heatmap (genre=CANONICAL_REFERENCE)
+[staging] Failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/types.ts: Error: [staging] Embedding failed: Error: Ollama parse error: {"error":{"message":"the input length exceeds the context length","type":"invalid_request_error","param":null,"code":null}}
+
+[staging] Pipeline complete.

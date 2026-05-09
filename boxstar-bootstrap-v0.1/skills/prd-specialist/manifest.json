@@ -1,0 +1,11 @@
+{
+  "id": "prd-specialist",
+  "skill": "PRD Specialist",
+  "name": "PRD Specialist",
+  "description": "Advanced product requirement documentation combining business strategy and technical architecture.",
+  "version": "0.1.0",
+  "entry_point": "SKILL.md",
+  "category": "strategy",
+  "tags": ["prd", "strategy", "architecture", "requirements", "planning"],
+  "author": "Antigravity"
+}

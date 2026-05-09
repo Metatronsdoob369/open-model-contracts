@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+FRAMEWORK_DIR="$ROOT_DIR/Sovereign_WhiteGlove_Framework"
+SHARD_DIR="$FRAMEWORK_DIR/data/vector_blocks/medical"
+INDEX_FILE="$FRAMEWORK_DIR/data/indices/medical.index"
+TSX_BIN="$ROOT_DIR/node_modules/.bin/tsx"
+
+if [[ ! -x "$TSX_BIN" ]]; then
+  echo "error: tsx not found at $TSX_BIN"
+  echo "run: cd $ROOT_DIR && npm install"
+  exit 1
+fi
+
+if [[ ! -d "$SHARD_DIR" ]]; then
+  echo "error: shard directory missing at $SHARD_DIR"
+  exit 1
+fi
+
+ensure_index() {
+  if [[ ! -f "$INDEX_FILE" ]]; then
+    echo "index missing; running reindex..."
+    (cd "$FRAMEWORK_DIR" && "$TSX_BIN" core/reindex.ts)
+  fi
+}
+
+doctor() {
+  echo "== WhiteGlove Doctor =="
+  echo "framework: $FRAMEWORK_DIR"
+  echo "shards: $(find "$SHARD_DIR" -type f -name '*.json' | wc -l | tr -d ' ')"
+  if [[ -f "$INDEX_FILE" ]]; then
+    echo "index: present ($(du -h "$INDEX_FILE" | awk '{print $1}'))"
+  else
+    echo "index: missing"
+  fi
+
+  if command -v ollama >/dev/null 2>&1; then
+    echo "ollama: $(ollama --version | head -n1)"
+    echo "models:"
+    ollama list | sed 's/^/  /'
+    echo "running:"
+    ollama ps | sed 's/^/  /'
+  else
+    echo "ollama: not installed"
+  fi
+}
+
+query() {
+  local question="$*"
+  if [[ -z "$question" ]]; then
+    echo "usage: whiteglove query \"your medical question\""
+    exit 1
+  fi
+  ensure_index
+  (cd "$ROOT_DIR" && "$TSX_BIN" Sovereign_WhiteGlove_Framework/interfaces/telegram_gateway.ts "$question")
+}
+
+command="${1:-query}"
+if [[ "$#" -gt 0 ]]; then
+  shift || true
+fi
+
+case "$command" in
+  doctor)
+    doctor
+    ;;
+  init)
+    ensure_index
+    echo "init complete"
+    ;;
+  benchmark)
+    ensure_index
+    (cd "$FRAMEWORK_DIR" && "$TSX_BIN" core/benchmark_ttft.ts "$@")
+    ;;
+  query)
+    query "$@"
+    ;;
+  *)
+    query "$command" "$@"
+    ;;
+esac

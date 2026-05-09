@@ -1,0 +1,14 @@
+{
+  "name": "MonsterTemplate",
+  "className": "Model",
+  "properties": {
+    "PrimaryPart": "ServerStorage.MonsterTemplate.HumanoidRootPart"
+  },
+  "attributes": {
+    "Rojo_Target_PrimaryPart": "141348a2716baeeb09f48a6b00001153"
+  },
+  "tags": [
+    "ZombieFriend",
+    "SoldierEnemy"
+  ]
+}

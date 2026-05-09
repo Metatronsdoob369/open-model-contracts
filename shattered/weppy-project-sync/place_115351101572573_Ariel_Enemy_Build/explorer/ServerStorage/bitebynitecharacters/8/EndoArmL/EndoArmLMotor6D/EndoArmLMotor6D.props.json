@@ -1,0 +1,23 @@
+{
+  "name": "EndoArmLMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -1.3045347929000854,
+      5.827681541442871,
+      0.048548758029937744,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.EndoArmL",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

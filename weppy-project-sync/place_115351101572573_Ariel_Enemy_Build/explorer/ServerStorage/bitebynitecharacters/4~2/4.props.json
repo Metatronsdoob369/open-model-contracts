@@ -1,0 +1,21 @@
+{
+  "name": "4",
+  "className": "Model",
+  "properties": {},
+  "attributes": {
+    "Pivot": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ]
+  }
+}

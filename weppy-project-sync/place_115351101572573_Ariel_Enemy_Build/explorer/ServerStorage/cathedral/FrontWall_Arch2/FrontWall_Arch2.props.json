@@ -1,0 +1,35 @@
+{
+  "name": "FrontWall_Arch2",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "BrickColor": "Earth green",
+    "Material": "Enum.Material.Slate",
+    "Color": {
+      "b": 60,
+      "g": 55,
+      "r": 55
+    },
+    "Anchored": true,
+    "CFrame": [
+      -5,
+      171.5,
+      -25,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 3,
+      "x": 18,
+      "z": 4.5
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "metadata": {
+    "name": "CyberWolf_Manifestation_v1",
+    "hash": "WOLF-99-ALPHA",
+    "description": "High-fidelity cybernetic predator proxy for Roblox VCS"
+  },
+  "structuralSpec": {
+    "root": {
+      "name": "OMC_ManifestedWorld",
+      "children": [
+        {
+          "name": "Workspace",
+          "children": [
+            {
+              "name": "CyberWolf_Proxy",
+              "type": "Model",
+              "stage": "world_geometry",
+              "properties": {
+                "Position": [0, 5, 0]
+              },
+              "children": [
+                {
+                  "name": "WolfCore",
+                  "type": "Part",
+                  "properties": {
+                    "Size": [4, 4, 8],
+                    "Color": "#1a1a1a",
+                    "Material": "Metal",
+                    "Anchored": true
+                  }
+                },
+                {
+                  "name": "Joint_FrontLeft",
+                  "type": "Part",
+                  "properties": {
+                    "Position": [-2, 0, 3],
+                    "Size": [1, 1, 1],
+                    "Color": "#ff0000",
+                    "Material": "Neon",
+                    "Anchored": true
+                  }
+                },
+                {
+                  "name": "Joint_FrontRight",
+                  "type": "Part",
+                  "properties": {
+                    "Position": [2, 0, 3],
+                    "Size": [1, 1, 1],
+                    "Color": "#ff0000",
+                    "Material": "Neon",
+                    "Anchored": true
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "ServerScriptService",
+          "children": [
+            {
+              "name": "CyberWolf_AI",
+              "type": "Script",
+              "stage": "server_logic",
+              "properties": {
+                "aggroRange": 50,
+                "movementSpeed": 25,
+                "laserDamage": 15
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

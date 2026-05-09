@@ -1,0 +1,23 @@
+{
+  "name": "ElbowR.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      2.1052637100219727,
+      5.176016807556152,
+      -0.699529767036438,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.ElbowR.001",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "355_low.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      1.1920928955078125e-7,
+      -0.9835779070854187,
+      -0.12632901966571808,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.3.355_low.001",
+    "Part0": "ServerStorage.bitebynitecharacters.3.RootPart"
+  }
+}

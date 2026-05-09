@@ -1,0 +1,11 @@
+{
+  "id": "boxstar-architect",
+  "skill": "BoxStar Architect",
+  "name": "BoxStar Architect",
+  "description": "Industrial-grade governance and refactoring standards for autonomous game development.",
+  "version": "0.1.0",
+  "entry_point": "SKILL.md",
+  "category": "governance",
+  "tags": ["governance", "refactoring", "industrial", "sovereign", "deployment"],
+  "author": "Antigravity"
+}

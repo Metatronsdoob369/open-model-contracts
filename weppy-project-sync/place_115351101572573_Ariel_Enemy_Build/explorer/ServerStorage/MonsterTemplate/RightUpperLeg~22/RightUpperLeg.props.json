@@ -1,0 +1,42 @@
+{
+  "name": "RightUpperLeg",
+  "className": "MeshPart",
+  "properties": {
+    "Rotation": {
+      "y": -90,
+      "x": 0,
+      "z": 0
+    },
+    "CanCollide": false,
+    "BrickColor": "Really black",
+    "RenderFidelity": "Enum.RenderFidelity.Precise",
+    "Color": {
+      "b": 17,
+      "g": 17,
+      "r": 17
+    },
+    "CFrame": [
+      -61.1435432434082,
+      -19.734195709228516,
+      -391.8821105957031,
+      0,
+      0,
+      -1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "Material": "Enum.Material.Fabric",
+    "Size": {
+      "y": 1.521328330039978,
+      "x": 0.7822489738464355,
+      "z": 0.7855479717254639
+    }
+  },
+  "attributes": {
+    "Rojo_Id": "141348a2716baeeb09f48a6b0000113d"
+  }
+}

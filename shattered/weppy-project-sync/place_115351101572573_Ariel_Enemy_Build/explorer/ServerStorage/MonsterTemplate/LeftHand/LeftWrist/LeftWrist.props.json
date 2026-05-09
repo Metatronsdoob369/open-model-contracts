@@ -1,0 +1,40 @@
+{
+  "name": "LeftWrist",
+  "className": "Motor6D",
+  "properties": {
+    "C1": [
+      0.026176974177360535,
+      -0.43494272232055664,
+      0.012155048549175262,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "C0": [
+      -0.14527839422225952,
+      -2.4582085609436035,
+      -0.1693592071533203,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.MonsterTemplate.LeftHand",
+    "Part0": "ServerStorage.MonsterTemplate.LeftLowerArm"
+  },
+  "attributes": {
+    "Rojo_Target_Part0": "141348a2716baeeb09f48a6b000010fb",
+    "Rojo_Target_Part1": "141348a2716baeeb09f48a6b00001127"
+  }
+}

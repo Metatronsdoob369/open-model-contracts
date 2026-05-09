@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 4,
+  "lastUpdated": "2026-05-07T06:47:24.441Z",
+  "totalSessions": 1,
+  "totalCalls": 20,
+  "totalSuccessCalls": 14,
+  "totalFailedCalls": 2,
+  "totalFallbackCalls": 2,
+  "totalUnsupportedCalls": 2,
+  "tools": {
+    "system_info": {
+      "tool": "system_info",
+      "tier": "mixed",
+      "commands": {
+        "system_info_connection": {
+          "command": "system_info_connection",
+          "tier": "basic",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 1,
+          "avgExecutionTimeMs": 1,
+          "firstUsed": "2026-05-07T06:32:20.130Z",
+          "lastUsed": "2026-05-07T06:32:20.130Z"
+        },
+        "system_info_ping": {
+          "command": "system_info_ping",
+          "tier": "basic",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 2,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:33:14.240Z",
+          "lastUsed": "2026-05-07T06:33:14.240Z"
+        },
+        "system_info_place_info": {
+          "command": "system_info_place_info",
+          "tier": "pro",
+          "totalCalls": 1,
+          "successCount": 0,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 1,
+          "totalExecutionTimeMs": 1,
+          "avgExecutionTimeMs": 1,
+          "firstUsed": "2026-05-07T06:33:16.470Z",
+          "lastUsed": "2026-05-07T06:33:16.470Z"
+        },
+        "system_info_usage": {
+          "command": "system_info_usage",
+          "tier": "basic",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 1,
+          "avgExecutionTimeMs": 1,
+          "firstUsed": "2026-05-07T06:33:20.141Z",
+          "lastUsed": "2026-05-07T06:33:20.141Z"
+        },
+        "system_info_play": {
+          "command": "system_info_play",
+          "tier": "pro",
+          "totalCalls": 1,
+          "successCount": 0,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 1,
+          "totalExecutionTimeMs": 2,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:45:48.681Z",
+          "lastUsed": "2026-05-07T06:45:48.681Z"
+        }
+      },
+      "totalCalls": 5,
+      "successCount": 3,
+      "failureCount": 0,
+      "fallbackCount": 0,
+      "unsupportedCount": 2,
+      "totalExecutionTimeMs": 7,
+      "avgExecutionTimeMs": 1,
+      "firstUsed": "2026-05-07T06:32:20.130Z",
+      "lastUsed": "2026-05-07T06:45:48.681Z"
+    },
+    "workspace_state": {
+      "tool": "workspace_state",
+      "tier": "pro",
+      "commands": {
+        "workspace_state_snapshot": {
+          "command": "workspace_state_snapshot",
+          "tier": "pro",
+          "totalCalls": 1,
+          "successCount": 0,
+          "failureCount": 0,
+          "fallbackCount": 1,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 102,
+          "avgExecutionTimeMs": 102,
+          "firstUsed": "2026-05-07T06:34:33.487Z",
+          "lastUsed": "2026-05-07T06:34:33.487Z"
+        }
+      },
+      "totalCalls": 1,
+      "successCount": 0,
+      "failureCount": 0,
+      "fallbackCount": 1,
+      "unsupportedCount": 0,
+      "totalExecutionTimeMs": 102,
+      "avgExecutionTimeMs": 102,
+      "firstUsed": "2026-05-07T06:34:33.487Z",
+      "lastUsed": "2026-05-07T06:34:33.487Z"
+    },
+    "manage_scripts": {
+      "tool": "manage_scripts",
+      "tier": "basic",
+      "commands": {
+        "manage_scripts_get_source": {
+          "command": "manage_scripts_get_source",
+          "tier": "basic",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 4,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:38:10.332Z",
+          "lastUsed": "2026-05-07T06:38:10.917Z"
+        },
+        "manage_scripts_create": {
+          "command": "manage_scripts_create",
+          "tier": "basic",
+          "totalCalls": 5,
+          "successCount": 3,
+          "failureCount": 2,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 9,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:38:59.243Z",
+          "lastUsed": "2026-05-07T06:46:49.999Z"
+        },
+        "manage_scripts_edit_replace": {
+          "command": "manage_scripts_edit_replace",
+          "tier": "basic",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 3,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:47:18.810Z",
+          "lastUsed": "2026-05-07T06:47:24.441Z"
+        },
+        "manage_scripts_delete": {
+          "command": "manage_scripts_delete",
+          "tier": "basic",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 1,
+          "avgExecutionTimeMs": 1,
+          "firstUsed": "2026-05-07T06:47:22.836Z",
+          "lastUsed": "2026-05-07T06:47:22.836Z"
+        }
+      },
+      "totalCalls": 10,
+      "successCount": 8,
+      "failureCount": 2,
+      "fallbackCount": 0,
+      "unsupportedCount": 0,
+      "totalExecutionTimeMs": 17,
+      "avgExecutionTimeMs": 2,
+      "firstUsed": "2026-05-07T06:38:10.332Z",
+      "lastUsed": "2026-05-07T06:47:24.441Z"
+    },
+    "query_instances": {
+      "tool": "query_instances",
+      "tier": "mixed",
+      "commands": {
+        "query_instances_children": {
+          "command": "query_instances_children",
+          "tier": "basic",
+          "totalCalls": 1,
+          "successCount": 1,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 1,
+          "avgExecutionTimeMs": 1,
+          "firstUsed": "2026-05-07T06:45:24.693Z",
+          "lastUsed": "2026-05-07T06:45:24.693Z"
+        },
+        "query_instances_descendants": {
+          "command": "query_instances_descendants",
+          "tier": "pro",
+          "totalCalls": 1,
+          "successCount": 0,
+          "failureCount": 0,
+          "fallbackCount": 1,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 2,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:45:28.903Z",
+          "lastUsed": "2026-05-07T06:45:28.903Z"
+        }
+      },
+      "totalCalls": 2,
+      "successCount": 1,
+      "failureCount": 0,
+      "fallbackCount": 1,
+      "unsupportedCount": 0,
+      "totalExecutionTimeMs": 3,
+      "avgExecutionTimeMs": 2,
+      "firstUsed": "2026-05-07T06:45:24.693Z",
+      "lastUsed": "2026-05-07T06:45:28.903Z"
+    },
+    "manage_properties": {
+      "tool": "manage_properties",
+      "tier": "basic",
+      "commands": {
+        "manage_properties_get_all": {
+          "command": "manage_properties_get_all",
+          "tier": "basic",
+          "totalCalls": 2,
+          "successCount": 2,
+          "failureCount": 0,
+          "fallbackCount": 0,
+          "unsupportedCount": 0,
+          "totalExecutionTimeMs": 3,
+          "avgExecutionTimeMs": 2,
+          "firstUsed": "2026-05-07T06:45:30.985Z",
+          "lastUsed": "2026-05-07T06:45:38.914Z"
+        }
+      },
+      "totalCalls": 2,
+      "successCount": 2,
+      "failureCount": 0,
+      "fallbackCount": 0,
+      "unsupportedCount": 0,
+      "totalExecutionTimeMs": 3,
+      "avgExecutionTimeMs": 2,
+      "firstUsed": "2026-05-07T06:45:30.985Z",
+      "lastUsed": "2026-05-07T06:45:38.914Z"
+    }
+  },
+  "tierSummary": {
+    "basic": {
+      "totalCalls": 13,
+      "successCount": 11,
+      "failureCount": 2,
+      "fallbackCount": 0,
+      "unsupportedCount": 0
+    },
+    "pro": {
+      "totalCalls": 4,
+      "successCount": 0,
+      "failureCount": 0,
+      "fallbackCount": 2,
+      "unsupportedCount": 2
+    }
+  }
+}

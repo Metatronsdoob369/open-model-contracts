@@ -1,0 +1,25 @@
+{
+  "name": "Workspace",
+  "className": "Workspace",
+  "childCount": 3,
+  "children": [
+    {
+      "name": "Terrain",
+      "className": "Terrain",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "Camera",
+      "className": "Camera",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "ArenaFloor",
+      "className": "Part",
+      "childCount": 0
+    }
+  ],
+  "syncedAt": "2026-05-07T08:41:01.844Z"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Redthings_LMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -0.6864020824432373,
+      -1.09048593044281,
+      -0.07298189401626587,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.4.Redthings_L",
+    "Part0": "ServerStorage.bitebynitecharacters.4.RootPart"
+  }
+}

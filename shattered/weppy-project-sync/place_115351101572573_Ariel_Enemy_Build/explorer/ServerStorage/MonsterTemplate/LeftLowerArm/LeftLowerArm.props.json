@@ -1,0 +1,42 @@
+{
+  "name": "LeftLowerArm",
+  "className": "MeshPart",
+  "properties": {
+    "Rotation": {
+      "y": -90,
+      "x": 0,
+      "z": 0
+    },
+    "CanCollide": false,
+    "BrickColor": "Really black",
+    "RenderFidelity": "Enum.RenderFidelity.Precise",
+    "Color": {
+      "b": 17,
+      "g": 17,
+      "r": 17
+    },
+    "CFrame": [
+      -61.256195068359375,
+      -20.686809539794922,
+      -393.32196044921875,
+      0,
+      0,
+      -1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "Material": "Enum.Material.Fabric",
+    "Size": {
+      "y": 5.027981281280518,
+      "x": 0.43834102153778076,
+      "z": 0.4821130037307739
+    }
+  },
+  "attributes": {
+    "Rojo_Id": "141348a2716baeeb09f48a6b000010fb"
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "name": "ServerScriptService",
+  "className": "ServerScriptService",
+  "childCount": 19,
+  "children": [
+    {
+      "name": "ApplyAvatarAppearance",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "OMC_Ignition",
+      "className": "Folder",
+      "childCount": 1,
+      "children": [
+        {
+          "name": "Source",
+          "className": "Script",
+          "childCount": 13,
+          "children": [
+            {
+              "name": "AtmosphereController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "CathedralRaveService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "CharacterService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "DanceFloorService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "Environment",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "GameService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "Global",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "LobbyService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "MetropolisGovernance",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "SovereignClientRouter",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagControl",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagGameService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "VictimService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SOVEREIGN_MANIFEST",
+      "className": "Folder",
+      "childCount": 7,
+      "children": [
+        {
+          "name": "VCS_BUILD_ORCHESTRATOR",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "BuildAerialHawkChassis",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "BuildGroundEnemies~1",
+          "className": "Script",
+          "childCount": 0
+        },
+        {
+          "name": "BuildGroundEnemies~2",
+          "className": "Script",
+          "childCount": 0,
+          "originalName": "BuildGroundEnemies"
+        },
+        {
+          "name": "BuildArenaFloor~1",
+          "className": "Script",
+          "childCount": 0
+        },
+        {
+          "name": "BuildArenaFloor~2",
+          "className": "Script",
+          "childCount": 0,
+          "originalName": "BuildArenaFloor"
+        },
+        {
+          "name": "high_fid_lizard_enemy",
+          "className": "Script",
+          "childCount": 0
+        }
+      ]
+    },
+    {
+      "name": "SetDuskLighting",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "InventoryService~1",
+      "className": "Script",
+      "childCount": 0
+    },
+    {
+      "name": "InventoryService~2",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "InventoryService"
+    },
+    {
+      "name": "InventoryService~3",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "InventoryService"
+    },
+    {
+      "name": "InventoryService~4",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "InventoryService"
+    },
+    {
+      "name": "SpitballService~1",
+      "className": "Script",
+      "childCount": 0
+    },
+    {
+      "name": "SpitballService~2",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "SpitballService"
+    },
+    {
+      "name": "SpitballService~3",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "SpitballService"
+    },
+    {
+      "name": "SpitballService~4",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "SpitballService"
+    },
+    {
+      "name": "JetpackThrowService~1",
+      "className": "Script",
+      "childCount": 0
+    },
+    {
+      "name": "JetpackThrowService~2",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "JetpackThrowService"
+    },
+    {
+      "name": "__TMP_WhereAmI~1",
+      "className": "Script",
+      "childCount": 0
+    },
+    {
+      "name": "__TMP_WhereAmI~2",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "__TMP_WhereAmI"
+    },
+    {
+      "name": "__TMP_WhereAmI~3",
+      "className": "Script",
+      "childCount": 0,
+      "originalName": "__TMP_WhereAmI"
+    },
+    {
+      "name": "CreateCrawlerTitanMonster",
+      "className": "Script",
+      "childCount": 0
+    },
+    {
+      "name": "__TMP_WhereAmI",
+      "className": "Script",
+      "childCount": 0
+    }
+  ],
+  "syncedAt": "2026-05-07T08:47:39.340Z"
+}

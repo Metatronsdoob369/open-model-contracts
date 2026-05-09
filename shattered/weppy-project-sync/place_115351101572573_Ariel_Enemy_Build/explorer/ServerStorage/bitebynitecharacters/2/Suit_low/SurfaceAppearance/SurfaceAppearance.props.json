@@ -1,0 +1,11 @@
+{
+  "name": "SurfaceAppearance",
+  "className": "SurfaceAppearance",
+  "properties": {
+    "MetalnessMap": "rbxassetid://81432899779815",
+    "NormalMap": "rbxassetid://76191711379762",
+    "AlphaMode": "Enum.AlphaMode.Transparency",
+    "RoughnessMap": "rbxassetid://82151997425677",
+    "ColorMap": "rbxassetid://119939691961222"
+  }
+}

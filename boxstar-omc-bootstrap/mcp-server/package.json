@@ -1,0 +1,10 @@
+{
+  "name": "boxstar-sovereign-mcp",
+  "version": "1.0.0",
+  "description": "Sovereign Control Layer for BoxStar Agents",
+  "main": "index.js",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest"
+  }
+}

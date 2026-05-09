@@ -1,0 +1,23 @@
+{
+  "name": "Mimic_Torso.064Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0,
+      5.385573387145996,
+      0.19421838223934174,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.7.Mimic_Torso.064",
+    "Part0": "ServerStorage.bitebynitecharacters.7.RootPart"
+  }
+}

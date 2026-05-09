@@ -1,0 +1,28 @@
+{
+  "name": "RootPart",
+  "className": "Part",
+  "properties": {
+    "Transparency": 1,
+    "CanCollide": false,
+    "Massless": true,
+    "CFrame": [
+      -12.605815887451172,
+      7.983262062072754,
+      -10.738349914550781,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 1,
+      "x": 1,
+      "z": 1
+    }
+  }
+}

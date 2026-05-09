@@ -1,0 +1,23 @@
+{
+  "name": "ArmSuit.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -1.6924937963485718,
+      6.130098342895508,
+      0.19216984510421753,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.ArmSuit.001",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

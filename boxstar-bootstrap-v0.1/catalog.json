@@ -1,0 +1,27 @@
+{
+  "skills": [
+    {
+      "id": "boxstar-architect",
+      "name": "BoxStar Architect",
+      "description": "Industrial-grade governance and refactoring standards for autonomous game development.",
+      "category": "governance",
+      "tags": ["governance", "refactoring", "industrial", "sovereign", "deployment"]
+    },
+    {
+      "id": "sovereign-janitor",
+      "name": "Sovereign Janitor",
+      "description": "Autonomous cleanup and optimization protocol for game logic and project structures.",
+      "category": "optimization",
+      "tags": ["cleanup", "optimization", "refactoring", "maintenance"]
+    },
+    {
+      "id": "prd-specialist",
+      "name": "PRD Specialist",
+      "description": "Advanced product requirement documentation combining business strategy and technical architecture.",
+      "category": "strategy",
+      "tags": ["prd", "strategy", "architecture", "requirements", "planning"]
+    }
+  ],
+  "total": 3,
+  "generatedAt": "2026-04-23T11:10:00Z"
+}

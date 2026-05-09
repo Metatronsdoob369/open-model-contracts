@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>CRON³ OS — scaffold</title>
+
+<!--
+  CRON³ OS — vertical-slice scaffold
+  ----------------------------------
+  Purpose: prove the ONE mechanic that makes this product novel — a unified
+  coordinate space where DOM elements (text, UI, copy) and WebGL graph nodes
+  share the same camera. Scroll = T-axis traversal. The page IS the graph.
+
+  This file is intentionally a SCAFFOLD, not a finished product. The hard parts
+  are stubbed with TODO markers so future-you (or future-Orion) can see exactly
+  where the real work plugs in:
+
+    [TODO:DATA]    — replace the mock graph with real repo/AST/cron data
+    [TODO:ANIME]   — swap the hand-rolled scroll math for anime.js v4
+                     ScrollObserver(sync:true) once you wire the npm install
+    [TODO:BREAKOUT]— hook anime.js Draggable + spring for grab-pilot-release
+    [TODO:MIRROR]  — fetch('./index.html') + tone-mapped wallpaper
+                     (the BOXSTAR self-mirror move applied to this scene)
+    [TODO:RECURSE] — render a node in the graph that REPRESENTS the canvas
+                     itself, so the scene contains itself contained
+
+  Run: open in browser. No build step. Three.js + CSS3DRenderer via CDN.
+-->
+
+<style>
+  /* --------------------------------------------------------------------
+     Type system: JetBrains Mono for instrument readouts, Fraunces for
+     editorial moments. No Inter, no Space Grotesk — we've worn those out.
+     -------------------------------------------------------------------- */
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,400;9..144,700;9..144,900&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg:           #0a0b0d;
+    --bg-elev:      #111316;
+    --ink:          #e7e5e0;
+    --ink-dim:      #6e7177;
+    --ink-faint:    #2a2d33;
+    --accent:       #c2f04c;   /* radioactive lime — instrument signal */
+    --accent-dim:   #5a6f1f;
+    --warn:         #ff5d3a;
+    --rule:         #1c1f24;
+    --grid:         rgba(231,229,224,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    /* The page itself is tall — scroll IS the T-axis traversal. */
+    /* Total scroll height = 5 frames * 100vh */
+    overflow-x: hidden;
+  }
+
+  /* -----------------------------------------------------------------
+     The unified scene. Three layers, ONE camera (set in JS):
+       #webgl-layer  — graph nodes, edges, the spatial fabric
+       #css3d-layer  — DOM elements positioned in 3D world space
+       #hud-layer    — flat overlays that don't move (chrome, instruments)
+     ----------------------------------------------------------------- */
+  #scene-fixed {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none; /* scroll passes through; breakout enables this */
+  }
+  #webgl-layer, #css3d-layer {
+    position: absolute;
+    inset: 0;
+  }
+  #css3d-layer { pointer-events: none; }
+
+  /* CSS3D-positioned text nodes — these are REAL DOM, real selectable,
+     real accessible, but they live at world coordinates set by JS. */
+  .world-node {
+    position: absolute;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-weight: 200;
+    user-select: text;
+    will-change: transform;
+  }
+  .world-node.headline {
+    font-size: clamp(48px, 7vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    max-width: 14ch;
+  }
+  .world-node.headline strong {
+    font-weight: 900;
+    font-style: italic;
+  }
+  .world-node.label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .world-node.body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink-dim);
+    max-width: 42ch;
+    line-height: 1.7;
+  }
+
+  /* -----------------------------------------------------------------
+     HUD chrome — does not move with the camera. The instrument panel.
+     ----------------------------------------------------------------- */
+  #hud-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-dim);
+  }
+  .hud-corner {
+    position: absolute;
+    padding: 18px 22px;
+  }
+  .hud-tl { top: 0; left: 0; }
+  .hud-tr { top: 0; right: 0; text-align: right; }
+  .hud-bl { bottom: 0; left: 0; }
+  .hud-br { bottom: 0; right: 0; text-align: right; }
+
+  .hud-corner .key { color: var(--ink-dim); }
+  .hud-corner .val { color: var(--accent); margin-left: 8px; }
+  .hud-corner .stack { display: block; margin-top: 4px; }
+
+  /* T-axis gauge — bottom center. The money shot lives here. */
+  #t-gauge {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%);
+    z-index: 11;
+    width: min(640px, 70vw);
+    pointer-events: none;
+  }
+  #t-gauge .track {
+    height: 1px;
+    background: var(--ink-faint);
+    position: relative;
+  }
+  #t-gauge .fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--accent);
+    width: 0%;
+    box-shadow: 0 0 12px var(--accent);
+  }
+  #t-gauge .ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 9px;
+    color: var(--ink-dim);
+    letter-spacing: 0.3em;
+  }
+  #t-gauge .ticks span.active { color: var(--accent); }
+
+  /* Brand mark — top left, instrument-panel feel. */
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-transform: none;
+  }
+  .brand sup { font-size: 0.55em; vertical-align: super; color: var(--accent); }
+
+  /* The faint grid behind everything — graph paper, not particle soup. */
+  #scene-fixed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* The scroll spacer — gives the page real height so the browser
+     produces real scroll events that drive our T-axis. */
+  #scroll-spacer {
+    position: relative;
+    height: 500vh; /* 5 frames */
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Frame markers — invisible anchors at each frame boundary, used
+     for IntersectionObserver to update HUD state. */
+  .frame-anchor {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  /* [TODO:MIRROR] — the BOXSTAR self-mirror wallpaper goes here.
+     Will be a <pre> rendered behind everything at low alpha,
+     populated at runtime by fetch('./index.html'). */
+  #self-mirror {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0;       /* TODO: bring to 0.05 once populated */
+    pointer-events: none;
+    overflow: hidden;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.3;
+    white-space: pre;
+    padding: 20px;
+  }
+
+  /* Breakout cursor hint — appears on hover over the scene when
+     breakout-pilot mode is available. [TODO:BREAKOUT] */
+  #breakout-hint {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 12;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--ink-dim);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  #breakout-hint.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- =================================================================
+     SELF-MIRROR LAYER  [TODO:MIRROR]
+     fetch('./index.html'), render here, alpha 0.05.
+     The page becomes its own wallpaper. BOXSTAR's move, applied here.
+     ================================================================= -->
+<pre id="self-mirror" aria-hidden="true"></pre>
+
+<!-- =================================================================
+     UNIFIED SCENE — fixed, full viewport. Camera shared between layers.
+     ================================================================= -->
+<div id="scene-fixed">
+  <canvas id="webgl-layer"></canvas>
+  <div id="css3d-layer"></div>
+</div>
+
+<!-- =================================================================
+     HUD — instrument chrome, does not move with camera.
+     ================================================================= -->
+<div id="hud-layer">
+  <div class="hud-corner hud-tl">
+    <div class="brand">cron<sup>3</sup> os</div>
+    <span class="stack"><span class="key">build</span><span class="val">0.0.1—scaffold</span></span>
+  </div>
+  <div class="hud-corner hud-tr">
+    <span><span class="key">frame</span><span class="val" id="hud-frame">01 / 05</span></span>
+    <span class="stack"><span class="key">t-axis</span><span class="val" id="hud-t">0.000</span></span>
+    <span class="stack"><span class="key">camera</span><span class="val" id="hud-cam">on rails</span></span>
+  </div>
+  <div class="hud-corner hud-bl">
+    <span><span class="key">nodes</span><span class="val" id="hud-nodes">— —</span></span>
+    <span class="stack"><span class="key">recursion depth</span><span class="val" id="hud-depth">0</span></span>
+  </div>
+  <div class="hud-corner hud-br">
+    <span class="key">scroll = time</span>
+    <span class="stack key">grab to pilot</span>
+  </div>
+</div>
+
+<!-- T-axis gauge — the money shot. -->
+<div id="t-gauge">
+  <div class="track"><div class="fill" id="t-fill"></div></div>
+  <div class="ticks" id="t-ticks">
+    <span data-frame="0">awake</span>
+    <span data-frame="1">recurse</span>
+    <span data-frame="2">observe</span>
+    <span data-frame="3">propagate</span>
+    <span data-frame="4">collapse</span>
+  </div>
+</div>
+
+<div id="breakout-hint">— click + drag the scene to pilot —</div>
+
+<!-- =================================================================
+     SCROLL SPACER — the only thing producing scroll events.
+     Frame anchors are invisible elements at each 100vh boundary
+     used for IntersectionObserver-based frame state.
+     ================================================================= -->
+<div id="scroll-spacer">
+  <div class="frame-anchor" data-frame="0" style="top: 0vh"></div>
+  <div class="frame-anchor" data-frame="1" style="top: 100vh"></div>
+  <div class="frame-anchor" data-frame="2" style="top: 200vh"></div>
+  <div class="frame-anchor" data-frame="3" style="top: 300vh"></div>
+  <div class="frame-anchor" data-frame="4" style="top: 400vh"></div>
+</div>
+
+<!-- =================================================================
+     THREE.JS + CSS3DRenderer via CDN. No build step.
+     ================================================================= -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+
+/* =====================================================================
+   CRON³ scaffold — minimum viable proof of the unified-coordinate trick.
+   Read top to bottom. Every TODO is a real next step, not a placeholder.
+   ===================================================================== */
+
+// ---------- 1. SCENE / CAMERA / RENDERERS ----------
+// One scene, one camera, two renderers stacked. This is the core trick.
+const scene   = new THREE.Scene();
+const camera  = new THREE.PerspectiveCamera(50, window.innerWidth/window.innerHeight, 0.1, 5000);
+camera.position.set(0, 0, 600);
+
+const webglRenderer = new THREE.WebGLRenderer({
+  canvas: document.getElementById('webgl-layer'),
+  antialias: true,
+  alpha: true,
+});
+webglRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+webglRenderer.setSize(window.innerWidth, window.innerHeight);
+webglRenderer.setClearColor(0x000000, 0);
+
+const css3dRenderer = new CSS3DRenderer();
+css3dRenderer.setSize(window.innerWidth, window.innerHeight);
+const css3dEl = document.getElementById('css3d-layer');
+css3dEl.appendChild(css3dRenderer.domElement);
+
+// ---------- 2. WORLD NODES (DOM elements at world coordinates) ----------
+// These are the page's actual content. They live at 3D positions in the
+// SAME coordinate space as the WebGL nodes. Same camera renders both.
+//
+// This is the BOXSTAR-style move: the marketing copy isn't laid out by
+// CSS flow — it's positioned in the scene. Scroll moves the camera past
+// it. The user can break out and orbit it from the back.
+const worldNodes = [
+  {
+    t: 0,                    // T-axis position (matches frame index)
+    pos: [0, 60, 0],
+    html: `<div class="world-node label">contract—first observability</div>`,
+  },
+  {
+    t: 0,
+    pos: [0, 0, 0],
+    html: `
+      <div class="world-node headline">
+        time isn't a feature.<br>
+        it's the <strong>only</strong> dimension<br>
+        you forgot to look at.
+      </div>`,
+  },
+  {
+    t: 1,
+    pos: [-200, 0, -300],
+    html: `<div class="world-node body">
+      cron³ watches recursive systems propagate. nodes aren't files —
+      they're executions. edges aren't imports — they're causations.
+      the t-axis is the only one that matters.
+    </div>`,
+  },
+  {
+    t: 2,
+    pos: [240, 80, -600],
+    html: `<div class="world-node label">// observe</div>`,
+  },
+  {
+    t: 3,
+    pos: [0, -40, -900],
+    html: `<div class="world-node body">
+      vulnerabilities aren't found. they emerge as topological features
+      when you watch a system long enough, in enough dimensions.
+    </div>`,
+  },
+  {
+    t: 4,
+    pos: [0, 0, -1200],
+    html: `<div class="world-node headline">
+      every system<br>has a <strong>shape</strong>.
+    </div>`,
+  },
+];
+
+worldNodes.forEach(n => {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = n.html;
+  const obj = new CSS3DObject(wrapper.firstElementChild);
+  obj.position.set(...n.pos);
+  scene.add(obj);
+});
+
+// ---------- 3. GRAPH NODES (WebGL) ----------
+// Mock graph for the scaffold. [TODO:DATA] — replace with real input:
+//   - parsed AST modules from a git repo
+//   - cron job execution lineage
+//   - ICS protocol state-machine snapshots (for the lab variant)
+// The shape here doesn't matter; the mechanic does.
+const graphGroup = new THREE.Group();
+scene.add(graphGroup);
+
+const NODE_COUNT = 80;
+const nodes = [];
+const nodeGeo = new THREE.SphereGeometry(2.2, 12, 12);
+const nodeMat = new THREE.MeshBasicMaterial({ color: 0xc2f04c });
+const dimMat  = new THREE.MeshBasicMaterial({ color: 0x2a2d33 });
+
+for (let i = 0; i < NODE_COUNT; i++) {
+  // Distribute along a helix that travels down the -Z axis.
+  // T-axis (depth) IS the camera's flight path.
+  const t = i / NODE_COUNT;
+  const angle = t * Math.PI * 8;
+  const radius = 180 + Math.sin(t * Math.PI * 3) * 60;
+  const x = Math.cos(angle) * radius;
+  const y = Math.sin(angle) * radius * 0.5;
+  const z = -t * 1400;
+
+  const mesh = new THREE.Mesh(nodeGeo, i % 7 === 0 ? nodeMat : dimMat);
+  mesh.position.set(x, y, z);
+  mesh.userData = { t, baseY: y, baseScale: i % 7 === 0 ? 1.4 : 1.0 };
+  graphGroup.add(mesh);
+  nodes.push(mesh);
+}
+
+// Edges — connect each node to its neighbor. Simple but reads as structure.
+const edgeMat = new THREE.LineBasicMaterial({
+  color: 0x2a2d33, transparent: true, opacity: 0.5,
+});
+const edgePoints = [];
+for (let i = 1; i < nodes.length; i++) {
+  edgePoints.push(nodes[i-1].position, nodes[i].position);
+}
+const edgeGeo = new THREE.BufferGeometry().setFromPoints(edgePoints);
+const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+graphGroup.add(edges);
+
+// [TODO:RECURSE] — add a node here that *represents* the canvas itself.
+// Position it at the camera's current location. It should orbit you.
+// "The scene contains a node for the scene." Recursion as wallpaper.
+
+// ---------- 4. CAMERA PATH (driven by scroll → T) ----------
+// Hand-rolled scroll math for the scaffold. [TODO:ANIME] — replace with:
+//   import { animate, createScope, onScroll } from 'animejs';
+//   const tl = createTimeline({ autoplay: onScroll({ sync: true }) });
+//   tl.add(camera.position, { z: -1400, x: ... }, ...);
+// The anime.js v4 ScrollObserver(sync:true) does this with declarative
+// keyframes instead of imperative tweening. Cleaner.
+
+const FRAME_COUNT = 5;
+let scrollT = 0;          // 0 → 1, derived from scroll position
+let cameraTarget = new THREE.Vector3(0, 0, 0);
+
+function updateCameraFromScroll() {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  scrollT = Math.max(0, Math.min(1, window.scrollY / max));
+
+  // Camera flies along -Z, with subtle lateral drift per frame.
+  // Each frame is a keyframe; we lerp between them.
+  const frameF = scrollT * (FRAME_COUNT - 1);
+  const i = Math.floor(frameF);
+  const f = frameF - i;
+
+  const keyframes = [
+    { pos: [0,    0,   600], look: [0,   0,    0] },
+    { pos: [-80, 30,   200], look: [-200, 0, -300] },
+    { pos: [120, 60,  -150], look: [240, 80, -600] },
+    { pos: [-40, 20,  -500], look: [0,  -40, -900] },
+    { pos: [0,    0,  -800], look: [0,    0, -1200] },
+  ];
+
+  const a = keyframes[i];
+  const b = keyframes[Math.min(i+1, FRAME_COUNT-1)];
+
+  camera.position.set(
+    a.pos[0] + (b.pos[0]-a.pos[0]) * f,
+    a.pos[1] + (b.pos[1]-a.pos[1]) * f,
+    a.pos[2] + (b.pos[2]-a.pos[2]) * f,
+  );
+  cameraTarget.set(
+    a.look[0] + (b.look[0]-a.look[0]) * f,
+    a.look[1] + (b.look[1]-a.look[1]) * f,
+    a.look[2] + (b.look[2]-a.look[2]) * f,
+  );
+  camera.lookAt(cameraTarget);
+
+  // HUD updates
+  document.getElementById('hud-frame').textContent =
+    String(Math.min(i+1, FRAME_COUNT)).padStart(2,'0') + ' / 0' + FRAME_COUNT;
+  document.getElementById('hud-t').textContent = scrollT.toFixed(3);
+  document.getElementById('hud-nodes').textContent = NODE_COUNT;
+  document.getElementById('t-fill').style.width = (scrollT * 100) + '%';
+
+  // Tick highlight
+  document.querySelectorAll('#t-ticks span').forEach((el, idx) => {
+    el.classList.toggle('active', idx === i || (i === FRAME_COUNT-1 && idx === i));
+  });
+}
+
+window.addEventListener('scroll', updateCameraFromScroll, { passive: true });
+updateCameraFromScroll();
+
+// ---------- 5. BREAKOUT-PILOT  [TODO:BREAKOUT] ----------
+// In the real build:
+//   import { createDraggable, createSpring } from 'animejs';
+//   createDraggable(scene-fixed, {
+//     onGrab: () => pauseCameraPath(),
+//     onRelease: { snap: cameraPath.position, ease: createSpring(...) }
+//   });
+// For now: just show the hint when scrolling stops.
+let scrollIdleTimer;
+window.addEventListener('scroll', () => {
+  document.getElementById('breakout-hint').classList.remove('visible');
+  clearTimeout(scrollIdleTimer);
+  scrollIdleTimer = setTimeout(() => {
+    document.getElementById('breakout-hint').classList.add('visible');
+  }, 1200);
+});
+
+// ---------- 6. SELF-MIRROR  [TODO:MIRROR] ----------
+// Uncomment when you're ready. This fetches the page's own source and
+// renders it as ambient wallpaper. The page becomes its own watermark.
+//
+// fetch(window.location.href)
+//   .then(r => r.text())
+//   .then(src => {
+//     document.getElementById('self-mirror').textContent = src;
+//     document.getElementById('self-mirror').style.opacity = '0.05';
+//   });
+
+// ---------- 7. RENDER LOOP ----------
+function tick() {
+  // Subtle node breathing — proves nodes are alive without being noisy.
+  const time = performance.now() * 0.0005;
+  nodes.forEach((n, i) => {
+    n.position.y = n.userData.baseY + Math.sin(time + i * 0.3) * 4;
+  });
+
+  webglRenderer.render(scene, camera);
+  css3dRenderer.render(scene, camera);
+  requestAnimationFrame(tick);
+}
+tick();
+
+// ---------- 8. RESIZE ----------
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  webglRenderer.setSize(window.innerWidth, window.innerHeight);
+  css3dRenderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* =====================================================================
+   END OF SCAFFOLD.
+
+   What this proves:
+     ✓  DOM text and WebGL nodes share one camera (the unified-space trick)
+     ✓  Scroll drives camera position along a multi-keyframe path
+     ✓  HUD reads instrument-panel, not dashboard-cliché
+     ✓  Frame-aware T-axis gauge gives the "scroll = time" feel
+     ✓  Single file, no build step, deploys anywhere
+
+   What's stubbed (intentionally, for the swing-back):
+     ✗  Real graph data (currently a decorative helix)
+     ✗  anime.js v4 ScrollObserver instead of hand-rolled scroll math
+     ✗  anime.js Draggable + spring for breakout-pilot
+     ✗  fetch-self self-mirror wallpaper
+     ✗  Recursive node representing the canvas in the canvas
+     ✗  The 12-frame deck (this is 5; expansion is mechanical)
+   ===================================================================== */
+</script>
+
+</body>
+</html>

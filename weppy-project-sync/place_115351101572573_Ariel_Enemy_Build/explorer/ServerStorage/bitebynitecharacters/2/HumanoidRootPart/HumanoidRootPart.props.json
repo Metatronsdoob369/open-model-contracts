@@ -1,0 +1,33 @@
+{
+  "name": "HumanoidRootPart",
+  "className": "Part",
+  "properties": {
+    "Transparency": 1,
+    "CFrame": [
+      -2.6316184997558594,
+      6.1410417556762695,
+      -10.600540161132812,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "CustomPhysicalProperties": {
+      "density": 0.699999988079071,
+      "frictionWeight": 1,
+      "elasticity": 0,
+      "elasticityWeight": 0,
+      "friction": 0.30000001192092896
+    },
+    "Size": {
+      "y": 2,
+      "x": 2,
+      "z": 1
+    }
+  }
+}

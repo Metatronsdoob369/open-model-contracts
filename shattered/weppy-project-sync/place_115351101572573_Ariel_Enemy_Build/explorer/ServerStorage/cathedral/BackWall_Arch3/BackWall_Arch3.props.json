@@ -1,0 +1,35 @@
+{
+  "name": "BackWall_Arch3",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "BrickColor": "Earth green",
+    "Material": "Enum.Material.Slate",
+    "Color": {
+      "b": 60,
+      "g": 55,
+      "r": 55
+    },
+    "Anchored": true,
+    "CFrame": [
+      19,
+      171.5,
+      95,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 3,
+      "x": 18,
+      "z": 4.5
+    }
+  }
+}

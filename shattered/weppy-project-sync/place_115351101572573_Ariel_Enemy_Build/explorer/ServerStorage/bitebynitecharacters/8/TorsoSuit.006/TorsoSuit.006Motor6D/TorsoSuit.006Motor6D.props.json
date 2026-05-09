@@ -1,0 +1,23 @@
+{
+  "name": "TorsoSuit.006Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -0.023582160472869873,
+      5.856267929077148,
+      -0.7564163208007812,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.TorsoSuit.006",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

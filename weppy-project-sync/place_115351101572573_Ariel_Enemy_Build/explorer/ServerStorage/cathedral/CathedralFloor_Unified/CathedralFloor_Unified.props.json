@@ -1,0 +1,34 @@
+{
+  "name": "CathedralFloor_Unified",
+  "className": "Part",
+  "properties": {
+    "Anchored": true,
+    "BrickColor": "Black",
+    "Material": "Enum.Material.Slate",
+    "Color": {
+      "b": 50,
+      "g": 45,
+      "r": 45
+    },
+    "CFrame": [
+      -5,
+      95,
+      35,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "CanQuery": false,
+    "Size": {
+      "y": 100,
+      "x": 80,
+      "z": 120
+    }
+  }
+}

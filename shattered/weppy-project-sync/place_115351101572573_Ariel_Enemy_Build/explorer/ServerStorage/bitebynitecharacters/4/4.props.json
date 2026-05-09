@@ -1,0 +1,23 @@
+{
+  "name": "4",
+  "className": "Model",
+  "properties": {
+    "PrimaryPart": "ServerStorage.bitebynitecharacters.4.HumanoidRootPart"
+  },
+  "attributes": {
+    "Pivot": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ]
+  }
+}

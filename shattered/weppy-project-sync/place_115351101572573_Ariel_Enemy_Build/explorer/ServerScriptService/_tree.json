@@ -1,0 +1,179 @@
+{
+  "name": "ServerScriptService",
+  "className": "ServerScriptService",
+  "childCount": 9,
+  "children": [
+    {
+      "name": "ApplyAvatarAppearance",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "SetDuskLighting",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "InventoryService",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "SpitballService",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "JetpackThrowService",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "CreateCrawlerTitanMonster",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "__TMP_WhereAmI",
+      "className": "Script",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "OMC_Ignition",
+      "className": "Folder",
+      "childCount": 1,
+      "children": [
+        {
+          "name": "Source",
+          "className": "Script",
+          "childCount": 13,
+          "children": [
+            {
+              "name": "AtmosphereController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "CathedralRaveService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "CharacterService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "DanceFloorService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "Environment",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "GameService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "Global",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "LobbyService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "MetropolisGovernance",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "SovereignClientRouter",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagControl",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagGameService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "VictimService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SOVEREIGN_MANIFEST",
+      "className": "Folder",
+      "childCount": 5,
+      "children": [
+        {
+          "name": "VCS_BUILD_ORCHESTRATOR",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "BuildAerialHawkChassis",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "BuildGroundEnemies",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "BuildArenaFloor",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "high_fid_lizard_enemy",
+          "className": "Script",
+          "childCount": 0,
+          "children": []
+        }
+      ]
+    }
+  ],
+  "syncedAt": "2026-05-08T01:14:29.735Z"
+}

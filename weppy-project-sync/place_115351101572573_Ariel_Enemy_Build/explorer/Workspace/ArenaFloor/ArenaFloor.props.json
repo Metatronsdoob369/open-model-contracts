@@ -1,0 +1,35 @@
+{
+  "name": "ArenaFloor",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "BrickColor": "Dark grey metallic",
+    "Material": "Enum.Material.SmoothPlastic",
+    "Color": {
+      "b": 87,
+      "g": 88,
+      "r": 87
+    },
+    "Anchored": true,
+    "CFrame": [
+      1012,
+      58,
+      1007,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 2,
+      "x": 120,
+      "z": 120
+    }
+  }
+}

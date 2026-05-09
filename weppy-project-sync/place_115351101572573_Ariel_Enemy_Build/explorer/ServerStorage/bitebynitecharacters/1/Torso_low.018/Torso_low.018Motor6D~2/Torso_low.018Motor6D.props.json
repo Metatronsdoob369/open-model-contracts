@@ -1,0 +1,23 @@
+{
+  "name": "Torso_low.018Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -1.3191723823547363,
+      6.085416316986084,
+      0.0060397665947675705,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.1.Torso_low.018",
+    "Part0": "ServerStorage.bitebynitecharacters.1.RootPart"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "VoiceBox",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "Transparency": 1,
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "CanCollide": false,
+    "Massless": true,
+    "CFrame": [
+      17.669635772705078,
+      5.118611812591553,
+      -7.059700012207031,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "CanTouch": false,
+    "Size": {
+      "y": 1,
+      "x": 1,
+      "z": 1
+    }
+  }
+}

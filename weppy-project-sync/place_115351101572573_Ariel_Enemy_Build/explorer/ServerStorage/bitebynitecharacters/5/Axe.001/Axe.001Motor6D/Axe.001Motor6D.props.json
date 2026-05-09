@@ -1,0 +1,23 @@
+{
+  "name": "Axe.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      1.8604508638381958,
+      4.560916900634766,
+      -1.433188796043396,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.5.Axe.001",
+    "Part0": "ServerStorage.bitebynitecharacters.5.RootPart"
+  }
+}

@@ -1,0 +1,358 @@
+{
+  "name": "ReplicatedStorage",
+  "className": "ReplicatedStorage",
+  "childCount": 3,
+  "children": [
+    {
+      "name": "Assets",
+      "className": "Folder",
+      "childCount": 1,
+      "children": [
+        {
+          "name": "Lightings",
+          "className": "Folder",
+          "childCount": 1,
+          "children": [
+            {
+              "name": "OriginalLighting",
+              "className": "Folder",
+              "childCount": 3,
+              "children": [
+                {
+                  "name": "InCamera",
+                  "className": "Folder",
+                  "childCount": 0,
+                  "children": []
+                },
+                {
+                  "name": "InLighting",
+                  "className": "Folder",
+                  "childCount": 5,
+                  "children": [
+                    {
+                      "name": "Atmosphere",
+                      "className": "Atmosphere",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "Bloom",
+                      "className": "BloomEffect",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "DepthOfField",
+                      "className": "DepthOfFieldEffect",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "Sky",
+                      "className": "Sky",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "SunRays",
+                      "className": "SunRaysEffect",
+                      "childCount": 0,
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "name": "Lighting",
+                  "className": "Folder",
+                  "childCount": 15,
+                  "children": [
+                    {
+                      "name": "Ambient",
+                      "className": "Color3Value",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "Brightness",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "ClockTime",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "ColorShift_Bottom",
+                      "className": "Color3Value",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "ColorShift_Top",
+                      "className": "Color3Value",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "EnvironmentDiffuseScale",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "EnvironmentSpecularScale",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "ExposureCompensation",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "FogColor",
+                      "className": "Color3Value",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "FogEnd",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "FogStart",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "GeographicLatitude",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "GlobalShadows",
+                      "className": "BoolValue",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "OutdoorAmbient",
+                      "className": "Color3Value",
+                      "childCount": 0,
+                      "children": []
+                    },
+                    {
+                      "name": "ShadowSoftness",
+                      "className": "NumberValue",
+                      "childCount": 0,
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "OMC",
+      "className": "Folder",
+      "childCount": 2,
+      "children": [
+        {
+          "name": "Client",
+          "className": "LocalScript",
+          "childCount": 3,
+          "children": [
+            {
+              "name": "CharacterController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "LobbyController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "SovereignMobilityController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Generated",
+          "className": "Folder",
+          "childCount": 12,
+          "children": [
+            {
+              "name": "HousingService",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "MetropolisLighting",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "PlayerMechanics",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "SoundscapeManager",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagArena",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagBot",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagGameLogic",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TagLogic",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "Telemetry",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TowerGenerator",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "TrafficController",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "VisualAtmosphere",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SharedSource",
+      "className": "Folder",
+      "childCount": 3,
+      "children": [
+        {
+          "name": "Datas",
+          "className": "Folder",
+          "childCount": 1,
+          "children": [
+            {
+              "name": "ProfileTemplate",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "Externals",
+          "className": "Folder",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "Utilities",
+          "className": "Folder",
+          "childCount": 4,
+          "children": [
+            {
+              "name": "CameraFocusHelper",
+              "className": "ModuleScript",
+              "childCount": 0,
+              "children": []
+            },
+            {
+              "name": "ScriptsLoader",
+              "className": "Folder",
+              "childCount": 1,
+              "children": [
+                {
+                  "name": "ComponentsInitializer",
+                  "className": "ModuleScript",
+                  "childCount": 0,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "Number",
+              "className": "Folder",
+              "childCount": 1,
+              "children": [
+                {
+                  "name": "AddCommasToNumbers",
+                  "className": "ModuleScript",
+                  "childCount": 0,
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "UI",
+              "className": "Folder",
+              "childCount": 1,
+              "children": [
+                {
+                  "name": "UIArranger",
+                  "className": "ModuleScript",
+                  "childCount": 0,
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "syncedAt": "2026-05-07T07:35:53.156Z"
+}

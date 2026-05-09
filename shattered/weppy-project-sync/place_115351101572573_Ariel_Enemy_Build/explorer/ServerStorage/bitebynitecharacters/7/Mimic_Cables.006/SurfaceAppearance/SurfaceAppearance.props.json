@@ -1,0 +1,14 @@
+{
+  "name": "SurfaceAppearance",
+  "className": "SurfaceAppearance",
+  "properties": {
+    "EmissiveTint": {
+      "b": 0,
+      "g": 0,
+      "r": 0
+    },
+    "NormalMap": "rbxassetid://110515204977417",
+    "MetalnessMap": "rbxassetid://105810667309303",
+    "ColorMap": "rbxassetid://137201528349021"
+  }
+}

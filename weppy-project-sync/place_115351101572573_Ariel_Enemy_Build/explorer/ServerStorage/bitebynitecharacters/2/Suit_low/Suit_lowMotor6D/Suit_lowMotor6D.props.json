@@ -1,0 +1,23 @@
+{
+  "name": "Suit_lowMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0,
+      3.5034239292144775,
+      -0.27816176414489746,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.2.Suit_low",
+    "Part0": "ServerStorage.bitebynitecharacters.2.RootPart"
+  }
+}

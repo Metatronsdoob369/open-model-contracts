@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ChronoOS — Loader Concepts</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --panel: #07070b;
+    --teal: #2dd4bf;
+    --teal-deep: #0d3d3d;
+    --coral: #ff5a4e;
+    --cold: #0891b2;
+    --cold-deep: #1e3a8a;
+    --amber: #fbbf24;
+    --slate: #94a3b8;
+    --slate-dim: #475569;
+    --slate-deeper: #1e293b;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--slate);
+    font-family: "JetBrains Mono", "SF Mono", "Menlo", monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+  body {
+    padding: 32px;
+    min-height: 100vh;
+  }
+  header {
+    max-width: 1320px;
+    margin: 0 auto 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--slate-deeper);
+    padding-bottom: 16px;
+  }
+  header h1 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--teal);
+    margin: 0;
+    letter-spacing: 0.18em;
+  }
+  header .meta {
+    font-size: 10px;
+    color: var(--slate-dim);
+    letter-spacing: 0.18em;
+  }
+  .grid {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 400px);
+    gap: 24px;
+    justify-content: center;
+  }
+  .card {
+    width: 400px;
+  }
+  .frame {
+    width: 400px;
+    height: 400px;
+    background: var(--bg);
+    border: 1px solid var(--slate-deeper);
+    position: relative;
+    overflow: hidden;
+  }
+  .frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(45,212,191,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,212,191,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .corner {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--slate-dim);
+    opacity: 0.6;
+  }
+  .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+  .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+  .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+  .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+  .label {
+    position: absolute;
+    top: 14px;
+    left: 24px;
+    color: var(--slate-dim);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+  }
+  .label .num { color: var(--teal); margin-right: 8px; }
+  .status {
+    position: absolute;
+    bottom: 14px;
+    left: 24px;
+    right: 24px;
+    color: var(--slate-dim);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    display: flex;
+    justify-content: space-between;
+  }
+  .status .v { color: var(--teal); }
+  .caption {
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--slate);
+    letter-spacing: 0.12em;
+    display: flex;
+    justify-content: space-between;
+  }
+  .caption .name { color: var(--teal); }
+  .caption .meta { color: var(--slate-dim); }
+
+  /* ===================================================== */
+  /* #01 SHATTER */
+  /* ===================================================== */
+  .shatter-stage { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .shatter-svg { width: 280px; height: 280px; overflow: visible; }
+  .shatter-shard {
+    fill: #0d3d3d;
+    stroke: var(--teal);
+    stroke-width: 1;
+    transform-origin: 140px 140px;
+    transform-box: fill-box;
+    animation: shatterCycle 2800ms cubic-bezier(.6,.05,.3,1) infinite;
+  }
+  .shatter-stress {
+    stroke: var(--coral);
+    stroke-width: 0.8;
+    fill: none;
+    opacity: 0;
+    animation: shatterStress 2800ms ease-out infinite;
+  }
+  @keyframes shatterCycle {
+    0%,8%   { transform: translate(0,0) rotate(0deg); }
+    35%,55% { transform: var(--explode); }
+    85%,100%{ transform: translate(0,0) rotate(0deg); }
+  }
+  @keyframes shatterStress {
+    0%,7% { opacity: 0; }
+    9%    { opacity: 1; }
+    14%   { opacity: 0; }
+    100%  { opacity: 0; }
+  }
+
+  /* ===================================================== */
+  /* #02 SPECTRAL FABRIC */
+  /* ===================================================== */
+  .fabric {
+    position: absolute; inset: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    padding: 60px;
+    gap: 0;
+  }
+  .fabric .cell {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cold-deep);
+    font-size: 10px;
+    animation: fabricHeat 2400ms linear infinite;
+  }
+  @keyframes fabricHeat {
+    0%, 100% { color: var(--cold-deep); text-shadow: none; }
+    45%      { color: var(--teal);     text-shadow: 0 0 4px var(--teal); }
+    50%      { color: var(--coral);    text-shadow: 0 0 8px var(--coral); }
+    60%      { color: var(--amber);    text-shadow: 0 0 4px var(--amber); }
+    80%      { color: var(--cold-deep); text-shadow: none; }
+  }
+
+  /* ===================================================== */
+  /* #03 ESCROW GATE */
+  /* ===================================================== */
+  .escrow { position:absolute; inset:0; padding: 60px 80px; }
+  .escrow .threshold {
+    position: absolute; left: 60px; right: 60px;
+    height: 1px;
+    background: var(--amber);
+    top: 130px;
+    box-shadow: 0 0 6px var(--amber);
+    opacity: 0.7;
+    animation: thresholdFlash 2600ms ease-in-out infinite;
+  }
+  .escrow .threshold::before {
+    content: "THRESHOLD 0.85"; position: absolute;
+    right: 0; top: -14px; color: var(--amber); font-size: 9px; letter-spacing: 0.2em;
+  }
+  .escrow .bars { display: flex; gap: 24px; justify-content: center; height: 100%; padding-top: 50px; padding-bottom: 70px; }
+  .escrow .col { display: flex; flex-direction: column; align-items: center; flex: 1; max-width: 60px; }
+  .escrow .bar-track {
+    flex: 1; width: 32px; background: rgba(45,212,191,0.05);
+    border: 1px solid var(--teal-deep);
+    position: relative; overflow: visible;
+  }
+  .escrow .bar-fill {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(180deg, var(--teal), var(--teal-deep));
+    box-shadow: 0 0 12px rgba(45,212,191,0.4);
+  }
+  .escrow .bar-fill.s1 { animation: barFill1 2600ms cubic-bezier(.4,1.5,.5,1) infinite; }
+  .escrow .bar-fill.s2 { animation: barFill2 2600ms cubic-bezier(.4,1.5,.5,1) infinite; }
+  .escrow .bar-fill.s3 { animation: barFill3 2600ms cubic-bezier(.4,1.5,.5,1) infinite; }
+  .escrow .bar-fill.s3 { background: linear-gradient(180deg, var(--coral), #4a1a16); }
+  .escrow .ticker { color: var(--teal); font-size: 10px; margin-top: 6px; }
+  .escrow .ticker.breach { color: var(--coral); }
+  .escrow .lbl { color: var(--slate-dim); font-size: 8px; letter-spacing: 0.2em; margin-top: 4px; }
+  .escrow .bracket {
+    position: absolute; left: -8px; right: -8px;
+    color: var(--amber); font-size: 14px; font-weight: 700;
+    display: flex; justify-content: space-between;
+    opacity: 0;
+    animation: clamp 2600ms ease-in-out infinite;
+  }
+  .escrow .col.c3 .bracket { animation: clampBreach 2600ms ease-in-out infinite; color: var(--coral); }
+
+  @keyframes barFill1 {
+    0%      { height: 0; }
+    50%,80% { height: 55%; }
+    95%,100%{ height: 0; }
+  }
+  @keyframes barFill2 {
+    0%      { height: 0; }
+    50%,80% { height: 78%; }
+    95%,100%{ height: 0; }
+  }
+  @keyframes barFill3 {
+    0%      { height: 0; }
+    50%,80% { height: 92%; }
+    95%,100%{ height: 0; }
+  }
+  @keyframes thresholdFlash {
+    0%,42%   { opacity: 0.5; background: var(--amber); }
+    48%      { opacity: 1; background: var(--coral); box-shadow: 0 0 12px var(--coral); }
+    60%,100% { opacity: 0.5; background: var(--amber); }
+  }
+  @keyframes clamp {
+    0%,55%   { opacity: 0; transform: scaleX(1.4); }
+    65%,80%  { opacity: 1; transform: scaleX(1); }
+    90%,100% { opacity: 0; transform: scaleX(1.4); }
+  }
+  @keyframes clampBreach {
+    0%,48%   { opacity: 0; transform: scaleX(1.4); }
+    55%      { opacity: 1; transform: scaleX(1); }
+    65%      { opacity: 0.4; }
+    72%      { opacity: 1; }
+    85%,100% { opacity: 0; transform: scaleX(1.4); }
+  }
+
+  /* ===================================================== */
+  /* #04 CENTROID */
+  /* ===================================================== */
+  .centroid { position:absolute; inset:0; }
+  .marker {
+    position: absolute; width: 12px; height: 12px;
+    transform-origin: center;
+  }
+  .marker::before, .marker::after {
+    content:""; position:absolute; background: var(--teal); box-shadow: 0 0 4px var(--teal);
+  }
+  .marker::before { left: 0; right: 0; top: 50%; height: 1px; margin-top: -0.5px; }
+  .marker::after { top: 0; bottom: 0; left: 50%; width: 1px; margin-left: -0.5px; }
+  .marker .lbl {
+    position: absolute; top: -12px; left: 14px;
+    color: var(--slate-dim); font-size: 7px; letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .centroid-core {
+    position: absolute; left: 50%; top: 50%;
+    width: 8px; height: 8px; margin: -4px 0 0 -4px;
+    background: var(--coral);
+    box-shadow: 0 0 0 0 var(--coral);
+    border-radius: 50%;
+    animation: centroidPulse 2800ms ease-out infinite;
+  }
+  @keyframes centroidPulse {
+    0%,55%   { box-shadow: 0 0 0 0 rgba(255,90,78,0); }
+    62%      { box-shadow: 0 0 0 80px rgba(255,90,78,0); background: var(--coral); }
+    62.01%   { box-shadow: 0 0 12px 2px var(--coral); }
+    65%      { box-shadow: 0 0 0 4px rgba(255,90,78,0.6); }
+    80%      { box-shadow: 0 0 0 60px rgba(255,90,78,0); }
+    100%     { box-shadow: 0 0 0 0 rgba(255,90,78,0); }
+  }
+
+  /* ===================================================== */
+  /* #05 ORBIT HEAT */
+  /* ===================================================== */
+  .orbit-stage { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  .orbit-svg { width: 360px; height: 360px; overflow: visible; }
+  .orbit-track {
+    fill: none; stroke: var(--teal-deep); stroke-width: 1;
+    stroke-dasharray: 3 5; opacity: 0.7;
+  }
+  .meridian {
+    stroke: var(--coral); stroke-width: 0.5; stroke-dasharray: 2 4; opacity: 0.4;
+  }
+  .orbit-node { transform-origin: 180px 180px; }
+  .orbit-node circle.body { fill: var(--cold); }
+  .orbit-node text { font-size: 8px; fill: var(--slate); letter-spacing: 0.1em; }
+  .o1 { animation: orbit1 2800ms linear infinite; }
+  .o2 { animation: orbit2 2200ms linear infinite reverse; }
+  .o3 { animation: orbit3 3400ms linear infinite; }
+  .o4 { animation: orbit4 2600ms linear infinite reverse; }
+  .o5 { animation: orbit5 3000ms linear infinite; }
+  @keyframes orbit1 { to { transform: rotate(360deg); } }
+  @keyframes orbit2 { to { transform: rotate(360deg); } }
+  @keyframes orbit3 { to { transform: rotate(360deg); } }
+  @keyframes orbit4 { to { transform: rotate(360deg); } }
+  @keyframes orbit5 { to { transform: rotate(360deg); } }
+
+  /* ===================================================== */
+  /* #06 LATENCY GRAPH */
+  /* ===================================================== */
+  .latency { position: absolute; inset: 0; padding: 0 40px; display: flex; flex-direction: column; justify-content: center; gap: 24px; }
+  .lat-row { position: relative; }
+  .lat-row .axis {
+    color: var(--slate-dim); font-size: 8px; letter-spacing: 0.18em;
+    display: flex; justify-content: space-between; margin-bottom: 6px;
+  }
+  .lat-cells {
+    display: grid; grid-template-columns: repeat(24, 1fr); gap: 2px;
+    height: 28px;
+  }
+  .lat-cell {
+    background: var(--slate-deeper);
+    position: relative;
+    overflow: hidden;
+  }
+  .lat-cell::after {
+    content:""; position: absolute; inset: 0; background: var(--teal); transform: scaleX(0); transform-origin: left;
+    box-shadow: 0 0 6px var(--teal);
+  }
+  .lat-cells.run .lat-cell::after { animation: latFill 2400ms linear infinite; }
+  .lat-cells.run .lat-cell:nth-child(n)::after { animation-delay: calc(var(--i) * 60ms); }
+  @keyframes latFill {
+    0%, 100% { transform: scaleX(0); opacity: 1; }
+    8%       { transform: scaleX(1); opacity: 1; }
+    80%      { transform: scaleX(1); opacity: 1; }
+    90%      { transform: scaleX(1); opacity: 0; }
+  }
+  .lat-tot {
+    position: absolute; right: 0; top: -4px;
+    color: var(--amber); font-size: 11px; letter-spacing: 0.15em;
+    opacity: 0;
+    animation: latCommit 2400ms ease-in-out infinite;
+  }
+  @keyframes latCommit {
+    0%,75%   { opacity: 0; transform: translateY(0); }
+    82%      { opacity: 1; transform: translateY(0); color: var(--amber); }
+    92%      { opacity: 1; transform: translateY(-12px); color: var(--teal); }
+    98%,100% { opacity: 0; transform: translateY(-20px); }
+  }
+
+  /* ===================================================== */
+  /* #07 QUADMAP */
+  /* ===================================================== */
+  .quad { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; }
+  .quad-svg { width: 280px; height: 280px; overflow: visible; }
+  .quad-svg rect { fill: none; stroke: var(--teal); stroke-width: 1; }
+  .quad-svg .leaf { fill: rgba(45,212,191,0.04); }
+  .quad-svg .leaf.hot { fill: rgba(255,90,78,0.12); stroke: var(--coral); }
+  .quad-svg .leaf.cold { fill: rgba(8,145,178,0.08); stroke: var(--cold); }
+  .quad-svg text { font-family: monospace; font-size: 8px; fill: var(--slate); letter-spacing: 0.1em; }
+  .quad-svg .split {
+    stroke: var(--teal); stroke-width: 0.8;
+    stroke-dasharray: 280; stroke-dashoffset: 280;
+    animation: drawSplit 3000ms ease-in-out infinite;
+  }
+  .quad-svg .leaf-anim {
+    opacity: 0;
+    animation: leafIn 3000ms ease-in-out infinite;
+  }
+  .quad-svg .leaf-label {
+    opacity: 0;
+    animation: leafIn 3000ms ease-in-out infinite;
+  }
+  @keyframes drawSplit {
+    0%      { stroke-dashoffset: 280; }
+    20%     { stroke-dashoffset: 0; }
+    80%     { stroke-dashoffset: 0; opacity: 1; }
+    92%     { opacity: 0.2; }
+    100%    { stroke-dashoffset: 280; opacity: 0.2; }
+  }
+  @keyframes leafIn {
+    0%, 30%   { opacity: 0; }
+    45%, 80%  { opacity: 1; }
+    92%, 100% { opacity: 0; }
+  }
+  .quad-pulse {
+    transform-origin: center; transform-box: fill-box;
+    animation: quadPulse 3000ms ease-in-out infinite;
+  }
+  @keyframes quadPulse {
+    0%,75%   { filter: drop-shadow(0 0 0 transparent); }
+    82%      { filter: drop-shadow(0 0 8px var(--coral)); }
+    92%,100% { filter: drop-shadow(0 0 0 transparent); }
+  }
+
+  /* ===================================================== */
+  /* #08 ZOD FORGE */
+  /* ===================================================== */
+  .zod { position: absolute; inset: 0; padding: 50px 50px; font-family: inherit; font-size: 11px; line-height: 18px; }
+  .zod .ln { display: flex; justify-content: space-between; opacity: 0; }
+  .zod .ln .code { color: var(--slate); white-space: pre; }
+  .zod .ln .code .k { color: var(--cold); }
+  .zod .ln .code .s { color: var(--amber); }
+  .zod .ln .vbr { color: var(--amber); font-weight: 700; transition: color .2s; }
+  .zod .ln.ok .vbr { color: var(--teal); }
+  .zod .l1 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 0ms; }
+  .zod .l2 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 200ms; }
+  .zod .l3 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 400ms; }
+  .zod .l4 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 600ms; }
+  .zod .l5 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 800ms; }
+  .zod .l6 { animation: zodLine 3200ms steps(1) infinite; animation-delay: 1000ms; }
+  @keyframes zodLine {
+    0%, 5%    { opacity: 0; }
+    8%, 70%   { opacity: 1; }
+    /* validating amber, then ok teal handled via class swap below */
+    78%,100%  { opacity: 0; }
+  }
+  .zod .ln .vbr { animation: brackTone 3200ms steps(1) infinite; }
+  .zod .l1 .vbr { animation-delay: 100ms; }
+  .zod .l2 .vbr { animation-delay: 300ms; }
+  .zod .l3 .vbr { animation-delay: 500ms; }
+  .zod .l4 .vbr { animation-delay: 700ms; }
+  .zod .l5 .vbr { animation-delay: 900ms; }
+  .zod .l6 .vbr { animation-delay: 1100ms; }
+  @keyframes brackTone {
+    0%,15%   { color: var(--amber); }
+    25%,70%  { color: var(--teal); }
+    78%,100% { color: var(--amber); opacity: 0; }
+  }
+  .zod .seal {
+    position: absolute; left: 50%; top: 50%; width: 60px; height: 60px;
+    margin: -30px 0 0 -30px;
+    border: 1px solid var(--coral);
+    transform: scale(0) rotate(0deg);
+    background: rgba(255,90,78,0.1);
+    box-shadow: 0 0 18px var(--coral);
+    opacity: 0;
+    animation: zodSeal 3200ms ease-in-out infinite;
+  }
+  .zod .seal::after {
+    content: "✓ SEALED"; position: absolute; inset: 0; display:flex;
+    align-items:center; justify-content:center;
+    color: var(--coral); font-size: 9px; letter-spacing: 0.2em;
+  }
+  @keyframes zodSeal {
+    0%,75%   { opacity: 0; transform: scale(0) rotate(0deg); }
+    80%      { opacity: 1; transform: scale(1) rotate(0deg); }
+    92%      { opacity: 1; transform: scale(0.6) rotate(540deg); }
+    98%,100% { opacity: 0; transform: scale(0.1) rotate(720deg); }
+  }
+
+  /* ===================================================== */
+  /* #09 MANHATTAN RESONANCE */
+  /* ===================================================== */
+  .mhattan { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; }
+  .mhattan-svg { width: 320px; height: 320px; overflow: visible; }
+  .mhattan-svg .grid line { stroke: var(--slate-deeper); stroke-width: 0.5; }
+  .mhattan-svg .src {
+    fill: var(--teal); stroke: var(--teal); stroke-width: 0.5;
+  }
+  .mhattan-svg .srcB { fill: var(--cold); stroke: var(--cold); }
+  .mhattan-svg .ring {
+    fill: none; stroke-width: 1;
+    transform-origin: var(--ox) var(--oy);
+    transform-box: fill-box;
+  }
+  .mhattan-svg .ring.A { stroke: var(--teal); animation: mhRing 2400ms ease-out infinite; }
+  .mhattan-svg .ring.B { stroke: var(--cold); animation: mhRing 2400ms ease-out infinite; }
+  .mhattan-svg .ring.r1 { animation-delay: 0ms; }
+  .mhattan-svg .ring.r2 { animation-delay: 160ms; }
+  .mhattan-svg .ring.r3 { animation-delay: 320ms; }
+  .mhattan-svg .ring.r4 { animation-delay: 480ms; }
+  @keyframes mhRing {
+    0%   { transform: scale(0); opacity: 0.9; }
+    70%  { transform: scale(2.6); opacity: 0; }
+    100% { transform: scale(2.6); opacity: 0; }
+  }
+  .mhattan-svg .hit {
+    fill: var(--coral); opacity: 0;
+    animation: mhHit 2400ms ease-out infinite;
+    animation-delay: 600ms;
+  }
+  @keyframes mhHit {
+    0%,40% { opacity: 0; }
+    50%    { opacity: 1; }
+    75%    { opacity: 0; }
+    100%   { opacity: 0; }
+  }
+  .mhattan-svg .score {
+    fill: var(--amber); font-size: 12px; font-family: monospace; letter-spacing: 0.1em;
+    opacity: 0;
+    animation: mhScore 2400ms ease-out infinite;
+    animation-delay: 700ms;
+  }
+  @keyframes mhScore {
+    0%,40%  { opacity: 0; transform: translateY(4px); }
+    55%,75% { opacity: 1; transform: translateY(0); }
+    90%,100%{ opacity: 0; transform: translateY(-4px); }
+  }
+
+  /* ===================================================== */
+  /* #10 SHA-256 */
+  /* ===================================================== */
+  .sha { position: absolute; inset: 0; display:flex; align-items:center; justify-content:center; flex-direction: column; gap: 14px; }
+  .sha .lbl { font-size: 9px; letter-spacing: 0.3em; color: var(--slate-dim); }
+  .sha .row { display: flex; gap: 4px; font-size: 18px; font-family: monospace; letter-spacing: 0.05em; }
+  .sha .ch {
+    width: 16px; text-align: center;
+    color: var(--slate-dim);
+    animation: shaScramble 100ms steps(1) infinite, shaLock 2800ms steps(1) infinite;
+  }
+  .sha .row.sealed .ch { animation: shaScramble 100ms steps(1) infinite; }
+  .sha .ring {
+    width: 320px; height: 1px; background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0;
+    animation: shaSeal 2800ms ease-in-out infinite;
+  }
+  @keyframes shaScramble { /* set via JS textContent */ }
+  @keyframes shaLock {
+    0%,12%   { color: var(--slate-dim); }
+    14%,90%  { color: var(--teal); text-shadow: 0 0 4px var(--teal); }
+    92%      { color: var(--coral); text-shadow: 0 0 8px var(--coral); }
+    98%,100% { color: var(--slate-dim); text-shadow: none; }
+  }
+  @keyframes shaSeal {
+    0%,85%   { opacity: 0; }
+    90%      { opacity: 1; }
+    100%     { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>CHRONOOS // LOADER CONCEPTS</h1>
+    <span class="meta">10 VARIANTS · 400×400 · SEAMLESS LOOP</span>
+  </header>
+
+  <div class="grid" id="grid"></div>
+
+<script>
+// =====================================================
+// Frame helper
+// =====================================================
+function frame(num, name, meta, inner, status) {
+  return `
+    <div class="card">
+      <div class="frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <div class="label"><span class="num">#${String(num).padStart(2,'0')}</span>${name}</div>
+        ${inner}
+        <div class="status">${status}</div>
+      </div>
+      <div class="caption"><span class="name">${name}</span><span class="meta">${meta}</span></div>
+    </div>
+  `;
+}
+
+const grid = document.getElementById('grid');
+const cards = [];
+
+// =====================================================
+// #01 SHATTER
+// =====================================================
+{
+  // Voronoi-ish shards around a hexagon center (140,140), radius 90
+  const shards = [
+    { d: "M140,50 L210,90 L195,140 L140,140 Z", dx: 35, dy: -25, rot: 12 },
+    { d: "M210,90 L230,170 L195,170 L195,140 Z", dx: 55, dy: 8,   rot: -8 },
+    { d: "M230,170 L195,230 L160,210 L195,170 Z", dx: 45, dy: 50,  rot: 18 },
+    { d: "M195,230 L120,230 L140,180 L160,210 Z", dx: 0,  dy: 60,  rot: -14 },
+    { d: "M120,230 L60,180 L100,160 L140,180 Z",  dx: -45,dy: 40,  rot: 8 },
+    { d: "M60,180 L70,90 L110,120 L100,160 Z",    dx: -55,dy: 0,   rot: -16 },
+    { d: "M70,90 L140,50 L140,140 L110,120 Z",    dx: -30,dy: -35, rot: 10 },
+    { d: "M140,140 L195,140 L195,170 L160,210 L140,180 L100,160 L110,120 Z", dx: 0, dy: 0, rot: 4 }
+  ];
+  const stress = [
+    "M140,50 L140,140",
+    "M70,90 L195,140",
+    "M210,90 L100,160",
+    "M120,230 L195,170"
+  ];
+  const inner = `
+    <div class="shatter-stage">
+      <svg class="shatter-svg" viewBox="0 0 280 280">
+        ${shards.map((s,i)=>`<path class="shatter-shard" d="${s.d}" style="--explode: translate(${s.dx}px, ${s.dy}px) rotate(${s.rot}deg); animation-delay: ${i*40}ms"/>`).join('')}
+        ${stress.map((d,i)=>`<path class="shatter-stress" d="${d}" style="animation-delay:${50+i*30}ms"/>`).join('')}
+      </svg>
+    </div>`;
+  cards.push(frame(1, "SHATTER", "MANIFEST · AST DECOMPOSE", inner,
+    `<span>NODES: 8</span><span class="v">FRACTURE 0.42v</span>`));
+}
+
+// =====================================================
+// #02 SPECTRAL FABRIC
+// =====================================================
+{
+  const N = 12;
+  let cells = '';
+  for (let r=0;r<N;r++) for (let c=0;c<N;c++) {
+    const diag = (r+c)/(2*N-2); // 0..1
+    const delay = diag * 1200; // ms
+    cells += `<div class="cell" style="animation-delay:${delay}ms">·</div>`;
+  }
+  const inner = `<div class="fabric">${cells}</div>`;
+  cards.push(frame(2, "SPECTRAL FABRIC", "SCAN · 144 NODES", inner,
+    `<span>WAVEFRONT</span><span class="v">0.78v</span>`));
+}
+
+// =====================================================
+// #03 ESCROW GATE
+// =====================================================
+{
+  const inner = `
+    <div class="escrow">
+      <div class="threshold"></div>
+      <div class="bars">
+        <div class="col c1">
+          <div class="bar-track"><div class="bar-fill s1"></div>
+            <div class="bracket"><span>[</span><span>]</span></div>
+          </div>
+          <div class="ticker">0.55v</div>
+          <div class="lbl">STAGED</div>
+        </div>
+        <div class="col c2">
+          <div class="bar-track"><div class="bar-fill s2"></div>
+            <div class="bracket"><span>[</span><span>]</span></div>
+          </div>
+          <div class="ticker">0.78v</div>
+          <div class="lbl">TRUSTED</div>
+        </div>
+        <div class="col c3">
+          <div class="bar-track"><div class="bar-fill s3"></div>
+            <div class="bracket"><span>[</span><span>]</span></div>
+          </div>
+          <div class="ticker breach">0.92v</div>
+          <div class="lbl">BREACH</div>
+        </div>
+      </div>
+    </div>`;
+  cards.push(frame(3, "ESCROW GATE", "PHASE 2 · THRESHOLD VALIDATE", inner,
+    `<span>GATE</span><span class="v">LOCKING</span>`));
+}
+
+// =====================================================
+// #04 CENTROID
+// =====================================================
+{
+  const N = 24;
+  // generate marker positions around a ring with jitter
+  let markers = '';
+  for (let i=0;i<N;i++) {
+    const a = (i / N) * Math.PI * 2;
+    const r = 110 + Math.sin(i*1.7) * 20;
+    const x = 200 + Math.cos(a) * r;
+    const y = 200 + Math.sin(a) * r;
+    const cx = 200, cy = 200;
+    const lbl = (Math.random()*0.99).toFixed(2);
+    markers += `<div class="marker" style="
+      left:${x-6}px; top:${y-6}px;
+      animation: m${i} 2800ms ease-in-out infinite;
+      animation-delay: ${i*15}ms;
+    ">
+      <span class="lbl">${lbl}</span>
+    </div>
+    <style>
+    @keyframes m${i} {
+      0%, 8%    { transform: translate(0,0); opacity: 0.9; }
+      45%       { transform: translate(${cx-x}px, ${cy-y}px) scale(0.4); opacity: 1; }
+      55%       { transform: translate(${cx-x}px, ${cy-y}px) scale(0.4); opacity: 0; }
+      72%       { transform: translate(0,0); opacity: 0.9; }
+      100%      { transform: translate(0,0); opacity: 0.9; }
+    }
+    </style>`;
+  }
+  const inner = `<div class="centroid">${markers}<div class="centroid-core"></div></div>`;
+  cards.push(frame(4, "CENTROID", "INTEL · K-MEANS CONVERGE", inner,
+    `<span>EMBEDDINGS: 24</span><span class="v">3072-D</span>`));
+}
+
+// =====================================================
+// #05 ORBIT HEAT
+// =====================================================
+{
+  // draw 5 orbits with nodes
+  const orbits = [
+    { r: 50,  cls: "o1", val: "0.42" },
+    { r: 80,  cls: "o2", val: "0.68" },
+    { r: 110, cls: "o3", val: "0.91" },
+    { r: 140, cls: "o4", val: "0.15" },
+    { r: 170, cls: "o5", val: "0.77" }
+  ];
+  const inner = `
+    <div class="orbit-stage">
+      <svg class="orbit-svg" viewBox="0 0 360 360">
+        <line class="meridian" x1="180" y1="0" x2="180" y2="360"/>
+        ${orbits.map(o=>`<circle class="orbit-track" cx="180" cy="180" r="${o.r}"/>`).join('')}
+        ${orbits.map((o,i)=>`
+          <g class="orbit-node ${o.cls}">
+            <circle class="body n${i}" cx="${180+o.r}" cy="180" r="4"/>
+            <text x="${180+o.r+8}" y="183">${o.val}v</text>
+          </g>
+        `).join('')}
+        <circle cx="180" cy="180" r="6" fill="#0d3d3d" stroke="#2dd4bf" stroke-width="0.8"/>
+      </svg>
+    </div>
+    <style>
+    @keyframes heat {
+      0%,100% { fill: #0891b2; filter: drop-shadow(0 0 0 transparent); }
+      45%     { fill: #fbbf24; }
+      50%     { fill: #ff5a4e; filter: drop-shadow(0 0 6px #ff5a4e); }
+      55%     { fill: #fbbf24; }
+    }
+    .n0 { animation: heat 2800ms ease-in-out infinite; }
+    .n1 { animation: heat 2200ms ease-in-out infinite reverse; }
+    .n2 { animation: heat 3400ms ease-in-out infinite; }
+    .n3 { animation: heat 2600ms ease-in-out infinite reverse; }
+    .n4 { animation: heat 3000ms ease-in-out infinite; }
+    </style>`;
+  cards.push(frame(5, "ORBIT HEAT", "DASH · NODE THERMAL MAP", inner,
+    `<span>5 NODES</span><span class="v">MERIDIAN HOT</span>`));
+}
+
+// =====================================================
+// #06 LATENCY GRAPH
+// =====================================================
+{
+  let cells = '';
+  for (let i=0;i<24;i++) cells += `<div class="lat-cell" style="--i:${i}"></div>`;
+  const inner = `
+    <div class="latency">
+      <div class="lat-row">
+        <div class="axis"><span>T0</span><span>LATENCY · 18ms/CELL</span><span>T+432</span></div>
+        <div class="lat-cells run">${cells}</div>
+        <div class="lat-tot">432ms · COMMIT</div>
+      </div>
+      <div class="lat-row">
+        <div class="axis"><span>BUDGET</span><span>RESONANCE</span><span>0.74</span></div>
+        <div class="lat-cells run" style="height:14px">${Array.from({length:24},(_,i)=>`<div class="lat-cell" style="--i:${(i+8)%24}"></div>`).join('')}</div>
+      </div>
+    </div>`;
+  cards.push(frame(6, "LATENCY GRAPH", "TIME · 18ms BUDGET", inner,
+    `<span>FRAMES</span><span class="v">24/24</span>`));
+}
+
+// =====================================================
+// #07 QUADMAP
+// =====================================================
+{
+  // quad subdivisions: full 240x240 box, top-left split into 4, then top-right of those subdivides
+  const inner = `
+    <div class="quad">
+      <svg class="quad-svg" viewBox="0 0 280 280">
+        <rect x="20" y="20" width="240" height="240" stroke="#2dd4bf" stroke-width="1" fill="none"/>
+        <!-- L1 splits -->
+        <line class="split" x1="140" y1="20"  x2="140" y2="260" style="animation-delay: 0ms"/>
+        <line class="split" x1="20"  y1="140" x2="260" y2="140" style="animation-delay: 200ms"/>
+        <!-- L2 split top-right quadrant -->
+        <line class="split" x1="200" y1="20"  x2="200" y2="140" style="animation-delay: 600ms"/>
+        <line class="split" x1="140" y1="80"  x2="260" y2="80"  style="animation-delay: 800ms"/>
+        <!-- L2 split bottom-left quadrant -->
+        <line class="split" x1="80"  y1="140" x2="80"  y2="260" style="animation-delay: 1000ms"/>
+        <line class="split" x1="20"  y1="200" x2="140" y2="200" style="animation-delay: 1200ms"/>
+
+        <!-- leaves -->
+        <rect class="leaf leaf-anim cold" x="20"  y="20"  width="120" height="120" style="animation-delay: 400ms"/>
+        <rect class="leaf leaf-anim hot quad-pulse" x="200" y="20"  width="60"  height="60"  style="animation-delay: 1100ms"/>
+        <rect class="leaf leaf-anim" x="140" y="20"  width="60"  height="60" style="animation-delay: 1100ms"/>
+        <rect class="leaf leaf-anim" x="140" y="80"  width="120" height="60" style="animation-delay: 1100ms"/>
+        <rect class="leaf leaf-anim hot quad-pulse" x="80"  y="140" width="60"  height="60" style="animation-delay: 1500ms"/>
+        <rect class="leaf leaf-anim" x="20"  y="140" width="60"  height="60" style="animation-delay: 1500ms"/>
+        <rect class="leaf leaf-anim" x="20"  y="200" width="120" height="60" style="animation-delay: 1500ms"/>
+        <rect class="leaf leaf-anim cold" x="140" y="140" width="120" height="120" style="animation-delay: 800ms"/>
+
+        <text class="leaf-label" x="65"  y="85"   style="animation-delay:500ms">0.31</text>
+        <text class="leaf-label" x="222" y="55"   style="animation-delay:1200ms">0.91</text>
+        <text class="leaf-label" x="162" y="55"   style="animation-delay:1200ms">0.42</text>
+        <text class="leaf-label" x="195" y="115"  style="animation-delay:1200ms">0.55</text>
+        <text class="leaf-label" x="100" y="175"  style="animation-delay:1600ms">0.88</text>
+        <text class="leaf-label" x="40"  y="175"  style="animation-delay:1600ms">0.22</text>
+        <text class="leaf-label" x="70"  y="235"  style="animation-delay:1600ms">0.18</text>
+        <text class="leaf-label" x="190" y="205"  style="animation-delay:900ms">0.44</text>
+      </svg>
+    </div>`;
+  cards.push(frame(7, "QUADMAP", "MANIFEST · SPECTRAL SUBDIVIDE", inner,
+    `<span>DEPTH 3</span><span class="v">8 LEAVES</span>`));
+}
+
+// =====================================================
+// #08 ZOD FORGE
+// =====================================================
+{
+  const inner = `
+    <div class="zod">
+      <div class="ln l1"><span class="code"><span class="k">z</span>.<span class="k">object</span>({</span><span class="vbr">[ ]</span></div>
+      <div class="ln l2"><span class="code">  id: <span class="k">z</span>.<span class="k">string</span>(),</span><span class="vbr">[ ]</span></div>
+      <div class="ln l3"><span class="code">  heat: <span class="k">z</span>.<span class="k">number</span>(),</span><span class="vbr">[ ]</span></div>
+      <div class="ln l4"><span class="code">  state: <span class="s">"TRUSTED"</span>,</span><span class="vbr">[ ]</span></div>
+      <div class="ln l5"><span class="code">  ts: <span class="k">z</span>.<span class="k">date</span>(),</span><span class="vbr">[ ]</span></div>
+      <div class="ln l6"><span class="code">})<span class="k">.parse</span>(input)</span><span class="vbr">[ ]</span></div>
+      <div class="seal"></div>
+    </div>`;
+  cards.push(frame(8, "ZOD FORGE", "INTEL · SCHEMA VALIDATE", inner,
+    `<span>SCHEMA</span><span class="v">FORGED</span>`));
+}
+
+// =====================================================
+// #09 MANHATTAN RESONANCE
+// =====================================================
+{
+  // grid lines
+  let glines = '';
+  const N = 16, S = 320, step = S / N;
+  for (let i=0;i<=N;i++) {
+    glines += `<line x1="${i*step}" y1="0" x2="${i*step}" y2="${S}"/>`;
+    glines += `<line x1="0" y1="${i*step}" x2="${S}" y2="${i*step}"/>`;
+  }
+  const ax = 5*step, ay = 5*step;
+  const bx = 11*step, by = 10*step;
+  // Manhattan diamond ring
+  function diamond(cx, cy, r) {
+    return `M${cx},${cy-r} L${cx+r},${cy} L${cx},${cy+r} L${cx-r},${cy} Z`;
+  }
+  const inner = `
+    <div class="mhattan">
+      <svg class="mhattan-svg" viewBox="0 0 320 320">
+        <g class="grid">${glines}</g>
+        <path class="ring A r1" d="${diamond(ax,ay,15)}" style="--ox:${ax}px;--oy:${ay}px"/>
+        <path class="ring A r2" d="${diamond(ax,ay,15)}" style="--ox:${ax}px;--oy:${ay}px"/>
+        <path class="ring A r3" d="${diamond(ax,ay,15)}" style="--ox:${ax}px;--oy:${ay}px"/>
+        <path class="ring A r4" d="${diamond(ax,ay,15)}" style="--ox:${ax}px;--oy:${ay}px"/>
+        <path class="ring B r1" d="${diamond(bx,by,15)}" style="--ox:${bx}px;--oy:${by}px"/>
+        <path class="ring B r2" d="${diamond(bx,by,15)}" style="--ox:${bx}px;--oy:${by}px"/>
+        <path class="ring B r3" d="${diamond(bx,by,15)}" style="--ox:${bx}px;--oy:${by}px"/>
+        <path class="ring B r4" d="${diamond(bx,by,15)}" style="--ox:${bx}px;--oy:${by}px"/>
+        <rect class="src"  x="${ax-4}" y="${ay-4}" width="8" height="8"/>
+        <rect class="src srcB" x="${bx-4}" y="${by-4}" width="8" height="8"/>
+        <!-- intersection cells (along midline) -->
+        <rect class="hit" x="${8*step}" y="${7*step}" width="${step}" height="${step}"/>
+        <rect class="hit" x="${8*step}" y="${8*step}" width="${step}" height="${step}" style="animation-delay:650ms"/>
+        <rect class="hit" x="${7*step}" y="${8*step}" width="${step}" height="${step}" style="animation-delay:700ms"/>
+        <text class="score" x="${8*step}" y="${7*step - 4}">0.74 RES</text>
+      </svg>
+    </div>`;
+  cards.push(frame(9, "MANHATTAN RESONANCE", "INTEL · L1 DISTANCE SCORE", inner,
+    `<span>DIST</span><span class="v">|Δx|+|Δy|=11</span>`));
+}
+
+// =====================================================
+// #10 SHA-256
+// =====================================================
+{
+  const N = 16;
+  let chs = '';
+  for (let i=0;i<N;i++) chs += `<span class="ch" data-i="${i}" style="animation-delay:0ms,${i*150}ms">·</span>`;
+  const inner = `
+    <div class="sha">
+      <div class="lbl">SHA-256 // ESCROW SEAL</div>
+      <div class="row" id="shaRow">${chs}</div>
+      <div class="ring"></div>
+      <div class="lbl" style="opacity:0.5">PHASE 2 · COMMITMENT</div>
+    </div>`;
+  cards.push(frame(10, "SHA-256", "ESCROW · CRYPTO COMMIT", inner,
+    `<span>16 BYTES</span><span class="v">LOCKING</span>`));
+}
+
+grid.innerHTML = cards.join('');
+
+// =====================================================
+// SHA-256 character scrambler (live)
+// =====================================================
+const HEX = "0123456789abcdef";
+const shaRow = document.getElementById('shaRow');
+const chars = shaRow ? Array.from(shaRow.querySelectorAll('.ch')) : [];
+// per-char "locked time" in cycle ms relative to 2800ms loop
+const cycle = 2800;
+const lockStart = 200;
+const lockSpan  = 1500; // 1500ms total to lock all 16
+const sealEnd   = 2400; // unlock at 2400ms
+const startedAt = performance.now();
+const lockedHex = chars.map(()=>HEX[Math.floor(Math.random()*16)]);
+
+function tick(now) {
+  const t = (now - startedAt) % cycle;
+  chars.forEach((el, i) => {
+    const lockAt = lockStart + (i / chars.length) * lockSpan;
+    if (t >= lockAt && t < sealEnd) {
+      el.textContent = lockedHex[i];
+    } else {
+      el.textContent = HEX[Math.floor(Math.random()*16)];
+    }
+    if (t >= sealEnd) {
+      // re-roll for next cycle
+      lockedHex[i] = HEX[Math.floor(Math.random()*16)];
+    }
+  });
+  requestAnimationFrame(tick);
+}
+if (chars.length) requestAnimationFrame(tick);
+</script>
+</body>
+</html>

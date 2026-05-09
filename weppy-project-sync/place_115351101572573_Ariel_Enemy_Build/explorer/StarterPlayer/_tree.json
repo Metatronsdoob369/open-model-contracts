@@ -1,0 +1,38 @@
+{
+  "name": "StarterPlayer",
+  "className": "StarterPlayer",
+  "childCount": 2,
+  "children": [
+    {
+      "name": "StarterPlayerScripts",
+      "className": "StarterPlayerScripts",
+      "childCount": 3,
+      "children": [
+        {
+          "name": "OMCClientBootstrap",
+          "className": "LocalScript",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "PreloadAerialHawk",
+          "className": "LocalScript",
+          "childCount": 0,
+          "children": []
+        },
+        {
+          "name": "JetpackThrowClient",
+          "className": "LocalScript",
+          "childCount": 0
+        }
+      ]
+    },
+    {
+      "name": "StarterCharacterScripts",
+      "className": "StarterCharacterScripts",
+      "childCount": 0,
+      "children": []
+    }
+  ],
+  "syncedAt": "2026-05-07T07:53:30.011Z"
+}

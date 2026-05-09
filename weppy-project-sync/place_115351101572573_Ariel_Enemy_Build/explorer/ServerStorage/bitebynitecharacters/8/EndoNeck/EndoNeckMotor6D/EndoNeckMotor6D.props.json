@@ -1,0 +1,23 @@
+{
+  "name": "EndoNeckMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.000028908252716064453,
+      7.004227638244629,
+      0.002398371696472168,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.EndoNeck",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

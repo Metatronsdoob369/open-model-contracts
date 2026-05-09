@@ -1,0 +1,11 @@
+{
+  "name": "SurfaceAppearance",
+  "className": "SurfaceAppearance",
+  "properties": {
+    "MetalnessMap": "rbxassetid://84571543823012",
+    "NormalMap": "rbxassetid://138434135030900",
+    "RoughnessMap": "rbxassetid://74986057109751",
+    "EmissiveStrength": 0,
+    "ColorMap": "rbxassetid://101629450286346"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "name": "Glow",
+  "className": "ParticleEmitter",
+  "properties": {
+    "Color": [
+      {
+        "time": 0,
+        "value": {
+          "b": 5,
+          "g": 22,
+          "r": 255
+        }
+      },
+      {
+        "time": 1,
+        "value": {
+          "b": 5,
+          "g": 22,
+          "r": 255
+        }
+      }
+    ],
+    "LockedToPart": true,
+    "Rate": 5,
+    "Texture": "rbxassetid://867619398",
+    "Transparency": [
+      {
+        "value": 1,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 0,
+        "time": 0.5,
+        "envelope": 0
+      },
+      {
+        "value": 1,
+        "time": 1,
+        "envelope": 0
+      }
+    ],
+    "Speed": {
+      "min": 0.0010000000474974513,
+      "max": 0.0010000000474974513
+    },
+    "Lifetime": {
+      "min": 1,
+      "max": 1
+    },
+    "LightEmission": 1,
+    "Brightness": 5,
+    "Orientation": "Enum.ParticleOrientation.VelocityPerpendicular",
+    "Size": [
+      {
+        "value": 0.07000000029802322,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 0.07999999821186066,
+        "time": 1,
+        "envelope": 0
+      }
+    ]
+  },
+  "attributes": {
+    "EmitDelay": 0,
+    "TimeScale_End": 1,
+    "TimeScale_Duration": 0.1,
+    "EmitCount": 1,
+    "EmitDuration": 0,
+    "TimeScale_Start": 1
+  }
+}

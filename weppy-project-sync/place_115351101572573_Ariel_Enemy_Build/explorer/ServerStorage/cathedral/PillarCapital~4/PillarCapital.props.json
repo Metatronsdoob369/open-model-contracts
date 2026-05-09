@@ -1,0 +1,33 @@
+{
+  "name": "PillarCapital",
+  "className": "Part",
+  "properties": {
+    "BrickColor": "Earth blue",
+    "Anchored": true,
+    "Color": {
+      "b": 65,
+      "g": 55,
+      "r": 55
+    },
+    "CFrame": [
+      -25,
+      218.5,
+      55,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Material": "Enum.Material.Slate",
+    "Size": {
+      "y": 3,
+      "x": 8,
+      "z": 8
+    }
+  }
+}

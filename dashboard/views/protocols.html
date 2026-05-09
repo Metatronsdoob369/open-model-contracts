@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>CHRONE³ OS | 4D Spatio-Temporal Orchestrator</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Inter:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&family=JetBrains+Mono:wght@100;200;400&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed": "#e0e3e5",
+                        "on-secondary-container": "#abb9d2",
+                        "surface-container-low": "#1c1b1c",
+                        "secondary": "#b9c7e0",
+                        "tertiary-container": "#53acd3",
+                        "surface-container": "#201f20",
+                        "outline": "#8e9197",
+                        "background": "#131314",
+                        "on-surface-variant": "#c4c6cd",
+                        "on-surface": "#e5e2e3",
+                        "inverse-on-surface": "#313031",
+                        "on-primary-fixed": "#191c1e",
+                        "primary": "#c4c7c9",
+                        "secondary-fixed": "#d5e3fd",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#b9c7e0",
+                        "surface-dim": "#131314",
+                        "on-error-container": "#ffdad6",
+                        "tertiary": "#7bd1fa",
+                        "on-primary": "#2d3133",
+                        "surface-container-highest": "#353436",
+                        "surface": "#131314",
+                        "inverse-primary": "#5c5f61",
+                        "surface-container-lowest": "#0e0e0f",
+                        "error-container": "#93000a",
+                        "secondary-container": "#3c4a5e",
+                        "on-secondary-fixed": "#0d1c2f",
+                        "on-primary-container": "#35393b",
+                        "primary-fixed-dim": "#c4c7c9",
+                        "tertiary-fixed-dim": "#7bd1fa",
+                        "on-tertiary-container": "#003d52",
+                        "on-secondary-fixed-variant": "#3a485c",
+                        "on-tertiary-fixed": "#001e2b",
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#444749",
+                        "on-background": "#e5e2e3",
+                        "primary-container": "#9fa2a4",
+                        "tertiary-fixed": "#c0e8ff",
+                        "on-secondary": "#233144",
+                        "surface-variant": "#353436",
+                        "outline-variant": "#44474c",
+                        "surface-container-high": "#2a2a2b",
+                        "on-tertiary": "#003547",
+                        "surface-bright": "#3a393a",
+                        "on-tertiary-fixed-variant": "#004d66",
+                        "inverse-surface": "#e5e2e3",
+                        "surface-tint": "#c4c7c9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="/static/nexus.css" />
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-tertiary/30 font-extralight scroll-smooth">
+    <!-- TopAppBar -->
+    <nav
+        class="fixed top-0 z-50 w-full h-20 px-8 lg:pl-32 flex justify-between items-center bg-zinc-950/60 backdrop-blur-2xl border-b border-white/5 shadow-[0_10px_40px_-15px_rgba(123,209,250,0.1)]">
+        <div class="flex items-center gap-4">
+            <span class="material-symbols-outlined text-slate-300 text-xl">view_in_ar</span>
+            <span class="text-xl font-light tracking-tighter text-slate-100 font-headline uppercase">CHRONE³ OS</span>
+        </div>
+        <div class="hidden md:flex items-center gap-12">
+            <a class="text-sky-400 font-light border-b-2 border-sky-400 pb-1 font-headline uppercase tracking-widest text-xs transition-colors duration-300"
+                href="#">ORCHESTRATE</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">TOPOLOGY</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">DIMENSIONS</a>
+            <a class="text-slate-500 font-light font-headline uppercase tracking-widest text-xs hover:text-sky-300 transition-colors duration-300"
+                href="#">PROTOCOLS</a>
+        </div>
+        <div class="flex items-center gap-6">
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">sensors</span>
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">speed</span>
+            <span
+                class="material-symbols-outlined text-slate-300 cursor-pointer active:scale-95 duration-200">settings</span>
+        </div>
+    </nav>
+    
+    <!-- Phase Clock HUD Overlay - Hard Anchored to Bottom Right -->
+    <div id="phase-clock" style="right: 3rem; bottom: 3rem; position: fixed;" class="z-[60] w-32 h-32 pointer-events-none opacity-60 hover:opacity-100 transition-opacity">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- Outer Ring -->
+            <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(123, 209, 250, 0.2)" stroke-width="0.5" stroke-dasharray="1,2" />
+            <!-- Inner Ring -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(123, 209, 250, 0.1)" stroke-width="2" />
+            <!-- Sweeping Hand -->
+            <line id="clock-hand" x1="50" y1="50" x2="50" y2="10" stroke="#7bd1fa" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Phase Text -->
+            <text x="50" y="75" text-anchor="middle" fill="#7bd1fa" font-family="'JetBrains Mono'" font-size="6" font-weight="100" id="clock-phase-text">idle_loop</text>
+            <text x="50" y="85" text-anchor="middle" fill="rgba(123, 209, 250, 0.4)" font-family="'Space Grotesk'" font-size="4" letter-spacing="2" class="uppercase">PHASE</text>
+        </svg>
+    </div>
+
+    <main id="view-orchestrator" class="relative min-h-screen pt-20 pl-20 lg:pl-0 overflow-hidden active-view">
+        <!-- Hero Section -->
+        <section class="relative h-[700px] flex flex-col justify-center px-8 md:px-24 lg:pl-48 fade-up-element">
+            <!-- Background Visual Layer -->
+            <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[140%] opacity-20"
+                    id="hero-img-container" style="transition: transform 1s ease-out;">
+                    <img alt="Abstract 3D wireframe" class="w-full h-full object-cover"
+                        data-alt="Intricate glowing abstract 3D wireframe mesh representing complex data structures on a dark charcoal background with ice blue light paths"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDc0TJB791E3PXpMzTiR-lqD_bYF3FYxWOnuMd9QFobv38IExXCSaivQSnFxfp7QQ69zix3yJi2uAvXk7o0MKKUVS16OiP50daqWQ_4Uv8WB1BzVhfXSGqEgQbjTnXg7WLkY29z3uZeX-js3wobbPTz9yw7OkhZpYFVzwAnJ4lJenhC1YtVtq-KYGpgOsS-FQkaQfH39mFLWIq8EqHKsb-tbLV76EFYlOLlhLFJPRN2jZA9Qg397UjESZ6U0aaQBsDtk0r72-9tNbw" />
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent"></div>
+            </div>
+            <div class="relative z-10 max-w-5xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="w-12 h-[1px] bg-tertiary"></span>
+                    <span class="font-headline text-tertiary text-xs tracking-[0.4em] uppercase font-light">Protocol
+                        Active: 4D Spatio-Temporal</span>
+                </div>
+                <h1
+                    class="font-headline text-6xl md:text-8xl font-light tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-white to-slate-400 leading-[0.9] mb-8 text-glow">
+                    THE FUTURE OF <br />CODE UNDERSTANDING <br /><span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tertiary">IS
+                        4D.</span>
+                </h1>
+                <p
+                    class="font-body text-on-surface-variant text-lg md:text-xl max-w-2xl mb-12 leading-relaxed font-thin">
+                    Navigate multi-dimensional software architectures directly. Experience real-time topological
+                    fracture analysis powered by our proprietary 3072-D Ollama Node Engine.
+                </p>
+                <div class="flex flex-wrap gap-6">
+                    <button id="btn-init-hero"
+                        class="group relative px-10 py-5 bg-primary text-on-primary font-headline font-light uppercase tracking-widest text-sm transition-all duration-300 active:scale-95 hover:shadow-[0_0_30px_rgba(123,209,250,0.4)]">
+                        <span class="relative z-10">INITIALIZE ORCHESTRATION</span>
+                        <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                    </button>
+                    <button id="btn-terminal"
+                        class="px-10 py-5 border border-outline-variant hover:border-tertiary/50 text-on-surface font-headline font-light uppercase tracking-widest text-sm transition-all duration-300">
+                        ACCESS TERMINAL
+                    </button>
+                </div>
+            </div>
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 cursor-pointer"
+                onclick="document.getElementById('command-deck').scrollIntoView({behavior: 'smooth'})">
+                <span
+                    class="font-headline text-[10px] tracking-[0.3em] text-slate-500 uppercase font-light hover:text-tertiary transition-colors">System
+                    Descent</span>
+                <div class="w-[1px] h-16 bg-gradient-to-b from-tertiary to-transparent animate-pulse"></div>
+            </div>
+        </section>
+        <!-- Hyperspatial Command Deck (Visual Core) -->
+        <section id="command-deck" class="relative min-h-[900px] w-full bg-[#050507] overflow-hidden border-y border-white/5 fade-up-element flex flex-col">
+            <!-- Top HUD Status -->
+            <div class="z-20 w-full h-16 border-b border-white/5 flex items-center justify-between px-12 bg-black/40 backdrop-blur-md">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-sm text-tertiary">architecture</span>
+                        <h2 class="font-headline text-lg tracking-widest text-slate-100 uppercase" id="node-count-header">12 / 12</h2>
+                    </div>
+                </div>
+                <div class="flex items-center gap-8">
+                    <div class="flex gap-6">
+                        <span data-axis="X-AXIS"   class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">X-AXIS</span>
+                        <span data-axis="Y-AXIS"   class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">Y-AXIS</span>
+                        <span data-axis="Z-DEPTH"  class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">Z-DEPTH</span>
+                        <span data-axis="T-CHRONE" class="text-[10px] font-headline tracking-[0.2em] cursor-pointer transition-all pb-1">T-CHRONE</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-slate-500 text-lg">podcasts</span>
+                    <span class="material-symbols-outlined text-slate-500 text-lg">cloud_done</span>
+                    <span class="material-symbols-outlined text-slate-300 text-lg">settings</span>
+                </div>
+            </div>
+
+            <!-- Main Orchestration Grid -->
+            <div class="flex-grow flex relative">
+                
+                <!-- Left Sidebar Nav -->
+                <div class="w-16 border-r border-white/5 flex flex-col items-center py-12 gap-10 bg-black/20">
+                    <span data-axis="X-AXIS"   class="material-symbols-outlined text-tertiary cursor-pointer border-r-2 border-tertiary pr-0 hover:text-sky-300 transition-colors" title="X-AXIS">arrow_right_alt</span>
+                    <span data-axis="Y-AXIS"   class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="Y-AXIS">north</span>
+                    <span data-axis="Z-DEPTH"  class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="Z-DEPTH">layers</span>
+                    <span data-axis="T-CHRONE" class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors" title="T-CHRONE">schedule</span>
+                    <span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-tertiary transition-colors">account_circle</span>
+                </div>
+
+                <!-- Column 1: Orchestrator Status & Node Health -->
+                <div class="w-80 h-full border-r border-white/5 p-6 flex flex-col gap-6 z-20 overflow-y-auto bg-black/10">
+                    <div class="card-veneer p-6 rounded-lg bg-zinc-900/20">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-symbols-outlined text-tertiary text-lg">deployed_code</span>
+                            <h3 class="text-[10px] font-headline tracking-[0.2em] text-slate-400 uppercase">Orchestrator</h3>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <p class="text-2xl font-light text-slate-100" id="latency-display">18 ms</p>
+                                <p class="text-[8px] font-headline text-slate-500 tracking-wider">Latency Spectrum Nominal</p>
+                            </div>
+                            <div class="w-10 h-10 border border-tertiary/20 rounded-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-tertiary text-sm">verified</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex-grow flex flex-col">
+                         <h3 class="text-[10px] font-headline tracking-[0.2em] text-slate-500 uppercase mb-4 px-2">Node Health (3072-D Vector)</h3>
+                         <div id="node-health-list" class="space-y-3 overflow-y-auto pr-2 max-h-[500px]">
+                            <!-- Populated by nexus.js -->
+                         </div>
+                    </div>
+
+                    <button id="btn-init-jump" class="mt-auto w-full py-4 bg-gradient-to-r from-slate-200 to-slate-400 text-black font-headline text-[10px] tracking-[0.3em] font-bold uppercase transition-all hover:scale-[1.02] active:scale-95 shadow-[0_4px_20px_rgba(255,255,255,0.1)]">
+                        Initialize Jump
+                    </button>
+                </div>
+
+                <!-- Column 2: Spatio-Temporal Fabric (Central Theater) -->
+                <div class="flex-grow relative flex flex-col items-center py-12">
+                    <div class="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none"></div>
+                    
+                    <div class="z-20 text-center mb-8">
+                        <h2 class="font-headline text-3xl tracking-tight text-slate-200 uppercase">Spatio-Temporal Fabric</h2>
+                        <div class="flex items-center justify-center gap-2">
+                             <span class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">Real-time Code Context Synchronization</span>
+                        </div>
+                    </div>
+
+                    <!-- THE 4D REACTOR -->
+                    <div id="reactor-visual-area" class="relative w-full max-w-4xl h-[500px] border border-white/5 bg-black/40 rounded-xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+                        <div id="radar-container" class="absolute inset-0 z-0"></div>
+                        <div class="absolute top-4 right-6 flex items-center gap-2">
+                             <span class="text-[8px] font-mono text-slate-500 uppercase">Epoch: 1.48.0</span>
+                             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                             <span class="text-[8px] font-mono text-emerald-400 uppercase font-bold">Live</span>
+                        </div>
+                        
+                        <!-- Axis Labels as seen in screenshot -->
+                        <div class="absolute inset-0 pointer-events-none p-12">
+                             <span class="absolute top-12 left-1/2 -translate-x-1/2 text-[8px] font-mono text-slate-500 tracking-[0.4em]">Y : DIMENSION</span>
+                             <span class="absolute bottom-12 left-1/2 -translate-x-1/2 text-[10px] font-mono text-slate-100 tracking-[0.2em]" id="id-tag-display">ID: 9821-X</span>
+                             <span class="absolute top-1/2 left-0 -rotate-90 text-[8px] font-mono text-slate-500 tracking-[0.4em]">X : VECTOR</span>
+                             <span class="absolute top-1/2 right-0 rotate-90 text-[8px] font-mono text-slate-500 tracking-[0.4em]">Z : DEPTH</span>
+                        </div>
+
+                        <!-- Hover UI Cards -->
+                        <div id="node-spec-card" class="hidden absolute z-30 pointer-events-none p-4 bg-zinc-950/90 backdrop-blur-xl border border-white/10 w-64 shadow-2xl" id="spec-card">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p id="spec-card-id" class="font-mono text-[9px] text-slate-500 mb-1 truncate"></p>
+                                    <p id="spec-card-room" class="font-headline text-[10px] tracking-widest text-slate-200 uppercase"></p>
+                                </div>
+                                <span id="spec-card-gate" class="font-headline text-[8px] tracking-widest px-2 py-0.5 mt-0.5"></span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-center"><span class="font-mono text-[8px] text-slate-500">SHATTER_VELOCITY</span><span id="spec-card-shatter" class="font-mono text-[9px] font-bold"></span></div>
+                                <div class="flex justify-between items-center"><span class="font-mono text-[8px] text-slate-500">HEAT_ANOMALY</span><span id="spec-card-heat" class="font-mono text-[9px] text-amber-400"></span></div>
+                                <div class="flex justify-between items-center"><span class="font-mono text-[8px] text-slate-500">PHASE_GATE</span><span id="spec-card-phase" class="font-mono text-[8px] text-slate-300"></span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Escrow Control -->
+                    <div class="mt-8 grid grid-cols-3 gap-6 w-full max-w-4xl px-2">
+                         <div class="card-veneer p-4 rounded-md flex items-center justify-between">
+                             <div class="flex items-center gap-3">
+                                 <span class="material-symbols-outlined text-rose-500 text-sm">lock</span>
+                                 <h4 class="text-[9px] font-headline tracking-widest text-slate-500 uppercase">Escrow Validation Gate</h4>
+                             </div>
+                             <div class="flex gap-3 items-center">
+                                 <div class="flex flex-col items-end">
+                                     <span class="text-[10px] font-headline text-emerald-400" id="escrow-trusted">8 TRUSTED</span>
+                                     <span class="text-[10px] font-headline text-slate-500">0 STAGED</span>
+                                 </div>
+                                 <div class="w-px h-6 bg-white/5"></div>
+                                 <span class="text-[10px] font-headline text-rose-500">0 BREACH</span>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Test Pipeline -->
+                <div class="w-80 h-full border-l border-white/5 p-6 flex flex-col gap-5 z-20 bg-black/10 overflow-y-auto">
+                    <div class="flex justify-between items-center px-1 mb-2">
+                         <h3 class="text-[10px] font-headline tracking-[0.2em] text-slate-500 uppercase">Test Pipeline</h3>
+                         <span class="text-[8px] font-headline text-tertiary tracking-widest">RUNNING: 8 NODES</span>
+                    </div>
+
+                    <div class="card-veneer p-5 rounded-lg bg-zinc-900/20 border-l border-tertiary/40">
+                         <div class="flex justify-between items-start mb-4">
+                             <div>
+                                 <p class="text-[10px] font-headline tracking-widest text-slate-200">SPECTRAL MAPPING</p>
+                                 <p class="text-[8px] font-mono text-slate-500 mt-1">8 SCRIPTS MAPPED / AVG 0.535V</p>
+                             </div>
+                             <span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                         </div>
+                    </div>
+
+                    <div class="card-veneer p-5 rounded-lg bg-zinc-900/20 border-l border-tertiary/40">
+                         <div class="flex justify-between items-start mb-4">
+                             <div>
+                                 <p class="text-[10px] font-headline tracking-widest text-slate-200">OLLAMA NODE</p>
+                                 <p class="text-[8px] font-mono text-slate-500 mt-1">CONTEXT READY / <span class="text-emerald-400">SYNCED</span></p>
+                             </div>
+                             <span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                         </div>
+                    </div>
+
+                    <div class="card-veneer p-5 rounded-lg bg-zinc-900/20 border-l border-tertiary/40">
+                         <div class="flex justify-between items-start mb-4">
+                             <div>
+                                 <p class="text-[10px] font-headline tracking-widest text-slate-200">REWIRE</p>
+                                 <p class="text-[8px] font-mono text-slate-500 mt-1">GRAPH MAPPED</p>
+                             </div>
+                             <span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+                         </div>
+                    </div>
+
+                    <div class="card-veneer p-5 rounded-lg bg-zinc-900/20">
+                         <div class="flex justify-between items-center mb-3">
+                             <p class="text-[10px] font-headline tracking-widest text-slate-500">INJECTION</p>
+                             <span class="material-symbols-outlined text-slate-600 text-sm">block</span>
+                         </div>
+                         <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                             <div class="h-full bg-slate-500/20 w-3/4"></div>
+                         </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Command Console overlay -->
+        <section class="fixed bottom-0 left-0 w-full z-[70]">
+            <div id="command-console" class="group h-12 bg-zinc-950/80 backdrop-blur-2xl border-t border-white/5 transition-all duration-500 ease-out overflow-hidden">
+
+            <!-- Label overlay — sits on top of canvas, clears sidebar -->
+            <div class="absolute top-0 right-0 pt-8 pl-8 pr-8 z-20 pointer-events-none" style="left: 5rem;">
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-tertiary animate-ping"></div>
+                    <span class="font-headline text-[10px] tracking-[0.4em] text-tertiary uppercase">Live_Spectral_Stream</span>
+                </div>
+                <h2 class="font-headline text-2xl font-light text-on-surface uppercase tracking-tighter">Sovereignty_Radar_V3</h2>
+            </div>
+
+            <!-- Legend — hover to reveal orientation guide -->
+            <div id="radar-legend" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center">
+                <button id="radar-legend-toggle" class="font-mono text-[9px] tracking-widest text-slate-500 hover:text-tertiary uppercase border border-white/10 hover:border-tertiary/40 px-3 py-1.5 bg-black/60 backdrop-blur-md transition-all">
+                    ? READING THIS VIEW
+                </button>
+                <div id="radar-legend-panel" class="hidden mb-2 p-4 bg-black/80 backdrop-blur-md border border-white/10 w-96 text-left order-first">
+                    <p class="font-headline text-[10px] tracking-widest text-tertiary uppercase mb-3">Sovereignty Radar — Orientation</p>
+                    <ul class="space-y-2 font-mono text-[10px] text-slate-400 leading-relaxed">
+                        <li><span class="text-[#00ffcc]">● Green-cyan nodes</span> — WorldState scripts (game logic layer)</li>
+                        <li><span class="text-[#ffaa00]">● Amber nodes</span> — Client Visual scripts (render layer)</li>
+                        <li><span class="text-[#cc44ff]">● Purple nodes</span> — Threading scripts (async layer)</li>
+                        <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Node size</span> — shatter velocity (larger = more fracture risk)</li>
+                        <li><span class="text-slate-300">Node glow</span> — thermal heat (hotter = higher anomaly score)</li>
+                        <li><span class="text-slate-300">Drop lines</span> — spatial anchor to the grid floor</li>
+                        <li><span class="text-slate-300">Ribbons</span> — active fracture paths between high-velocity nodes</li>
+                        <li class="pt-1 border-t border-white/5"><span class="text-slate-300">Grid floor</span> — 3D embedding space (X/Z = semantic axes, Y = time depth)</li>
+                        <li><span class="text-emerald-400">● Green glow</span> — Diamond Stable centroid: ideal convergence target (shatter &lt; 0.2)</li>
+                        <li><span class="text-rose-400">— Red ring</span> — Breach perimeter: 0.95v threshold. Nodes outside = escrow rejected</li>
+                        <li class="pt-1 border-t border-white/5 text-slate-500">Drag to orbit · Scroll to zoom</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Metadata — bottom right -->
+            <div class="absolute bottom-8 right-8 z-20 flex flex-col gap-3 text-right pointer-events-none">
+                <div class="bg-black/60 backdrop-blur-md px-4 py-3 border border-white/5">
+                    <span class="font-mono text-[9px] text-slate-500 uppercase block mb-1">Active_Node_Count</span>
+                    <span id="node-count-display" class="font-headline text-2xl text-tertiary">000</span>
+                </div>
+                <div class="bg-black/60 backdrop-blur-md px-4 py-3 border border-white/5">
+                    <span class="font-mono text-[9px] text-slate-500 uppercase block mb-1">Mean_Shatter_Velocity</span>
+                    <span id="velocity-display" class="font-headline text-2xl text-secondary">0.00v</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Bento Grid (Sovereignty Deck) -->
+        <section id="sovereignty-deck" class="relative px-8 md:px-24 py-32 bg-surface">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                <!-- Main Engine Card -->
+                <div class="md:col-span-8 group relative aspect-video md:aspect-auto overflow-hidden card-veneer p-8 fade-up-element"
+                    style="transition-delay: 0.1s;">
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="mb-auto">
+                            <span
+                                class="material-symbols-outlined text-tertiary text-4xl mb-6 transform group-hover:scale-110 transition-transform">hub</span>
+                            <h3 class="font-headline text-3xl font-light text-on-surface mb-4">3072-D OLLAMA NODE ENGINE
+                            </h3>
+                            <p class="text-on-surface-variant max-w-md font-thin">Our neural backbone processes code
+                                logic through high-dimensional vector spaces, revealing hidden dependencies invisible to
+                                traditional 2D static analysis.</p>
+                        </div>
+                        <div class="pt-8 flex items-center gap-4">
+                            <span
+                                class="px-3 py-1 bg-surface-container-highest text-[10px] font-headline tracking-tighter text-tertiary font-light">STABLE_V4.2</span>
+                            <span
+                                class="px-3 py-1 bg-surface-container-highest text-[10px] font-headline tracking-tighter text-secondary font-light"
+                                id="latency-metric">LATENCY: 0.04MS</span>
+                        </div>
+                    </div>
+                    <!-- Ambient Light Element -->
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-tertiary/5 rounded-full blur-[80px] group-hover:bg-tertiary/10 transition-all duration-500">
+                    </div>
+                </div>
+                <!-- Analysis Card -->
+                <div class="md:col-span-4 card-veneer p-8 group fade-up-element overflow-hidden" style="transition-delay: 0.2s;">
+                    <div class="relative z-10 pointer-events-none">
+                        <span class="material-symbols-outlined text-secondary text-4xl mb-6">analytics</span>
+                        <h3 class="font-headline text-2xl font-light text-on-surface mb-4 uppercase">TOPOLOGICAL FRACTURE
+                            ANALYSIS</h3>
+                        <p class="text-on-surface-variant text-sm leading-relaxed mb-6 font-thin">Real-time identification
+                            of architectural stress points. Predict system failures before they occur in the temporal
+                            stream.</p>
+                        <!-- New Manual Trigger -->
+                        <button id="btn-repair-trigger" class="pointer-events-auto px-4 py-2 border border-secondary/30 hover:border-secondary text-[10px] tracking-widest font-headline uppercase text-secondary/80 hover:text-secondary transition-all">
+                            INITIATE TEMPORAL REPAIR
+                        </button>
+                    </div>
+                    <!-- Legacy Radar Container Removed -->
+                    <div class="absolute bottom-4 left-8 z-10 flex items-center gap-2 pointer-events-none">
+                        <div class="w-2 h-2 rounded-full bg-secondary animate-ping"></div>
+                        <span class="font-mono text-secondary/60 text-[10px] tracking-widest uppercase">3072D_SPECTRUM_ACTIVE</span>
+                    </div>
+                </div>
+                <!-- Governance Score Card -->
+                <div class="md:col-span-4 card-veneer p-8 flex flex-col justify-between group hover:border-emerald-400/20 transition-colors fade-up-element"
+                    style="transition-delay: 0.3s;">
+                    <div>
+                        <span
+                            class="material-symbols-outlined text-4xl mb-6 text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.3)]">verified_user</span>
+                        <h3 class="font-headline text-2xl font-light text-on-surface mb-4 uppercase">GOVERNANCE COMPLIANCE</h3>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[10px] font-headline tracking-widest text-slate-500 uppercase">OMC_TEST_SUITE</span>
+                            <span class="text-[10px] font-mono text-emerald-400">100% PASS</span>
+                        </div>
+                        <p class="text-on-surface-variant text-sm font-thin mb-4">12/12 Automated Phase-Gates cleared. No structural fractures detected in the current temporal loop.</p>
+                        <div class="w-full h-1 bg-white/5 rounded-full mt-auto">
+                            <div class="h-full bg-emerald-400 w-full shadow-[0_0_15px_#34d399]"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Shatter Timeline Card (Distillation Layer) -->
+                <div class="md:col-span-8 card-veneer p-8 group fade-up-element overflow-hidden" style="transition-delay: 0.4s;">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <span class="material-symbols-outlined text-tertiary text-4xl mb-4">history</span>
+                            <h3 class="font-headline text-2xl font-light text-on-surface uppercase tracking-widest">SHATTER TIMELINE</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="font-mono text-[10px] text-slate-500 uppercase">Active_Vampire_Drops</span>
+                            <div id="shatter-count" class="text-tertiary font-headline text-3xl">00</div>
+                        </div>
+                    </div>
+                    
+                    <div id="shatter-timeline" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[300px] overflow-y-auto pr-4 custom-scrollbar py-2">
+                        <!-- History Items Injected Here -->
+                        <div class="col-span-full py-12 text-center border border-white/5 bg-white/[0.02]">
+                            <span class="font-mono text-[10px] text-slate-600 uppercase tracking-[.3em]">Awaiting_Temporal_Fractures...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                    </div>
+                    <div
+                        class="w-full md:w-64 h-48 bg-background border border-outline-variant/20 rounded-lg p-4 font-mono text-[10px] text-tertiary/70 overflow-hidden relative z-10">
+                        <div class="animate-pulse flex items-center justify-between"><span
+                                id="terminal-init-text">Initializing spatial_tunnel...</span><span
+                                class="w-2 h-2 rounded-full bg-tertiary"></span></div>
+                        <div class="mt-4 text-on-surface-variant font-thin" id="term-line-1">0x4F22 &gt;&gt; CONNECTED
+                        </div>
+                        <div class="mt-1 text-on-surface-variant font-thin" id="term-line-2">T-MINUS 0.0004s</div>
+                        <div class="mt-4 h-1 w-full bg-surface-container-highest">
+                            <div class="h-full bg-tertiary w-2/3 transition-all duration-1000 ease-out"
+                                id="term-progress-bar"></div>
+                        </div>
+                        <div class="mt-4 text-secondary font-thin" id="term-line-3">ACTIVE: NODE_3072</div>
+                    </div>
+                    <div class="absolute right-0 bottom-0 w-64 h-64 bg-tertiary/5 rounded-full blur-[100px] z-0"></div>
+                </div>
+            </div>
+        </section>
+        <!-- CTA Section -->
+        <section class="relative py-40 flex flex-col items-center text-center px-8 fade-up-element">
+            <div
+                class="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_rgba(123,209,250,0.05)_0%,_transparent_70%)]">
+            </div>
+            <div class="relative z-10">
+                <h2 class="font-headline text-4xl md:text-6xl font-light text-on-surface mb-8 tracking-tighter">READY TO
+                    TRANSCEND <br />3D ARCHITECTURES?</h2>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                    <div class="flex flex-col items-center">
+                        <button id="btn-cta-bottom"
+                            class="px-16 py-6 bg-gradient-to-r from-primary to-secondary text-on-primary font-headline font-light uppercase tracking-[0.2em] text-sm glow-hover transition-all duration-300 hover:scale-105 active:scale-95">
+                            INITIALIZE ORCHESTRATION
+                        </button>
+                        <span class="mt-4 text-[10px] font-headline tracking-widest text-slate-500 font-light">4D
+                            SPATIAL LINK ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Sentinel Tools View (Tool Page) -->
+    <main id="view-sentinel" class="relative min-h-screen pt-32 px-8 lg:pl-72 hidden">
+        <header class="mb-12">
+            <h2 class="text-4xl font-headline uppercase tracking-[0.2em] text-slate-100">Sentinel_Tool_Portal</h2>
+            <p class="text-slate-500 font-mono text-xs uppercase tracking-widest mt-2">Human-in-the-Loop Governance & Escrow Audit</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Escrow Queue -->
+            <div class="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 p-8 rounded-xl">
+                <h3 class="text-tertiary font-headline text-lg tracking-widest uppercase mb-6 flex items-center gap-3">
+                    <span class="material-symbols-outlined">pending_actions</span> Staged_Queue
+                </h3>
+                <div id="escrow-list" class="space-y-4">
+                    <div class="p-4 bg-white/5 border border-white/5 rounded-lg opacity-50 italic text-xs text-slate-500">
+                        Awaiting incoming STAGED resonance pulses...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Corpus Manager -->
+            <div class="bg-zinc-950/40 backdrop-blur-3xl border border-white/10 p-8 rounded-xl">
+                <h3 class="text-sky-400 font-headline text-lg tracking-widest uppercase mb-6 flex items-center gap-3">
+                    <span class="material-symbols-outlined">folder_special</span> Lua_Corpus_Control
+                </h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center p-3 bg-white/5 border border-white/5 rounded-lg text-xs font-mono text-slate-300">
+                        <span>TagGameClient.lua</span>
+                        <span class="text-green-500">CANONICAL</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 border border-white/5 rounded-lg text-xs font-mono text-slate-300">
+                        <span>Metropolis_PizzaService.lua</span>
+                        <span class="text-green-500">CANONICAL</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-white/5 border border-white/5 rounded-lg text-xs font-mono text-slate-300">
+                        <span>PizzaPlace_GameService.lua</span>
+                        <span class="text-green-500">CANONICAL</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 mt-4 uppercase tracking-tighter italic">+ 3 additional anchors loaded into spectral memory</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Visual Theater View (Visuals Page) -->
+    <main id="view-theater" class="relative w-full h-screen bg-black hidden">
+        <div id="theater-renderer" class="w-full h-full"></div>
+        <div class="absolute top-12 left-12 z-50">
+            <h2 class="text-2xl font-headline tracking-[0.5em] text-slate-200">HYPERSPATIAL_THEATER</h2>
+            <div class="flex items-center gap-4 mt-2">
+                <div class="bg-tertiary px-3 py-1 text-[10px] text-black font-bold uppercase tracking-widest">Spectral_Mode</div>
+            </div>
+        </div>
+    </main>
+    <!-- SideNavBar (Orchestrator Style) -->
+    <aside
+        class="fixed left-0 top-0 h-full w-20 hidden lg:flex flex-col pt-24 pb-8 bg-transparent hover:bg-zinc-950/40 backdrop-blur-3xl border-r border-white/5 z-[100] transition-all duration-500 hover:w-72 group">
+        <div class="flex-1 flex flex-col">
+            <!-- Navigation Items -->
+            <div
+                class="flex items-center gap-4 px-6 py-4 bg-slate-800/50 text-sky-400 border-l-4 border-sky-400 shadow-[0_0_15px_rgba(123,209,250,0.1)] cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">east</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">X-AXIS</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">north</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">Y-AXIS</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">layers</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">Z-DEPTH</span>
+            </div>
+            <div
+                class="flex items-center gap-4 px-6 py-4 text-slate-500 hover:bg-slate-800/30 hover:text-slate-200 transition-all duration-300 cursor-pointer">
+                <span class="material-symbols-outlined min-w-[24px]">schedule</span>
+                <span
+                    class="font-headline text-[10px] tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap font-light">T-CHRONO</span>
+            </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Global Command Console (Product UI Upgrade) -->
+    <div id="command-console" class="fixed bottom-0 right-0 w-full md:w-[600px] h-12 hover:h-64 transition-all duration-500 z-[60] bg-zinc-950/90 backdrop-blur-3xl border-t border-l border-white/5 shadow-2xl overflow-hidden group/console">
+        <div class="h-12 flex items-center justify-between px-6 bg-zinc-900/50 cursor-pointer border-b border-white/5" onclick="toggleConsole()">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-tertiary text-lg animate-pulse">terminal</span>
+                <span class="font-headline text-[10px] tracking-[0.3em] font-light text-slate-300">OMC_GOVERNANCE_LOGS</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="console-pulse" class="text-[8px] font-mono text-emerald-400 opacity-60">IDLE</span>
+                <span class="material-symbols-outlined text-slate-500 text-sm transform transition-transform group-hover/console:rotate-180">expand_less</span>
+            </div>
+        </div>
+        <div id="console-output" class="p-6 h-[calc(100%-48px)] overflow-y-auto console-text text-[11px] space-y-2 text-slate-400 font-extralight selection:bg-tertiary/20">
+            <div class="console-line text-slate-600">[SYSTEM] Session initialized. Awaiting 4D calibration...</div>
+            <div class="console-line text-tertiary/70">[OMC] Handshake verified with Node_3072</div>
+            <div class="console-line text-slate-500">[AUTH] Director-01 access confirmed.</div>
+        </div>
+    </div>
+    <footer
+        class="bg-surface-container-lowest border-t border-white/5 px-8 md:px-24 py-12 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+        <div class="flex items-center gap-4">
+            <span class="font-headline text-slate-100 font-light uppercase tracking-widest text-xs">CHRONE³ OS</span>
+            <span class="text-slate-600">|</span>
+            <span class="font-headline text-[10px] tracking-widest text-slate-500 uppercase font-light">Ver.
+                0.9.2-ALPHA</span>
+        </div>
+        <div class="flex gap-12 font-headline text-[10px] tracking-widest text-slate-400 uppercase font-light">
+            <a class="hover:text-tertiary transition-colors" href="#">Security Protocol</a>
+            <a class="hover:text-tertiary transition-colors" href="#">Fracture Terms</a>
+            <a class="hover:text-tertiary transition-colors" href="#">Spatial Privacy</a>
+        </div>
+                        <div class="text-slate-600 font-headline text-[10px] tracking-widest uppercase font-light">
+            © 2104 NEURAL LINK CORP
+        </div>
+    </footer>
+
+    <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+    <script type="module" src="/static/nexus.js"></script>
+</body>
+
+</html>

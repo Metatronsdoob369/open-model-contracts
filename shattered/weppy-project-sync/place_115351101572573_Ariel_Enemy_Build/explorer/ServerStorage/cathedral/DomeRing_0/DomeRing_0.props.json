@@ -1,0 +1,41 @@
+{
+  "name": "DomeRing_0",
+  "className": "Part",
+  "properties": {
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "Color": {
+      "b": 50,
+      "g": 45,
+      "r": 45
+    },
+    "Anchored": true,
+    "Rotation": {
+      "y": 0,
+      "x": 0,
+      "z": 90
+    },
+    "BrickColor": "Black",
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "CFrame": [
+      -5,
+      220,
+      35,
+      -4.371138828673793e-8,
+      -1,
+      0,
+      1,
+      -4.371138828673793e-8,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Material": "Enum.Material.Slate",
+    "Shape": "Enum.PartType.Cylinder",
+    "Size": {
+      "y": 80,
+      "x": 2.875,
+      "z": 80
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Part",
+  "className": "Part",
+  "properties": {
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "Color": {
+      "b": 172,
+      "g": 161,
+      "r": 159
+    },
+    "CFrame": [
+      -60.748504638671875,
+      -16.812946319580078,
+      -392.4217529296875,
+      0,
+      0,
+      1,
+      0,
+      1,
+      0,
+      -1,
+      0,
+      0
+    ],
+    "Rotation": {
+      "y": 90,
+      "x": 0,
+      "z": 0
+    },
+    "BrickColor": "Fossil",
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "Material": "Enum.Material.Neon",
+    "Shape": "Enum.PartType.Ball",
+    "Size": {
+      "y": 0.21856342256069183,
+      "x": 0.21856342256069183,
+      "z": 0.21856342256069183
+    }
+  }
+}

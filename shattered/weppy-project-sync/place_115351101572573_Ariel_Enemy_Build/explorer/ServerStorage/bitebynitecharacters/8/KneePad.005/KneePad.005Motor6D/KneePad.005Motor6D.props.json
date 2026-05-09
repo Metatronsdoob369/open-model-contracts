@@ -1,0 +1,23 @@
+{
+  "name": "KneePad.005Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.8366798162460327,
+      2.2524099349975586,
+      -0.5761778950691223,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.KneePad.005",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

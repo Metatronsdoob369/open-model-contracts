@@ -1,0 +1,23 @@
+{
+  "name": "RopeBase_low.005Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -1.0594947338104248,
+      -2.6559200286865234,
+      0.21079379320144653,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.4.RopeBase_low.005",
+    "Part0": "ServerStorage.bitebynitecharacters.4.RootPart"
+  }
+}

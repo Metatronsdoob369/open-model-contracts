@@ -1,0 +1,41 @@
+{
+  "name": "HumanoidRootPart",
+  "className": "Part",
+  "properties": {
+    "Rotation": {
+      "y": -90,
+      "x": 0,
+      "z": 0
+    },
+    "Transparency": 1,
+    "BrickColor": "Really black",
+    "Color": {
+      "b": 17,
+      "g": 17,
+      "r": 17
+    },
+    "Material": "Enum.Material.Fabric",
+    "CFrame": [
+      -61.104209899902344,
+      -20.25043487548828,
+      -392.336669921875,
+      0,
+      0,
+      -1,
+      0,
+      1,
+      0,
+      1,
+      0,
+      0
+    ],
+    "Size": {
+      "y": 2,
+      "x": 2,
+      "z": 1
+    }
+  },
+  "attributes": {
+    "Rojo_Id": "141348a2716baeeb09f48a6b00001153"
+  }
+}

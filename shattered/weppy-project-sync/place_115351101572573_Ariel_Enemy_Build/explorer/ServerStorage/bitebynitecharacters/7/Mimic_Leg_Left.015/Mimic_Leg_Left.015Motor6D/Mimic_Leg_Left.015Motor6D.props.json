@@ -1,0 +1,23 @@
+{
+  "name": "Mimic_Leg_Left.015Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.6760714650154114,
+      3.405202865600586,
+      -0.06798799335956573,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.7.Mimic_Leg_Left.015",
+    "Part0": "ServerStorage.bitebynitecharacters.7.RootPart"
+  }
+}

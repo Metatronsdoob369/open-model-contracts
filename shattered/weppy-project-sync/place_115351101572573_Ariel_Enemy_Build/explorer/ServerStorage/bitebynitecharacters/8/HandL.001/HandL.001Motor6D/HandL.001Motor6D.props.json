@@ -1,0 +1,23 @@
+{
+  "name": "HandL.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      2.208197593688965,
+      4.496084213256836,
+      -0.9944640398025513,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.HandL.001",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

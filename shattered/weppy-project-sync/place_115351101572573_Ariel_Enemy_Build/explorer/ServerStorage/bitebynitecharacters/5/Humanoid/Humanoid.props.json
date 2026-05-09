@@ -1,0 +1,8 @@
+{
+  "name": "Humanoid",
+  "className": "Humanoid",
+  "properties": {
+    "WalkSpeed": 0,
+    "HipHeight": 3
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "RightElbow",
+  "className": "Motor6D",
+  "properties": {
+    "C1": [
+      -0.11033022403717041,
+      2.0680994987487793,
+      0.17310363054275513,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "C0": [
+      0.1402350664138794,
+      -0.5545600652694702,
+      0.06650464236736298,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.MonsterTemplate.RightLowerArm",
+    "Part0": "ServerStorage.MonsterTemplate.RightUpperArm"
+  },
+  "attributes": {
+    "Rojo_Target_Part0": "141348a2716baeeb09f48a6b00001100",
+    "Rojo_Target_Part1": "141348a2716baeeb09f48a6b00001106"
+  }
+}

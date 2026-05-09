@@ -1,0 +1,22 @@
+{
+  "name": "RootPart",
+  "className": "Motor6D",
+  "properties": {
+    "Part0": "ServerStorage.bitebynitecharacters.1.HumanoidRootPart",
+    "C0": [
+      -0.01213836669921875,
+      -4.021927833557129,
+      0.186065673828125,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.1.RootPart"
+  }
+}

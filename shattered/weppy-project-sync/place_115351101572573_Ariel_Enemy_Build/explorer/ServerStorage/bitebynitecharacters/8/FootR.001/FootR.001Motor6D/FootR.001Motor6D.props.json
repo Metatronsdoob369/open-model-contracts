@@ -1,0 +1,23 @@
+{
+  "name": "FootR.001Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      1.3693898916244507,
+      0.5017654895782471,
+      -0.15762034058570862,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.FootR.001",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

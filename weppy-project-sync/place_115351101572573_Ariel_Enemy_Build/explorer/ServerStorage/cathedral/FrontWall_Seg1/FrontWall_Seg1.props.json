@@ -1,0 +1,35 @@
+{
+  "name": "FrontWall_Seg1",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "BrickColor": "Black",
+    "Material": "Enum.Material.Slate",
+    "Color": {
+      "b": 50,
+      "g": 45,
+      "r": 45
+    },
+    "Anchored": true,
+    "CFrame": [
+      -17,
+      157.5,
+      -25,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 25,
+      "x": 8,
+      "z": 4
+    }
+  }
+}

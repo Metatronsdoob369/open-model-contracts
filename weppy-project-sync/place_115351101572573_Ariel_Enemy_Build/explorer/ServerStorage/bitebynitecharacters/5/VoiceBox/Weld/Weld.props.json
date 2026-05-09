@@ -1,0 +1,22 @@
+{
+  "name": "Weld",
+  "className": "Weld",
+  "properties": {
+    "Part0": "ServerStorage.bitebynitecharacters.5.HumanoidRootPart",
+    "C0": [
+      0,
+      -0.00019931793212890625,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.5.VoiceBox"
+  }
+}

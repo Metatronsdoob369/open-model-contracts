@@ -1,0 +1,32 @@
+{
+  "metadata": {
+    "name": "WhiteGlove Sovereign Medical Intelligence",
+    "version": "2.0.0",
+    "description": "Air-gapped, faith-less medical diagnostic pipeline.",
+    "contractId": "omc.v3.medical-agent"
+  },
+  "policy": {
+    "similarityThreshold": 0.2858,
+    "queryThreshold": 0.45,
+    "clarificationThreshold": 0.35,
+    "maxContextShards": 5,
+    "silenceOnNoMatch": true,
+    "enableInference": false
+  },
+  "substrate": {
+    "source": "MedlinePlus_Canonical_Medical_Core",
+    "shardCount": 15580,
+    "indexing": "SimHash-128_Hamming_Space",
+    "projection": "Text-first_LSH_Routing"
+  },
+  "hermes": {
+    "runtime": "Ollama_Local",
+    "model": "qwen2.5-coder:7b",
+    "enabled": false
+  },
+  "claudeAutonomy": {
+    "circadianPulse": "1hr_heartbeat",
+    "tools": ["Local_FS", "CLI_Gateway", "Telegram_Gateway"],
+    "selfCorrection": true
+  }
+}

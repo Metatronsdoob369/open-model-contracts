@@ -1,0 +1,56 @@
+{
+  "name": "SlashTrail_AXELESS",
+  "className": "Trail",
+  "properties": {
+    "Enabled": false,
+    "FaceCamera": true,
+    "Color": [
+      {
+        "time": 0,
+        "value": {
+          "b": 255,
+          "g": 255,
+          "r": 255
+        }
+      },
+      {
+        "time": 1,
+        "value": {
+          "b": 112,
+          "g": 112,
+          "r": 112
+        }
+      }
+    ],
+    "WidthScale": [
+      {
+        "value": 0.6000000238418579,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 0,
+        "time": 1,
+        "envelope": 0
+      }
+    ],
+    "LightInfluence": 0.75,
+    "Transparency": [
+      {
+        "value": 0.6000000238418579,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 1,
+        "time": 1,
+        "envelope": 0
+      }
+    ],
+    "Lifetime": 0.10000000149011612,
+    "Texture": "rbxassetid://5699911427",
+    "Brightness": 4,
+    "Attachment0": "ServerStorage.bitebynitecharacters.8.RootPart.MasterControl.Root.UpperTorso.Bone.004.L.BShoulder.L.UpperArm.L.LowerArm.L.Hand.L.Attachment1",
+    "Attachment1": "ServerStorage.bitebynitecharacters.8.RootPart.MasterControl.Root.UpperTorso.Bone.004.L.BShoulder.L.UpperArm.L.LowerArm.L.Hand.L.Attachment2"
+  }
+}

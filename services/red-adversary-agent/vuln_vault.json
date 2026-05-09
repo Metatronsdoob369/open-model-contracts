@@ -1,0 +1,20 @@
+{
+  "signatures": [
+    {
+      "id": "8562",
+      "hex": "0x0902f1ac",
+      "text": "getReserves()",
+      "genre": "DeFi_Liquidity",
+      "threat_level": "CRITICAL"
+    },
+    {
+      "id": "844296",
+      "hex": "0x0902f1ac",
+      "text": "join_tg_invmru_haha_691357a(bool,bool,bool)",
+      "genre": "Bot_Engine",
+      "threat_level": "HIGH"
+    }
+  ],
+  "traverses": [],
+  "vuln_generation_seeds": []
+}

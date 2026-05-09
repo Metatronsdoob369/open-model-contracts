@@ -1,0 +1,23 @@
+{
+  "name": "Cylinder.008Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      2.3186755180358887,
+      3.8325953483581543,
+      -1.1002380847930908,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.Cylinder.008",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

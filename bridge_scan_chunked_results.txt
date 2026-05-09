@@ -1,0 +1,143 @@
+
+[staging] Pipeline start — 8 input(s) — Target: vuln-heatmap
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/audit-logger.ts — 1 chunk(s) targeting vuln-heatmap
+[staging] Final Result: heat=0.537  shatter=0.020  room=OMC_Governance  nearest=owasp-a09-2021 (from chunk 0)
+[staging] Upserted → Qdrant id=1502856758  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_audit_logger_1777864845496_c0
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/audit-logger.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5366  (proximity to canonical top-1%)
+  shatter   : 0.0201  (dispersion velocity across space)
+  nearest   : owasp-a09-2021  (score=0.5366)
+  shatterMap: [0.027, 0.025, 0.027, 0.023, 0.023, 0.024, 0.022, 0.022, 0.024, 0.026, 0.025, 0.026, 0.023, 0.023, 0.029, 0.024]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/escrow-store.ts — 2 chunk(s) targeting vuln-heatmap
+[staging] Final Result: heat=0.548  shatter=0.022  room=OMC_Governance  nearest=pattern-auth-bypass (from chunk 0)
+[staging] Upserted → Qdrant id=1403268957  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_escrow_store_1777864845496_c0
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/escrow-store.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5484  (proximity to canonical top-1%)
+  shatter   : 0.0222  (dispersion velocity across space)
+  nearest   : pattern-auth-bypass  (score=0.5484)
+  shatterMap: [0.027, 0.022, 0.025, 0.026, 0.023, 0.027, 0.022, 0.024, 0.023, 0.028, 0.025, 0.021, 0.025, 0.023, 0.028, 0.021]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/governance-gate.ts — 3 chunk(s) targeting vuln-heatmap
+[staging] Final Result: heat=0.576  shatter=0.019  room=OMC_Governance  nearest=pattern-auth-bypass (from chunk 2)
+[staging] Upserted → Qdrant id=1845011594  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_governance_gate_1777864845496_c2
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/governance-gate.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5756  (proximity to canonical top-1%)
+  shatter   : 0.0193  (dispersion velocity across space)
+  nearest   : pattern-auth-bypass  (score=0.5756)
+  shatterMap: [0.027, 0.024, 0.023, 0.027, 0.023, 0.026, 0.025, 0.023, 0.023, 0.022, 0.025, 0.025, 0.023, 0.025, 0.030, 0.026]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/index.ts — 2 chunk(s) targeting vuln-heatmap
+[staging] Chunk 0 failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/index.ts: Error: Ollama error: the input length exceeds the context length
+[staging] Final Result: heat=0.523  shatter=0.028  room=OMC_Governance  nearest=owasp-a09-2021 (from chunk 1)
+[staging] Upserted → Qdrant id=1534939179  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_index_1777864845496_c1
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/index.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5227  (proximity to canonical top-1%)
+  shatter   : 0.0281  (dispersion velocity across space)
+  nearest   : owasp-a09-2021  (score=0.5227)
+  shatterMap: [0.029, 0.021, 0.021, 0.025, 0.024, 0.023, 0.024, 0.024, 0.028, 0.024, 0.026, 0.020, 0.026, 0.024, 0.030, 0.022]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/metropolis-gate.ts — 4 chunk(s) targeting vuln-heatmap
+[staging] Final Result: heat=0.609  shatter=0.022  room=OMC_Governance  nearest=pattern-auth-bypass (from chunk 1)
+[staging] Upserted → Qdrant id=1305017519  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_metropolis_gate_1777864845496_c1
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/metropolis-gate.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.6090  (proximity to canonical top-1%)
+  shatter   : 0.0223  (dispersion velocity across space)
+  nearest   : pattern-auth-bypass  (score=0.6090)
+  shatterMap: [0.025, 0.021, 0.024, 0.024, 0.024, 0.021, 0.029, 0.026, 0.026, 0.027, 0.024, 0.024, 0.026, 0.023, 0.028, 0.023]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/schema-validator.ts — 2 chunk(s) targeting vuln-heatmap
+[staging] Final Result: heat=0.588  shatter=0.026  room=OMC_Governance  nearest=cve-2017-5638 (from chunk 0)
+[staging] Upserted → Qdrant id=851969782  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_schema_validator_1777864845496_c0
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/schema-validator.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5883  (proximity to canonical top-1%)
+  shatter   : 0.0264  (dispersion velocity across space)
+  nearest   : cve-2017-5638  (score=0.5883)
+  shatterMap: [0.027, 0.024, 0.026, 0.026, 0.023, 0.026, 0.021, 0.024, 0.024, 0.028, 0.025, 0.023, 0.023, 0.025, 0.030, 0.019]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/submit-auth.ts — 2 chunk(s) targeting vuln-heatmap
+[staging] Chunk 0 failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/submit-auth.ts: Error: Ollama error: the input length exceeds the context length
+[staging] Final Result: heat=0.584  shatter=0.025  room=OMC_Governance  nearest=pattern-auth-bypass (from chunk 1)
+[staging] Upserted → Qdrant id=386600338  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_submit_auth_1777864845496_c1
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/submit-auth.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5845  (proximity to canonical top-1%)
+  shatter   : 0.0254  (dispersion velocity across space)
+  nearest   : pattern-auth-bypass  (score=0.5845)
+  shatterMap: [0.027, 0.022, 0.024, 0.027, 0.025, 0.025, 0.024, 0.027, 0.024, 0.025, 0.024, 0.021, 0.023, 0.025, 0.032, 0.022]
+────────────────────────────────────────────────────────────
+
+[staging] Processing: /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/types.ts — 2 chunk(s) targeting vuln-heatmap
+[staging] Chunk 0 failed for /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/types.ts: Error: Ollama error: the input length exceeds the context length
+[staging] Final Result: heat=0.587  shatter=0.028  room=OMC_Governance  nearest=owasp-a08-2021 (from chunk 1)
+[staging] Upserted → Qdrant id=1299479708  collection=vuln-heatmap
+
+── Canonical Staging Summary ───────────────────────────────
+  id        : staged_types_1777864845496_c1
+  collection: vuln-heatmap
+  source    : /Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/types.ts
+  kind      : unknown
+  room      : OMC_Governance
+  vectorDim : 1024
+  heat      : 0.5868  (proximity to canonical top-1%)
+  shatter   : 0.0281  (dispersion velocity across space)
+  nearest   : owasp-a08-2021  (score=0.5868)
+  shatterMap: [0.024, 0.025, 0.021, 0.028, 0.025, 0.023, 0.024, 0.024, 0.022, 0.027, 0.029, 0.026, 0.021, 0.021, 0.031, 0.021]
+────────────────────────────────────────────────────────────
+
+[staging] Pipeline complete.

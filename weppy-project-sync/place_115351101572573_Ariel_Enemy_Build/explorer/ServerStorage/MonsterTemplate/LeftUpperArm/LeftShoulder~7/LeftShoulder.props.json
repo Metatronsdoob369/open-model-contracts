@@ -1,0 +1,40 @@
+{
+  "name": "LeftShoulder",
+  "className": "Motor6D",
+  "properties": {
+    "C1": [
+      0.0903024673461914,
+      0.3932809829711914,
+      -0.023725762963294983,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "C0": [
+      -0.629633367061615,
+      0.5804040431976318,
+      0.2135595977306366,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "LeftUpperArm",
+    "Part0": "ServerStorage.MonsterTemplate.UpperTorso"
+  },
+  "attributes": {
+    "Rojo_Target_Part0": "141348a2716baeeb09f48a6b00001116",
+    "Rojo_Target_Part1": "141348a2716baeeb09f48a6b0000110b"
+  }
+}

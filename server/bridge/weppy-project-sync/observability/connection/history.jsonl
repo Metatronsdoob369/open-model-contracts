@@ -1,0 +1,8 @@
+{"timestamp":"2026-05-08T00:06:26.959Z","type":"mcp","status":"registered","instanceId":"600976b4-761a-4cc2-a0c6-2e781d3e454d","message":"MCP registered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:22:18.757Z","type":"mcp","status":"unregistered","instanceId":"600976b4-761a-4cc2-a0c6-2e781d3e454d","message":"MCP unregistered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:22:53.507Z","type":"mcp","status":"registered","instanceId":"fe79a94e-f85c-46fb-a820-b59edcc047e2","message":"MCP registered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:23:11.015Z","type":"mcp","status":"registered","instanceId":"84854744-1e62-4b40-b4aa-54813c6a7c61","message":"MCP registered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:23:11.545Z","type":"mcp","status":"unregistered","instanceId":"84854744-1e62-4b40-b4aa-54813c6a7c61","message":"MCP unregistered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:25:47.202Z","type":"mcp","status":"registered","instanceId":"27532181-f951-4b8b-b52f-f5f4b7eaa56f","message":"MCP registered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T01:25:47.649Z","type":"mcp","status":"unregistered","instanceId":"27532181-f951-4b8b-b52f-f5f4b7eaa56f","message":"MCP unregistered — Claude Code","aiClientName":"Claude Code"}
+{"timestamp":"2026-05-08T02:22:54.206Z","type":"mcp","status":"unregistered","instanceId":"fe79a94e-f85c-46fb-a820-b59edcc047e2","message":"MCP unregistered — Claude Code","aiClientName":"Claude Code"}

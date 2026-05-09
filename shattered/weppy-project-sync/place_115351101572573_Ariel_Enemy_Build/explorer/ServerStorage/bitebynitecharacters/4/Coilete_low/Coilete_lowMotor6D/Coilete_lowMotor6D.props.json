@@ -1,0 +1,23 @@
+{
+  "name": "Coilete_lowMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.0006276369094848633,
+      1.7027087211608887,
+      0.007230788469314575,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.4.Coilete_low",
+    "Part0": "ServerStorage.bitebynitecharacters.4.RootPart"
+  }
+}

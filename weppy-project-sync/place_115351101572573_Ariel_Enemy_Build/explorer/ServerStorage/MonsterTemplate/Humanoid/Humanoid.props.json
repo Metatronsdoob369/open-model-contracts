@@ -1,0 +1,12 @@
+{
+  "name": "Humanoid",
+  "className": "Humanoid",
+  "properties": {
+    "RigType": "Enum.HumanoidRigType.R15",
+    "WalkSpeed": 8,
+    "BreakJointsOnDeath": false,
+    "NameDisplayDistance": 0,
+    "DisplayDistanceType": "Enum.HumanoidDisplayDistanceType.Subject",
+    "HipHeight": 3
+  }
+}

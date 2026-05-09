@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "name": "HighFidLizard_Manifestation_v1",
+    "hash": "LIZARD-99-HIGHFID",
+    "description": "Procedural High-Fidelity Komodo Anthro for Roblox VCS"
+  },
+  "structuralSpec": {
+    "root": {
+      "name": "OMC_ManifestedWorld",
+      "children": [
+        {
+          "name": "Workspace",
+          "children": [
+            {
+              "name": "Lizard_Spawn_Node",
+              "type": "Folder",
+              "stage": "world_geometry",
+              "properties": {
+                "Position": [0, 10, 0]
+              }
+            }
+          ]
+        },
+        {
+          "name": "ServerScriptService",
+          "children": [
+            {
+              "name": "HighFidLizard_Engine",
+              "type": "Script",
+              "stage": "server_logic",
+              "properties": {
+                "assetHash": "k9j8h7g6f5e4d3c2b1a0",
+                "spawnDelay": 1,
+                "autoManifest": true
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

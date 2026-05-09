@@ -1,0 +1,44 @@
+[
+  {
+    "id": "lab-heartbeat",
+    "skill": "heartbeat",
+    "schedule": "*/30 * * * *",
+    "gate": "SAFE",
+    "description": "Lab resilience check (lab-resilience-heartbeat.ts) every 30 minutes"
+  },
+  {
+    "id": "lab-shatter",
+    "skill": "shatter",
+    "schedule": "0 0 * * *",
+    "gate": "ARMED",
+    "description": "OpSec shatter protocol (lab-shatter-orchestrator.ts) daily"
+  },
+  {
+    "id": "lab-discover",
+    "skill": "discover",
+    "schedule": "0 */6 * * *",
+    "gate": "ARMED",
+    "description": "Vulnerability discovery pulse (lab-discovery-orchestrator.ts) every 6 hours"
+  },
+  {
+    "id": "lab-map",
+    "skill": "lab-map",
+    "schedule": "0 */12 * * *",
+    "gate": "ARMED",
+    "description": "Network mapping pulse (lab-mapping-orchestrator.ts) every 12 hours"
+  },
+  {
+    "id": "lab-research-pulse",
+    "skill": "research",
+    "schedule": "0 6 * * *",
+    "gate": "ARMED",
+    "description": "Daily deep research brief at 06:00"
+  },
+  {
+    "id": "lab-scrape-queue",
+    "skill": "scrape",
+    "schedule": "0 */2 * * *",
+    "gate": "ARMED",
+    "description": "Processing the scrape queue every 2 hours"
+  }
+]

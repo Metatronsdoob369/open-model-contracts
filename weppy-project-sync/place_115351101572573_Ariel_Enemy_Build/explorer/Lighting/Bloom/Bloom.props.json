@@ -1,0 +1,7 @@
+{
+  "name": "Bloom",
+  "className": "BloomEffect",
+  "properties": {
+    "Intensity": 0
+  }
+}

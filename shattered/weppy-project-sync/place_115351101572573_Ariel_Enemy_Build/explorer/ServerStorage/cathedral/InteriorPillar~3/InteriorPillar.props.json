@@ -1,0 +1,33 @@
+{
+  "name": "InteriorPillar",
+  "className": "Part",
+  "properties": {
+    "BrickColor": "Black",
+    "Anchored": true,
+    "Color": {
+      "b": 58,
+      "g": 50,
+      "r": 50
+    },
+    "CFrame": [
+      15,
+      182.5,
+      55,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Material": "Enum.Material.Slate",
+    "Size": {
+      "y": 75,
+      "x": 6,
+      "z": 6
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "EndoElbowLMotor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      -1.8887672424316406,
+      5.10660457611084,
+      -0.3724285364151001,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.8.EndoElbowL",
+    "Part0": "ServerStorage.bitebynitecharacters.8.RootPart"
+  }
+}

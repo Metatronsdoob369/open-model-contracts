@@ -1,0 +1,40 @@
+{
+  "name": "RightKnee",
+  "className": "Motor6D",
+  "properties": {
+    "C1": [
+      -0.05575188994407654,
+      1.8102483749389648,
+      -0.034704290330410004,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "C0": [
+      -0.01828339695930481,
+      -0.6464626789093018,
+      -0.08036866039037704,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "RightLowerLeg",
+    "Part0": "ServerStorage.MonsterTemplate.RightUpperLeg"
+  },
+  "attributes": {
+    "Rojo_Target_Part0": "141348a2716baeeb09f48a6b0000113d",
+    "Rojo_Target_Part1": "141348a2716baeeb09f48a6b00001137"
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://open-model-contracts.dev/schemas/capabilities.schema.json",
+  "title": "OMC Capability Taxonomy",
+  "description": "Canonical taxonomy of capabilities used by OMC tools, policies, and pipeline phases. Every capability exercised by any tool or agent MUST be declared here and referenced by its capability id.",
+  "type": "object",
+  "required": ["schema_version", "capabilities"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Version of this capability taxonomy.",
+      "pattern": "^\\d+\\.\\d+$",
+      "example": "1.0"
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Full list of defined capabilities.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/Capability"
+      }
+    }
+  },
+  "$defs": {
+    "Capability": {
+      "type": "object",
+      "required": ["id", "label", "description", "risk_level", "requires_human_approval"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Canonical capability identifier. Pattern: capability:<namespace>.<action>",
+          "pattern": "^capability:[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$",
+          "example": "capability:file.write"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short human-readable label.",
+          "example": "File Write"
+        },
+        "description": {
+          "type": "string",
+          "description": "Full description of what this capability permits."
+        },
+        "risk_level": {
+          "type": "string",
+          "description": "Risk classification. low = read / in-memory only. medium = local writes. high = network or external state. critical = irreversible external changes.",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "requires_human_approval": {
+          "type": "boolean",
+          "description": "Whether this capability requires explicit human approval before use."
+        },
+        "phase_whitelist": {
+          "type": "array",
+          "description": "Pipeline phases during which this capability is permitted. Omit to allow in all phases.",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3
+          },
+          "example": [1]
+        },
+        "side_effects": {
+          "type": "array",
+          "description": "List of side effects this capability may produce.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "reads-local-file",
+              "writes-local-file",
+              "reads-network",
+              "writes-network",
+              "modifies-external-state",
+              "irreversible",
+              "read-only",
+              "in-memory-only"
+            ]
+          }
+        },
+        "audit_required": {
+          "type": "boolean",
+          "description": "Whether every use of this capability MUST produce an audit log entry.",
+          "default": true
+        }
+      }
+    }
+  },
+  "x-capabilities-registry": [
+    {
+      "id": "capability:file.write",
+      "label": "File Write",
+      "description": "Write files to the local repository workspace. Used in Phase 1 by specialist agents to produce Luau modules and JSON artifacts.",
+      "risk_level": "medium",
+      "requires_human_approval": false,
+      "phase_whitelist": [1],
+      "side_effects": ["writes-local-file"],
+      "audit_required": true
+    },
+    {
+      "id": "capability:file.read",
+      "label": "File Read",
+      "description": "Read files from the local repository workspace.",
+      "risk_level": "low",
+      "requires_human_approval": false,
+      "phase_whitelist": [1],
+      "side_effects": ["reads-local-file", "read-only"],
+      "audit_required": false
+    },
+    {
+      "id": "capability:rag.retrieval",
+      "label": "RAG Document Retrieval",
+      "description": "Retrieve and read sovereign RAG documents (Level Primer, constitution, policies, approved external sources).",
+      "risk_level": "low",
+      "requires_human_approval": false,
+      "phase_whitelist": [1],
+      "side_effects": ["reads-local-file", "read-only"],
+      "audit_required": false
+    },
+    {
+      "id": "capability:schema.validation",
+      "label": "Schema Validation",
+      "description": "Validate JSON or YAML artifacts against declared JSON Schema definitions.",
+      "risk_level": "low",
+      "requires_human_approval": false,
+      "side_effects": ["in-memory-only", "read-only"],
+      "audit_required": false
+    },
+    {
+      "id": "capability:escrow.publish",
+      "label": "Escrow Publish",
+      "description": "Submit a manifest + module bundle to the Bridge server to create an armed escrow session.",
+      "risk_level": "high",
+      "requires_human_approval": false,
+      "phase_whitelist": [2],
+      "side_effects": ["writes-network", "in-memory-only"],
+      "audit_required": true
+    },
+    {
+      "id": "capability:network.expose",
+      "label": "Network Expose",
+      "description": "Expose a local HTTP endpoint (Bridge server) accessible to the Studio plugin, optionally via a tunnel such as ngrok.",
+      "risk_level": "high",
+      "requires_human_approval": false,
+      "phase_whitelist": [2, 3],
+      "side_effects": ["writes-network"],
+      "audit_required": true
+    },
+    {
+      "id": "capability:client.install",
+      "label": "Client Install",
+      "description": "Install ModuleScript instances into the Roblox Studio hierarchy under the declared target_root.",
+      "risk_level": "critical",
+      "requires_human_approval": true,
+      "phase_whitelist": [3],
+      "side_effects": ["modifies-external-state"],
+      "audit_required": true
+    },
+    {
+      "id": "capability:platform.apply_changes",
+      "label": "Platform Apply Changes",
+      "description": "Apply changes to the live target domain's object tree (e.g. Roblox Studio hierarchy). Always requires explicit user consent via UI action.",
+      "risk_level": "critical",
+      "requires_human_approval": true,
+      "phase_whitelist": [3],
+      "side_effects": ["modifies-external-state"],
+      "audit_required": true
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "SpotLight",
+  "className": "SpotLight",
+  "properties": {
+    "Shadows": true,
+    "Brightness": 3,
+    "Color": {
+      "b": 0,
+      "g": 149,
+      "r": 255
+    },
+    "Face": "Enum.NormalId.Top",
+    "Range": 60,
+    "Angle": 75
+  }
+}

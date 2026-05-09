@@ -1,0 +1,10 @@
+{
+  "name": "SpotLight",
+  "className": "SpotLight",
+  "properties": {
+    "Shadows": true,
+    "Angle": 45,
+    "Range": 60,
+    "Face": "Enum.NormalId.Top"
+  }
+}

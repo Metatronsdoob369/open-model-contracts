@@ -1,0 +1,35 @@
+{
+  "name": "BackWall_Upper",
+  "className": "Part",
+  "properties": {
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "BrickColor": "Black",
+    "Material": "Enum.Material.Slate",
+    "Color": {
+      "b": 50,
+      "g": 45,
+      "r": 45
+    },
+    "Anchored": true,
+    "CFrame": [
+      -5,
+      195,
+      95,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Size": {
+      "y": 50,
+      "x": 80,
+      "z": 4
+    }
+  }
+}

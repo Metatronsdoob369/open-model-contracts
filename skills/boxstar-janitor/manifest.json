@@ -1,0 +1,9 @@
+{
+  "id": "sovereign-janitor",
+  "name": "Sovereign Janitor",
+  "description": "Autonomous cleanup and optimization protocol for game logic and project structures.",
+  "version": "0.1.0",
+  "category": "optimization",
+  "tags": ["cleanup", "optimization", "refactoring", "maintenance"],
+  "author": "Antigravity"
+}

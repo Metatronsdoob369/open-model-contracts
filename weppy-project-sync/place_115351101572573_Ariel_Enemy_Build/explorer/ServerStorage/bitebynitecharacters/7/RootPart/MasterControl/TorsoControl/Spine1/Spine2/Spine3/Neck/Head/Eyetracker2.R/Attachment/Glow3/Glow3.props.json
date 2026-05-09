@@ -1,0 +1,75 @@
+{
+  "name": "Glow3",
+  "className": "ParticleEmitter",
+  "properties": {
+    "Color": [
+      {
+        "time": 0,
+        "value": {
+          "b": 5,
+          "g": 22,
+          "r": 255
+        }
+      },
+      {
+        "time": 1,
+        "value": {
+          "b": 5,
+          "g": 22,
+          "r": 255
+        }
+      }
+    ],
+    "LockedToPart": true,
+    "Rate": 5,
+    "ZOffset": 1,
+    "Transparency": [
+      {
+        "value": 1,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 0,
+        "time": 0.5,
+        "envelope": 0
+      },
+      {
+        "value": 1,
+        "time": 1,
+        "envelope": 0
+      }
+    ],
+    "Texture": "rbxassetid://867619398",
+    "Lifetime": {
+      "min": 1,
+      "max": 1
+    },
+    "LightEmission": 1,
+    "Brightness": 0.019999999552965164,
+    "Speed": {
+      "min": 0.0014000004157423973,
+      "max": 0.0014000004157423973
+    },
+    "Size": [
+      {
+        "value": 0.21000008285045624,
+        "time": 0,
+        "envelope": 0
+      },
+      {
+        "value": 0.4200001657009125,
+        "time": 1,
+        "envelope": 0
+      }
+    ]
+  },
+  "attributes": {
+    "EmitDelay": 0,
+    "TimeScale_End": 1,
+    "TimeScale_Duration": 0.1,
+    "EmitCount": 1,
+    "EmitDuration": 0,
+    "TimeScale_Start": 1
+  }
+}

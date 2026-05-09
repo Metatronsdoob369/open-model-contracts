@@ -1,0 +1,35 @@
+# RED ADVERSARY VALIDAOR - VULCAN ENCLOSURE
+# Optimized for 5090 RTX / FTC-GNN Sparse Acceleration
+FROM nvidia/cuda:12.3.1-runtime-ubuntu22.04
+
+# System Baseline
+RUN apt-get update && apt-get install -y \
+    python3.10 \
+    python3-pip \
+    curl \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Node.js 20 Baseline (Polyglot Sync)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs
+
+WORKDIR /adversary
+
+# Install SMB-Claw / CrewAI / PyTorch (CUDA)
+RUN pip3 install --no-cache-dir \
+    crewai \
+    torch --index-url https://download.pytorch.org/whl/cu121 \
+    scipy \
+    requests
+
+# Copy Logic Signatures
+COPY . .
+
+# Environment Bindings
+ENV HUD_PATH=/telemetry/telemetry.json
+ENV MANIFEST_PATH=/telemetry/manifest.json
+ENV CUDA_VISIBLE_DEVICES=0
+
+# Entrypoint: Execute the Deterministic Cascade
+CMD ["python3", "src/red_claw_engine.py"]

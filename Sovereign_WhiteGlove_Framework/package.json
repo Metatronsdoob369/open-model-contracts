@@ -1,0 +1,18 @@
+{
+  "name": "sovereign-whiteglove-framework",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "reindex": "tsx core/reindex.ts",
+    "query": "tsx interfaces/telegram_gateway.ts",
+    "benchmark:ttft": "tsx core/benchmark_ttft.ts",
+    "start": "bash ../bin/whiteglove"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.33",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.0"
+  }
+}

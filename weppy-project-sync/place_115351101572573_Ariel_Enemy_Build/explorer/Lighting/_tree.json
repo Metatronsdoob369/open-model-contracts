@@ -1,0 +1,20 @@
+{
+  "name": "Lighting",
+  "className": "Lighting",
+  "childCount": 2,
+  "children": [
+    {
+      "name": "ColorGrading",
+      "className": "ColorGradingEffect",
+      "childCount": 0,
+      "children": []
+    },
+    {
+      "name": "Bloom",
+      "className": "BloomEffect",
+      "childCount": 0,
+      "children": []
+    }
+  ],
+  "syncedAt": "2026-05-07T07:35:52.781Z"
+}

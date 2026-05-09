@@ -1,0 +1,23 @@
+{
+  "name": "Cube.004Motor6D",
+  "className": "Motor6D",
+  "properties": {
+    "MaxVelocity": 0.10000000149011612,
+    "C0": [
+      0.01341700553894043,
+      4.589484214782715,
+      0.08095073699951172,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      1
+    ],
+    "Part1": "ServerStorage.bitebynitecharacters.5.Cube.004",
+    "Part0": "ServerStorage.bitebynitecharacters.5.RootPart"
+  }
+}
