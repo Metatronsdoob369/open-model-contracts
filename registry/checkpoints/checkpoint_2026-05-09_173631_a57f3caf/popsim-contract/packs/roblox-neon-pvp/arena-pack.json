@@ -1,0 +1,91 @@
+{
+  "id": "roblox-neon-pvp-arena",
+  "version": "1.0.0",
+  "domain": "game-development",
+  "target": "Roblox Studio / Luau",
+  "description": "Validated Roblox PvP arena concepts with 1:1 buildability guarantee.",
+  "nodes": {
+    "ArenaRoot": {
+      "required": true,
+      "maxInstances": 1,
+      "enables": ["arena_scene", "spatial_layout"],
+      "properties": {
+        "name": { "type": "string", "default": "Neon Tag Clash" },
+        "playerCountMin": { "type": "number", "min": 2, "default": 2 },
+        "playerCountMax": { "type": "number", "max": 4, "default": 4 }
+      }
+    },
+    "CircularPlatform": {
+      "requires": ["ArenaRoot"],
+      "enables": ["playable_surface"],
+      "properties": {
+        "radius": { "type": "number", "default": 50 },
+        "thickness": { "type": "number", "default": 5 },
+        "material": { "type": "enum", "values": ["SmoothPlastic", "Metal", "Neon"], "default": "SmoothPlastic" },
+        "anchored": { "type": "boolean", "default": true }
+      }
+    },
+    "NeonRingBorder": {
+      "requires": ["CircularPlatform"],
+      "enables": ["arena_boundary_visual"],
+      "properties": {
+        "colors": { "type": "array", "items": "string", "default": ["cyan", "magenta"] },
+        "glowStrength": { "type": "number", "default": 1.0 }
+      }
+    },
+    "SpawnPad": {
+      "requires": ["CircularPlatform"],
+      "minInstances": 2,
+      "maxInstances": 4,
+      "enables": ["player_spawn"],
+      "properties": {
+        "position": { "type": "enum", "values": ["north", "south", "east", "west"] },
+        "color": { "type": "enum", "values": ["cyan", "magenta", "yellow", "green"] }
+      }
+    },
+    "PowerUpOrb": {
+      "requires": ["ArenaRoot"],
+      "enables": ["center_powerup", "rotating_visual"],
+      "properties": {
+        "location": { "type": "string", "const": "center" },
+        "effectType": { "type": "enum", "values": ["speed", "shield", "score_multiplier"] },
+        "rotation": { "type": "boolean", "default": true },
+        "glowColor": { "type": "string", "default": "cyan" }
+      }
+    },
+    "GameRoundController": {
+      "requires": ["ArenaRoot", "SpawnPad"],
+      "enables": ["round_timer", "active_match_state"],
+      "properties": {
+        "roundLengthSeconds": { "type": "number", "default": 120 }
+      }
+    }
+  },
+  "capabilities": {
+    "arena_scene": { "feature": "floating arena", "enabledBy": "Anchored Parts", "service": "Workspace" },
+    "playable_surface": { "feature": "circular floor", "enabledBy": "Cylinder Geometry", "service": "Workspace" },
+    "arena_boundary_visual": { "feature": "neon rings", "enabledBy": "Neon Material", "service": "MaterialService" },
+    "bloom_lighting": { "feature": "neon glow", "enabledBy": "BloomEffect", "service": "Lighting" }
+  },
+  "structuralRules": {
+    "root": "Workspace",
+    "hierarchy": [
+      { "name": "Arena_Core", "type": "Folder", "children": ["Floor_Circular", "NeonRingBorder", "SpawnPads"] },
+      { "name": "Lighting_Config", "type": "Folder", "children": ["Global_Neon", "Main_Atmosphere"] }
+    ]
+  },
+  "constraints": {
+    "blocked": [
+      "true volumetric light rays",
+      "photorealism",
+      "complex cloth simulation",
+      "ray-traced reflections"
+    ],
+    "hard_errors": [
+      "ArenaRoot must exist exactly once",
+      "CircularPlatform requires ArenaRoot",
+      "At least 2 SpawnPads are required",
+      "Max 4 SpawnPads for this pack"
+    ]
+  }
+}
