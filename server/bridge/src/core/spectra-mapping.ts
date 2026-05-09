@@ -57,11 +57,18 @@ export class SpectraMappingService {
     console.log(`💰 [REFRAG] $${fee} pull | engine: ${engine} | SOVEREIGN LOCAL`);
 
     if (engine === 'ollama') {
-      // CHUNKING STRATEGY: 1000 characters per block (safe context window for mxbai)
-      const maxChars = 1000;
+      // ── WEFT PROTOCOL: Overlapping Resonance ──────────────────────────────
+      // Lowered to 800 chars to ensure safety within 512-token context windows.
+      const maxChars = 800;
+      const overlap = 200; 
       const chunks: string[] = [];
-      for (let i = 0; i < code.length; i += maxChars) {
-        chunks.push(code.substring(i, i + maxChars));
+      
+      let cursor = 0;
+      while (cursor < code.length) {
+          const end = Math.min(cursor + maxChars, code.length);
+          chunks.push(code.substring(cursor, end));
+          if (end === code.length) break;
+          cursor += (maxChars - overlap);
       }
 
       const results: Float32Array[] = [];
@@ -76,7 +83,7 @@ export class SpectraMappingService {
           
           if (!response.ok) {
              const errText = await response.text();
-             console.error(`[SPECTRA-MAP] Block ${index} Error: ${errText}`);
+             console.error(`[SPECTRA-MAP] Block ${index} Error (Weft): ${errText}`);
              continue;
           }
 
@@ -89,17 +96,26 @@ export class SpectraMappingService {
             results.push(raw);
           }
         } catch (error: any) {
-          console.error(`[SPECTRA-MAP] Handshake failed on Block ${index}: ${error.message}`);
+          console.error(`[SPECTRA-MAP] Handshake failed on Weft-Block ${index}: ${error.message}`);
         }
       }
 
       if (results.length > 0) {
-        // Synthesize Centroid from across all code blocks
+        // ── CONCATENATED WEFT SYNTHESIS: Max-Magnitude Pooling ────────────────
         const finalVec = new Float32Array(this.DIMENSIONS).fill(0);
-        for (const res of results) {
-          for (let i = 0; i < this.DIMENSIONS; i++) finalVec[i] += res[i];
+        
+        for (let i = 0; i < this.DIMENSIONS; i++) {
+          let maxMag = 0;
+          let val = 0;
+          for (const res of results) {
+            if (Math.abs(res[i]) > maxMag) {
+              maxMag = Math.abs(res[i]);
+              val = res[i];
+            }
+          }
+          finalVec[i] = val;
         }
-        for (let i = 0; i < this.DIMENSIONS; i++) finalVec[i] /= results.length;
+
         return this.normalize(finalVec);
       }
     }
