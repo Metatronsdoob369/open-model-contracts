@@ -1,0 +1,47 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.physics-threshold.schema.json",
+  "$ref": "#/definitions/omc.v3.physics-threshold",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.physics-threshold": {
+      "additionalProperties": false,
+      "properties": {
+        "driftThreshold": {
+          "default": 5,
+          "description": "Number of consecutive directional mutations required to trigger an overfitting/looping warning",
+          "minimum": 1,
+          "type": "integer"
+        },
+        "id": {
+          "description": "Unique identifier for this physics profile (e.g., 'omc.physics.standard')",
+          "type": "string"
+        },
+        "maxVelocity": {
+          "default": 0.2,
+          "description": "Maximum allowed percentage change in a single mutation (Velocity)",
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "minSignificance": {
+          "default": 0.05,
+          "description": "P-value stability boundary required for overriding radical systemic changes",
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Defines the hard mathematical limits for execution mutation. Governs maxVelocity, minSignificance, and driftThresholds for the Domicile Vagus Nerve.",
+  "title": "omc.v3.physics-threshold",
+  "x-omc-capabilities": [
+    "read",
+    "validate"
+  ],
+  "x-omc-version": "3.0.0"
+}

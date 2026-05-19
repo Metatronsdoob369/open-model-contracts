@@ -1,0 +1,32 @@
+{
+  "name": "Harvestable_Tree",
+  "type": "SystemNode",
+  "robloxClass": "Model",
+  "service": "Workspace",
+  "properties": {
+    "Health": 100,
+    "LootType": "Wood"
+  },
+  "children": [
+    {
+      "name": "Trunk",
+      "type": "Part",
+      "properties": { "Size": "{2, 15, 2}", "Material": "Wood", "Color": "#5D2906", "Anchored": true }
+    },
+    {
+      "name": "Leaves",
+      "type": "Part",
+      "properties": { "Size": "{8, 8, 8}", "Material": "Grass", "Color": "#274627", "Position": "{0, 10, 0}", "Anchored": true }
+    },
+    {
+      "name": "HarvestPrompt",
+      "type": "ProximityPrompt",
+      "properties": { "ActionText": "Chop", "ObjectText": "Tree", "HoldDuration": 1.5 }
+    }
+  ],
+  "capabilityMapping": {
+    "feature": "Resource Harvesting",
+    "enabledBy": "ProximityPrompt",
+    "service": "Workspace"
+  }
+}
