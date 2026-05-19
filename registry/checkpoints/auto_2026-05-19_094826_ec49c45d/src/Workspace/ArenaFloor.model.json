@@ -1,0 +1,14 @@
+{
+  "className": "Part",
+  "properties": {
+    "Size": [120, 2, 120],
+    "Position": [1012, 58, 1007],
+    "Anchored": true,
+    "CanCollide": true,
+    "Material": "Enum.Material.SmoothPlastic",
+    "BrickColor": "Dark grey metallic",
+    "TopSurface": "Enum.SurfaceType.Smooth",
+    "BottomSurface": "Enum.SurfaceType.Smooth",
+    "Locked": true
+  }
+}
