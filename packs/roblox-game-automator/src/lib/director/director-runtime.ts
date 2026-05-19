@@ -151,6 +151,8 @@ export interface SpecialistDispatchResult {
   error?: string;
 }
 
+type DirectorRuntimeContext = NonNullable<DirectorInput['context']>;
+
 // ---------------------------------------------------------------------------
 // DirectorRuntime
 // ---------------------------------------------------------------------------
@@ -159,12 +161,23 @@ export class DirectorRuntime {
   private client: OpenAI;
   private specialists: SpecialistDef[];
   private model: string;
+  private runtimeContext: DirectorRuntimeContext | undefined;
 
   constructor(options: DirectorRuntimeOptions = {}) {
-    this.model = options.model ?? 'gpt-4o';
-    this.client = new OpenAI({
-      apiKey: options.apiKey ?? process.env.OPENAI_API_KEY,
-    });
+    // xAI (Grok) is OpenAI-compatible — prefer it if XAI_API_KEY is set
+    const xaiKey = process.env.XAI_API_KEY;
+    if (xaiKey) {
+      this.model = options.model ?? 'grok-4-1-fast-non-reasoning';
+      this.client = new OpenAI({
+        apiKey: xaiKey,
+        baseURL: 'https://api.x.ai/v1',
+      });
+    } else {
+      this.model = options.model ?? 'gpt-4o';
+      this.client = new OpenAI({
+        apiKey: options.apiKey ?? process.env.OPENAI_API_KEY,
+      });
+    }
     this.specialists = loadSpecialists();
   }
 
@@ -181,6 +194,10 @@ export class DirectorRuntime {
       throw new Error(`Invalid DirectorInput: ${inputResult.error.message}`);
     }
     const input = inputResult.data;
+    this.runtimeContext = input.context;
+    if (!input.context.cockpit.enforced) {
+      throw new Error('Cockpit context is mandatory for director execution');
+    }
 
     const completion = await this.client.chat.completions.create({
       model: this.model,
@@ -190,7 +207,9 @@ export class DirectorRuntime {
         { role: 'system', content: buildDirectorSystemPrompt(this.specialists) },
         {
           role: 'user',
-          content: `Game description: "${input.prompt}"\nGate preference: ${input.options?.gate ?? 'SAFE'}`,
+          content:
+            `Game description: "${input.prompt}"\nGate preference: ${input.options?.gate ?? 'SAFE'}\nGeneration mode: ${input.options?.generationMode ?? 'full'}` +
+            this.renderRuntimeContextForDirector(input.context),
         },
       ],
     });
@@ -280,6 +299,7 @@ export class DirectorRuntime {
     ctx: DirectorOutput
   ): Promise<Record<string, string>> {
     const intent = ctx.parsedIntent;
+    const runtimeContext = this.runtimeContext;
 
     const completion = await this.client.chat.completions.create({
       model: this.model,
@@ -321,7 +341,12 @@ IF YOU ARE system-01:
 
 IF YOU ARE sonic-01:
 - Generate ONLY audio (sounds, ambience, music).
-- NEVER generate geometry or game logic.`,
+- NEVER generate geometry or game logic.
+
+PATCH MODE RULES:
+- If generation mode is patch, assume canonical modules are the baseline and change as little as possible.
+- In patch mode, preserve public function names and initialization signatures unless explicitly impossible.
+- In patch mode, only emit modules that need to change.`,
         },
         {
           role: 'user',
@@ -336,7 +361,8 @@ Key mechanics: ${intent.keyMechanics.join(', ')}${
               : ''
           }
 
-MODULES TO GENERATE: ${brief.estimatedModules.join(', ')}`,
+MODULES TO GENERATE: ${brief.estimatedModules.join(', ')}
+GENERATION MODE: ${runtimeContext?.generationMode ?? 'full'}${this.renderRuntimeContextForSpecialist(runtimeContext)}`,
         },
       ],
     });
@@ -377,5 +403,42 @@ MODULES TO GENERATE: ${brief.estimatedModules.join(', ')}`,
     }
 
     return sorted;
+  }
+
+  private renderRuntimeContextForDirector(context: DirectorInput['context']): string {
+    const lines: string[] = [];
+    lines.push('\n\nRUNTIME CONTEXT (Enforced Cockpit + Canonical Selector + Adjudication):');
+    lines.push(`- cockpit enforced: ${context.cockpit.enforced}`);
+    lines.push(`- cockpit collectedAt: ${context.cockpit.collectedAt}`);
+    lines.push(`- canon report: ${context.cockpit.canonReportPath}`);
+    lines.push(`- canon files/flagged: ${context.cockpit.canonFileCount}/${context.cockpit.canonFlaggedCount}`);
+    lines.push(
+      `- live bridge: ${context.cockpit.liveBridgeUrl} ready=${context.cockpit.liveReady} ` +
+      `session=${context.cockpit.liveSessionId ?? 'none'} modules=${context.cockpit.liveModuleCount}`
+    );
+    lines.push(`- tFrame: ${context.tFrame}`);
+    lines.push(`- nearest canonical: ${context.nearestCanonicalId ?? 'none'} (${(context.nearestCanonicalScore ?? 0).toFixed(3)})`);
+    lines.push(`- generation mode preference: ${context.generationMode}`);
+    if (context.reasonTags.length > 0) {
+      lines.push(`- reason tags: ${context.reasonTags.join(', ')}`);
+    }
+    if (context.canonicalExemplars.length > 0) {
+      lines.push('- canonical exemplars:');
+      for (const exemplar of context.canonicalExemplars.slice(0, 3)) {
+        lines.push(`  * ${exemplar.canonicalId} (${exemplar.moduleName}) score=${exemplar.score.toFixed(3)} genre=${exemplar.genre}`);
+      }
+    }
+    return `\n${lines.join('\n')}`;
+  }
+
+  private renderRuntimeContextForSpecialist(context: DirectorRuntimeContext | undefined): string {
+    if (!context || context.canonicalExemplars.length === 0) return '';
+    const lines: string[] = [];
+    lines.push('\nCANONICAL BASELINES (use as style + stability anchors):');
+    for (const exemplar of context.canonicalExemplars.slice(0, 3)) {
+      lines.push(`\n[${exemplar.canonicalId}] ${exemplar.moduleName} score=${exemplar.score.toFixed(3)} genre=${exemplar.genre}`);
+      lines.push(exemplar.snippet.slice(0, 1600));
+    }
+    return `\n${lines.join('\n')}`;
   }
 }

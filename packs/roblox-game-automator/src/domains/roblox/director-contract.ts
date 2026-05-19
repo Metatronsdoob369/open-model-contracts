@@ -15,7 +15,33 @@ export const DirectorInputSchema = z.object({
     gate: z.enum(['SAFE', 'ARMED']).default('SAFE'),
     provider: z.enum(['openai', 'anthropic', 'dolphin', 'huggingface']).default('anthropic'),
     model: z.string().default('claude-sonnet-4-6'),
+    generationMode: z.enum(['full', 'patch']).default('full'),
   }).default({}),
+  context: z.object({
+    generationMode: z.enum(['full', 'patch']).default('full'),
+    nearestCanonicalId: z.string().optional(),
+    nearestCanonicalScore: z.number().min(0).max(1).optional(),
+    reasonTags: z.array(z.string()).default([]),
+    canonicalExemplars: z.array(z.object({
+      canonicalId: z.string(),
+      moduleName: z.string(),
+      score: z.number().min(0).max(1),
+      snippet: z.string(),
+      genre: z.string(),
+    })).default([]),
+    tFrame: z.enum(['t_start', 't_minus_1', 't']).default('t_start'),
+    cockpit: z.object({
+      enforced: z.literal(true),
+      collectedAt: z.string(),
+      canonReportPath: z.string(),
+      canonFileCount: z.number().int().nonnegative(),
+      canonFlaggedCount: z.number().int().nonnegative(),
+      liveBridgeUrl: z.string(),
+      liveReady: z.boolean(),
+      liveSessionId: z.string().optional(),
+      liveModuleCount: z.number().int().nonnegative(),
+    }),
+  }),
   partialPrimer: z.record(z.unknown()).optional(),
 });
 

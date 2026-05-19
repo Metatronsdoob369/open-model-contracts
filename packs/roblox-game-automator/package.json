@@ -35,6 +35,9 @@
     "predev": "lsof -ti :3099 | xargs kill -9 2>/dev/null; true",
     "dev": "./node_modules/.bin/tsx --watch src/bridge-server.ts",
     "typecheck": "tsc --noEmit",
+    "cockpit": "bash ./scripts/cockpit.sh",
+    "audit:live-escrow": "tsx src/tests/escrow-live-audit.ts",
+    "audit:canon": "tsx src/tests/canonical-audit.ts",
     "validate": "ts-node src/validate-contract.ts",
     "prepublishOnly": "npm run build"
   },

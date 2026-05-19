@@ -132,6 +132,7 @@ app.use('/v1/', limiter);
 
 import { PopSimFullContractSchema } from './schemas.js';
 import { DirectorRuntime } from './lib/director/director-runtime.js';
+import { buildEnforcedDirectorContext } from './lib/director/enforced-cockpit.js';
 
 // ─────────────────────────────────────────────
 // REPAIR SHOP SCHEMAS
@@ -360,6 +361,8 @@ app.post('/v1/delivery/nl-to-game', async (req, res) => {
     }
 
     const director = new DirectorRuntime({ model: 'gpt-4o', apiKey: config.openaiApiKey });
+    const enforced = await buildEnforcedDirectorContext(prompt);
+    const runtimeContext = enforced.runtimeContext;
 
     // Step 1: Intelligence Phase (Direct)
     progressTracker.update(runId, 'intelligence', 20, 'Director-01 parsing intent and deconstructing DNA...');
@@ -369,7 +372,8 @@ app.post('/v1/delivery/nl-to-game', async (req, res) => {
         gate: (options.gate as any) || 'SAFE', 
         provider: 'openai', 
         model: 'gpt-4o' 
-      } 
+      },
+      context: runtimeContext,
     });
 
     logger.info('🧠 Director Intelligence Complete', { 

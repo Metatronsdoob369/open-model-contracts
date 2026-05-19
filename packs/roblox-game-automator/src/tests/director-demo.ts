@@ -11,9 +11,18 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import * as os from 'os';
 import { fileURLToPath } from 'url';
+import { randomUUID } from 'crypto';
+import * as dotenv from 'dotenv';
 import { DirectorRuntime } from '../lib/director/director-runtime.js';
+import { buildEnforcedDirectorContext } from '../lib/director/enforced-cockpit.js';
+import { publishGeneratedModulesToEscrow, type GeneratedModuleSource } from '../lib/director/escrow-publisher.js';
 import type { DirectorInput } from '../domains/roblox/director-contract.js';
+
+// Load secrets from ~/.config/omc/secrets.env, then overlay local .env
+dotenv.config({ path: path.join(os.homedir(), '.config', 'omc', 'secrets.env') });
+dotenv.config({ override: false });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,7 +38,18 @@ async function main(): Promise<void> {
   console.log(sep);
   console.log(`\nPROMPT: "${prompt}"\n`);
 
-  const director = new DirectorRuntime({ model: 'gpt-4o' });
+  const director = new DirectorRuntime();
+  const pipelineId = randomUUID();
+  const enforced = await buildEnforcedDirectorContext(prompt);
+  const runtimeContext = enforced.runtimeContext;
+
+  console.log('[ COCKPIT ]');
+  console.log(`✓ Enforced:        ${runtimeContext.cockpit.enforced}`);
+  console.log(`✓ Canon files:     ${runtimeContext.cockpit.canonFileCount}`);
+  console.log(`✓ Canon flagged:   ${runtimeContext.cockpit.canonFlaggedCount}`);
+  console.log(`✓ Bridge ready:    ${runtimeContext.cockpit.liveReady}`);
+  console.log(`✓ Live modules:    ${runtimeContext.cockpit.liveModuleCount}`);
+  console.log(`✓ Collected at:    ${runtimeContext.cockpit.collectedAt}\n`);
 
   // ── Phase 1: Intelligence ──────────────────────────────────────────────────
 
@@ -37,7 +57,8 @@ async function main(): Promise<void> {
 
   const input: DirectorInput = {
     prompt,
-    options: { gate: 'SAFE', provider: 'openai', model: 'gpt-4o' },
+    options: { gate: 'SAFE' },
+    context: runtimeContext,
   };
 
   let output;
@@ -88,6 +109,7 @@ async function main(): Promise<void> {
 
   const outputDir = path.resolve(__dirname, '../../generated', output.directiveId);
   fs.mkdirSync(outputDir, { recursive: true });
+  const generatedModules: GeneratedModuleSource[] = [];
 
   for (const result of results) {
     console.log(`\n  ${result.specialistId} — ${result.role}`);
@@ -105,6 +127,13 @@ async function main(): Promise<void> {
     for (const [name, code] of Object.entries(result.generatedModules)) {
       fs.writeFileSync(path.join(specialistDir, name), code, 'utf-8');
       console.log(`    → ${name}`);
+      generatedModules.push({
+        specialistId: result.specialistId,
+        role: result.role,
+        name,
+        code,
+        description: result.brief,
+      });
     }
   }
 
@@ -114,6 +143,37 @@ async function main(): Promise<void> {
     JSON.stringify(output, null, 2),
     'utf-8'
   );
+
+  // ── Phase 2: Escrow ────────────────────────────────────────────────────────
+  const allowOfflineEscrow = process.env['OMC_ALLOW_OFFLINE_ESCROW'] === 'true';
+  try {
+    const escrow = await publishGeneratedModulesToEscrow(pipelineId, outputDir, generatedModules, {
+      metadata: {
+        prompt,
+        directive_id: output.directiveId,
+        pipeline_id: pipelineId,
+        gate: output.gate,
+        genre: output.parsedIntent.genre,
+        mood: output.parsedIntent.mood,
+      },
+    });
+    console.log('\n[ PHASE 2 — ESCROW ]');
+    console.log(`✓ Bridge endpoint:  ${escrow.bridgeUrl}`);
+    console.log(`✓ Session ID:       ${escrow.session_id ?? 'n/a'}`);
+    console.log(`✓ Expires at:       ${escrow.expires_at ?? 'n/a'}`);
+    console.log(`✓ Envelope:         generated/${output.directiveId}/omc.escrow-envelope.json`);
+    if (escrow.session_id && escrow.token) {
+      const bridgeBase = escrow.bridgeUrl.replace(/\/escrow$/, '');
+      console.log(`✓ Pull URL:         ${bridgeBase}/escrow/${escrow.session_id}/modules?token=${escrow.token}`);
+    }
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (!allowOfflineEscrow) {
+      throw new Error(`Escrow publish failed. Set OMC_ALLOW_OFFLINE_ESCROW=true to continue offline. ${msg}`);
+    }
+    console.log('\n[ PHASE 2 — ESCROW ]');
+    console.log(`⚠ Escrow publish failed (offline mode): ${msg}`);
+  }
 
   console.log(`\n${sep}`);
   console.log(`✓ Directive artifacts saved to:`);
