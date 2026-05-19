@@ -1,0 +1,138 @@
+/**
+ * OMC v3 — Contract Registry ("Law Index")
+ *
+ * This is the single source of truth for all versioned OMC contracts.
+ * Rules:
+ *   - Every entry MUST have a stable `id`, a semver `version`, a Zod `schema`,
+ *     and a human-readable `description`.
+ *   - This file MUST NOT import from src/**  (Law vs Runtime separation).
+ *   - Adding or changing a contract here requires regenerating JSON Schemas
+ *     (`npm run gen:schema`) and committing the updated files.
+ */
+
+import { z } from "zod";
+import { AssetSchema } from "./v3/asset.js";
+import { AgentSchema } from "./v3/agent.js";
+import { TaskSchema } from "./v3/task.js";
+import { ValidateManifestationSchema } from "./v3/validate-manifestation.js";
+import { SpecialistSchema } from "./v3/specialist.js";
+import { ScriptAuditSchema } from "./v3/script-audit.js";
+import { AMEM, ResearchInference } from "./v3/amem-payload.js";
+import { SkillManifestSchema } from "./v3/skill.js";
+import { PhysicsThresholdSchema } from "./v3/physics-threshold.js";
+import { EveV2Schema } from "./v3/eve-v2.js";
+
+// ─── Registry Entry Type ──────────────────────────────────────────────────────
+
+export interface ContractEntry {
+  /** Stable, URL-safe identifier used as the JSON Schema filename stem. */
+  id: string;
+  /** Semver string for this contract revision. */
+  version: string;
+  /** Zod schema — the authoritative "Law". */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodTypeAny;
+  /** Short human-readable description for tooling and documentation. */
+  description: string;
+  /**
+   * Optional list of capability strings declared by this contract.
+   * Maps to the `capabilities.schema.json` in `constitution/`.
+   */
+  capabilities?: string[];
+}
+
+// ─── OMC Registry ─────────────────────────────────────────────────────────────
+
+export const OMC_REGISTRY: Record<string, ContractEntry> = {
+  "omc.v3.asset": {
+    id: "omc.v3.asset",
+    version: "3.0.0",
+    schema: AssetSchema,
+    description:
+      "Canonical schema for a spawnable / transferable digital asset in OMC.",
+    capabilities: ["read", "write", "spawn"],
+  },
+  "omc.v3.agent": {
+    id: "omc.v3.agent",
+    version: "3.0.0",
+    schema: AgentSchema,
+    description:
+      "Canonical schema for an autonomous agent participating in OMC.",
+    capabilities: ["read", "validate", "checkpoint"],
+  },
+  "omc.v3.task": {
+    id: "omc.v3.task",
+    version: "3.0.0",
+    schema: TaskSchema,
+    description:
+      "Canonical schema for a unit of work (task) assigned within OMC.",
+    capabilities: ["read", "write", "execute"],
+  },
+  "omc.v3.validate-manifestation": {
+    id: "omc.v3.validate-manifestation",
+    version: "3.0.0",
+    schema: ValidateManifestationSchema,
+    description:
+      "Schema for validating a Phase-3 manifestation event in the OMC pipeline.",
+    capabilities: ["validate", "checkpoint"],
+  },
+  "omc.v3.specialist": {
+    id: "omc.v3.specialist",
+    version: "3.0.0",
+    schema: SpecialistSchema,
+    description:
+      "A self-learning RAG API architecture required for all Specialist Agents. Governs query, response, and the mandatory Circadian feedback loop.",
+    capabilities: ["read", "validate", "learn"],
+  },
+  "omc.v3.script-audit": {
+    id: "omc.v3.script-audit",
+    version: "3.0.0",
+    schema: ScriptAuditSchema,
+    description:
+      "A strict validator schema running luaparse for testing raw drops against Diamond Stable logic rules.",
+    capabilities: ["read", "validate"],
+  },
+  "omc.v3.skill": {
+    id: "omc.v3.skill",
+    version: "3.0.0",
+    schema: SkillManifestSchema,
+    description:
+      "Canonical schema for a Domicile Agent Skill Manifest. Enforces tool boundaries, entry points, and admission gating.",
+    capabilities: ["read", "validate"],
+  },
+  "omc.v3.physics-threshold": {
+    id: "omc.v3.physics-threshold",
+    version: "3.0.0",
+    schema: PhysicsThresholdSchema,
+    description:
+      "Defines the hard mathematical limits for execution mutation. Governs maxVelocity, minSignificance, and driftThresholds for the Domicile Vagus Nerve.",
+    capabilities: ["read", "validate"],
+  },
+  "omc.v3.eve-v2": {
+    id: "omc.v3.eve-v2",
+    version: "2.0.0",
+    schema: EveV2Schema,
+    description:
+      "Canonical schema for the Eve_v2 SpectralGAT brain. Governs spectral thresholds, Roblox Luau admission rules, and Circadian pruning cycles.",
+    capabilities: ["read", "validate", "learn", "prune"],
+  },
+} as const;
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Returns lightweight metadata for every registered contract (no schema object). */
+export function listContracts(): Array<Omit<ContractEntry, "schema">> {
+  return Object.values(OMC_REGISTRY).map(
+    ({ id, version, description, capabilities }) => ({
+      id,
+      version,
+      description,
+      capabilities,
+    })
+  );
+}
+
+/** Looks up a contract entry by its stable ID, or returns undefined. */
+export function getContract(id: string): ContractEntry | undefined {
+  return OMC_REGISTRY[id];
+}

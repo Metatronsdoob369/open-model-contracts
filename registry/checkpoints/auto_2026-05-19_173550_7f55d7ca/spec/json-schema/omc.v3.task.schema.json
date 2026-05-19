@@ -1,0 +1,84 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.task.schema.json",
+  "$ref": "#/definitions/omc.v3.task",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.task": {
+      "additionalProperties": false,
+      "properties": {
+        "assignedTo": {
+          "description": "Agent ID this task is assigned to",
+          "type": "string"
+        },
+        "completed": {
+          "default": false,
+          "description": "Completion status",
+          "type": "boolean"
+        },
+        "completedAt": {
+          "description": "ISO-8601 completion timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "ISO-8601 creation timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "description": {
+          "description": "Detailed task description",
+          "type": "string"
+        },
+        "gate": {
+          "default": "SAFE",
+          "description": "Gate required to execute this task",
+          "enum": [
+            "SAFE",
+            "ARMED"
+          ],
+          "type": "string"
+        },
+        "id": {
+          "description": "Stable unique identifier for this task",
+          "format": "uuid",
+          "type": "string"
+        },
+        "lessonMemo": {
+          "description": "Mandatory 'Lesson Learned' memo (required before shipping)",
+          "type": "string"
+        },
+        "priority": {
+          "default": "normal",
+          "description": "Execution priority",
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ],
+          "type": "string"
+        },
+        "title": {
+          "description": "Short task title",
+          "maxLength": 200,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "createdAt"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Canonical schema for a unit of work (task) assigned within OMC.",
+  "title": "omc.v3.task",
+  "x-omc-capabilities": [
+    "read",
+    "write",
+    "execute"
+  ],
+  "x-omc-version": "3.0.0"
+}
