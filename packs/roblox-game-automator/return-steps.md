@@ -1,39 +1,22 @@
-I have set the mission for your return.
+# Return Steps (Current)
 
-I've fixed the remaining "speedbumps" in the pusher script and successfully generated a Chaos Tag contract for your "Loader Test" canvas. To save you time, I've already updated the Loader.lua script with the active Contract ID.
+## Environment
+- Bridge URL: `http://127.0.0.1:3099`
+- Loader: `packs/roblox-game-automator/lua/Loader.lua`
+- Failure memory: `packs/roblox-game-automator/primer/SLOP_CANON.md`
 
-Setup Complete:
-Bridge Server: Hardened and running on port 8080 (w/ Legacy Support).
-Contract Armed: 99a744b5-702b-4a34-bc3f-567a3046c641 (Chaos Tag).
-Loader Pre-Configured: I've pasted the ID into your Loader.lua.
-Your return moves in 1 hour:
+## Start Order
+1. Start bridge service and confirm `GET /health` is green.
+2. Ensure `Loader.lua` is pasted as a full script in `ServerScriptService`.
+3. Open Studio and press Play.
 
-Open Roblox Studio to your "Loader Test" baseplate.
-Make sure Loader.lua is in ServerScriptService.
-Just hit Play.
-The assets are in "Escrow" waiting for the pull. See you in an hour. 🚀
+## Expected Logs
+- `[OMC] Auto-Loader started (escrow mode)...`
+- `[OMC] New session detected: ...`
+- `[OMC] Session ... live — N module(s)`
+- `[OMC] World sanity enforced around safe spawn: (...)`
 
-lua
--- Current Mission Configuration
-local CONTRACT_ID = "99a744b5-702b-4a34-bc3f-567a3046c641" -- Chaos Tag Armed
-The environment is fully armed for your return.
-
-Environment State: ARMED (Mission: Chaos Tag)
-Hardened Hub: Running on port 8080.
-Legacy Bridge: Patched and ready for Loader.lua.
-Active Contract: 99a744b5-702b-4a34-bc3f-567a3046c641 generated and escrowed.
-Loader Pre-Configured: I have updated
-
-Loader.lua
- with the active ID.
-Your return moves (in 1 hour):
-
-Open Roblox Studio to your "Loader Test" baseplate.
-Ensure
-
-Loader.lua
- is in ServerScriptService.
-Just hit Play.
-The "Chaos Tag" assets are waiting in the Bridge Escrow. 🚀 I'm standing by.
-
-2
+## If Playability Fails
+- Do not patch line-by-line in Studio.
+- Replace with full latest `Loader.lua`.
+- Record the failure in `primer/SLOP_CANON.md` before next iteration.
