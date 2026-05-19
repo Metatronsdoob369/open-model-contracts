@@ -30,7 +30,7 @@ export class MetropolisGate {
      * Tiered Resonance Audit (Sovereign Implementation)
      * Upgraded with VULN SNIPER detection layer.
      */
-    async validateSovereignty(fileId: string, code: string): Promise<{ authorized: boolean; tier: SovereigntyTier; resonanceScore: number; status?: string }> {
+    async validateSovereignty(fileId: string, code: string): Promise<{ authorized: boolean; tier: SovereigntyTier; resonanceScore: number; status?: string; reason?: string }> {
         // 4. Loyalty Protocol (Canonical Context Bonus)
         const getLoyalty = (code: string) => {
             const markers = ['SafeFire', 'OMC_Bridge_', 'WaitForChild', 'capability:', 'REFRAG_SIGNATURE'];
@@ -79,28 +79,29 @@ export class MetropolisGate {
                     authorized: false, 
                     tier: 'BREACH', 
                     resonanceScore: Math.max(score, 0.99), 
-                    status: 'VULN_CLUSTER_A' 
+                    status: 'VULN_CLUSTER_A',
+                    reason: 'Matched vulnerability signature cluster'
                 };
             }
 
             if (score <= 0.65) {
-                return { authorized: true, tier: 'TRUSTED', resonanceScore: score, status: 'TRUSTED' };
+                return { authorized: true, tier: 'TRUSTED', resonanceScore: score, status: 'TRUSTED', reason: 'Within trusted threshold' };
             } 
             
             if (score <= 0.95) {
-                return { authorized: true, tier: 'STAGED', resonanceScore: score, status: 'STAGED' };
+                return { authorized: true, tier: 'STAGED', resonanceScore: score, status: 'STAGED', reason: 'Requires staged review' };
             }
 
             return { 
                 authorized: false, 
                 tier: 'BREACH', 
                 resonanceScore: score, 
-                status: 'BREACH'
+                status: 'BREACH',
+                reason: 'Resonance exceeded breach threshold'
             };
 
         } catch (e: any) {
-            return { authorized: false, tier: 'BREACH', resonanceScore: 999, status: "OFFLINE" };
+            return { authorized: false, tier: 'BREACH', resonanceScore: 999, status: "OFFLINE", reason: 'Gate offline' };
         }
     }
 }
-

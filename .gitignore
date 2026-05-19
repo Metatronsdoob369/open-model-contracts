@@ -19,7 +19,10 @@ __pycache__
 *.pyc
 .env.local
 .next
-.github
+.github/*
+!.github/workflows/
+.github/workflows/*
+!.github/workflows/sovereign-sync-cron.yml
 .claude/settings.local.json
 
 # Graphify content-addressed cache — regenerable, do NOT commit

@@ -154,6 +154,58 @@
         "description": {
           "type": "string",
           "description": "Human-readable description of this module."
+        },
+        "spectral": {
+          "$ref": "#/$defs/ModuleSpectralSignals"
+        }
+      }
+    },
+    "ModuleSpectralSignals": {
+      "type": "object",
+      "required": [
+        "heat",
+        "shatter",
+        "shatterMap",
+        "nearestCanonicalId",
+        "nearestCanonicalScore",
+        "room",
+        "embeddingModel",
+        "vectorDim",
+        "tFrame"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "heat": {
+          "type": "number"
+        },
+        "shatter": {
+          "type": "number"
+        },
+        "shatterMap": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "nearestCanonicalId": {
+          "type": ["string", "null"]
+        },
+        "nearestCanonicalScore": {
+          "type": ["number", "null"]
+        },
+        "room": {
+          "type": "string"
+        },
+        "embeddingModel": {
+          "type": "string"
+        },
+        "vectorDim": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "tFrame": {
+          "type": "string",
+          "enum": ["t_start", "t_minus_1", "t"]
         }
       }
     }

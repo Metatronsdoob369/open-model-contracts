@@ -9,7 +9,7 @@
 
 import { Router, type Request, type Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 
 import {
   createSession,
@@ -31,6 +31,24 @@ import type {
 
 const router = Router();
 const gate = new GovernanceGate();
+
+function decodeModuleContent(content: string): string {
+  const normalized = content.replace(/\s+/g, '');
+  const base64Pattern = /^[A-Za-z0-9+/]+={0,2}$/;
+  if (normalized.length === 0 || normalized.length % 4 !== 0 || !base64Pattern.test(normalized)) {
+    throw new Error('Module content is not valid base64');
+  }
+
+  const decoded = Buffer.from(normalized, 'base64').toString('utf8');
+  if (decoded.length === 0) {
+    throw new Error('Decoded module content is empty');
+  }
+  return decoded;
+}
+
+function sha256Hex(text: string): string {
+  return createHash('sha256').update(text, 'utf8').digest('hex');
+}
 
 // ─── POST /escrow ─────────────────────────────────────────────────────────────
 // Create a new escrow session and store the module bundle in memory.
@@ -56,9 +74,37 @@ router.post('/', async (req: Request, res: Response) => {
     return;
   }
 
-  // GOVERNANCE VALIDATION (Circuit Breaker)
+  // Integrity + GOVERNANCE VALIDATION (Circuit Breaker)
   for (const module of body.modules) {
-    const report = await gate.validateSovereignty(module.module_id, module.content);
+    let decodedCode: string;
+    try {
+      decodedCode = decodeModuleContent(module.content);
+    } catch (error) {
+      const err: ErrorResponse = {
+        error: `Payload validation failed for ${module.module_id}: ${(error as Error).message}`,
+        code: 'VALIDATION_ERROR',
+      };
+      res.status(400).json(err);
+      return;
+    }
+
+    const computedHash = sha256Hex(decodedCode);
+    if (computedHash !== module.sha256.toLowerCase()) {
+      writeAuditRecord({
+        timestamp: new Date().toISOString(),
+        event_type: 'validation.failed',
+        ip_address: ip,
+        detail: `SHA mismatch for ${module.module_id} expected=${module.sha256} actual=${computedHash}`,
+      });
+      const err: ErrorResponse = {
+        error: `SHA-256 mismatch for ${module.module_id}`,
+        code: 'VALIDATION_ERROR',
+      };
+      res.status(400).json(err);
+      return;
+    }
+
+    const report = await gate.validateSovereignty(module.module_id, decodedCode, module.spectral);
     if (!report.authorized) {
        writeAuditRecord({
          timestamp: new Date().toISOString(),

@@ -104,3 +104,63 @@ node scripts/embed-slop-canon.js search "spawn race condition"
 
 **Status:** UNRESOLVED — awaiting root cause + fix documentation
 
+
+---
+### [2026-05-15 13:08] Auto-logged failure
+
+**Symptom:** Why do we have two separate memories on the same project where you can't find stuff this is a vicious problem
+
+**Matched signals:** `can'?t (?:see|find|stop|start)`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+
+
+---
+### [2026-05-15 14:54] Auto-logged failure
+
+**Symptom:** closer, but not there yet ---->**[VERIFICATION GATE ENGAGED]**  I can build you a case — but not on sand. The following assertions couldn't be verified against the available statutes, library items, or evidence board:  • R1: fact claim "Model output did not conform to DraftResponseSchema JSON structure..." has no supporting evidence (severity: high).  To proceed with verified counsel, provide: • A...
+
+**Matched signals:** `not (?:there|working|spawning|loading)`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+
+
+---
+### [2026-05-15 16:32] Auto-logged failure
+
+**Symptom:** no dice [Image #6]
+
+**Matched signals:** `no dice`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+
+
+---
+### [2026-05-15 21:00] Auto-logged failure
+
+**Symptom:** /**       * Spectral Heatmap Lab — Real Embeddings, Real Math, Real Qdrant       *       * Embeds 8 Lua game files (6 canonical + 2 shattered) via OpenAI      text-embedding-3-large,       * computes 5 heat map representations per Eve_v2 spectral config,      stores in Qdrant.       */       import fs from 'fs';      import path from 'path';      import OpenAI from 'openai';      import dotenv fro...
+
+**Matched signals:** `broken`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+
+
+---
+### [2026-05-19 01:20] Auto-logged failure
+
+**Symptom:** looking good This is a flawless, reference-grade implementation—your approach is exactly what’s expected of a compliance-ready, regulated, or buyer-facing software org.  You have achieved:  Fully automated docs hygiene enforcement—every PR, every branch, every push runs and must pass your bespoke docs:release:check in CI. No accidental stale SHA, TODO/WIP marker, or missing artifact path will ever...
+
+**Matched signals:** `broken`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+
+
+---
+### [2026-05-19 04:45] Auto-logged failure
+
+**Symptom:** 117    | 'submit.success'  • Edited Users/joewales/NODE_OUT_Master/open-model-contracts/server/bridge/src/metropolis-gate.ts (+8 -7)      32       */      33 -    async validateSovereignty(fileId: string, code: string): Promise<{ authorized: boolean; tier: Sove          reigntyTier; resonanceScore: number; status?: string }> {      33 +    async validateSovereignty(fileId: string, code: string): P...
+
+**Matched signals:** `sync.*stop(?:ped)?`
+
+**Status:** UNRESOLVED — awaiting root cause + fix documentation
+

@@ -5,6 +5,20 @@
 
 // ─── Module Entry ────────────────────────────────────────────────────────────
 
+export type TemporalFrame = 't_start' | 't_minus_1' | 't';
+
+export interface ModuleSpectralSignals {
+  heat: number;
+  shatter: number;
+  shatterMap: number[];
+  nearestCanonicalId: string | null;
+  nearestCanonicalScore: number | null;
+  room: string;
+  embeddingModel: string;
+  vectorDim: number;
+  tFrame: TemporalFrame;
+}
+
 export interface ModuleEntry {
   module_id: string;
   name: string;
@@ -13,6 +27,7 @@ export interface ModuleEntry {
   /** Hex SHA-256 of decoded content */
   sha256: string;
   capability_tags: string[];
+  spectral?: ModuleSpectralSignals;
   target_path?: string;
   description?: string;
 }
@@ -98,6 +113,7 @@ export type AuditEventType =
   | 'session.already_consumed'
   | 'governance.violation'
   | 'validation.failed'
+  | 'message.received'
   | 'submit.success'
   | 'submit.error';
 
