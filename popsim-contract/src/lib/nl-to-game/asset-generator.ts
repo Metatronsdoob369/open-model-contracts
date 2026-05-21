@@ -5,12 +5,60 @@
  */
 
 import { z } from 'zod';
+import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import {
     PopSimFullContract,
     SovereignScientistPersona,
 } from '../../types.js';
 import { PopSimFullContractSchema } from '../../schemas.js';
+import { LuauShatterLibrary } from '../../domains/roblox/luau-shatter-library.js';
+
+// Singleton — one library instance per process, loaded once from disk
+const shatterLibrary = new LuauShatterLibrary();
+
+// ─────────────────────────────────────────────
+// LABEL GUARD — Shadow Vocabulary Collision Check
+// Blocks module names that collide with Roblox Engine API terms.
+// Source of truth: Roblox Engine API reference + Luau globals.
+// Any collision here would generate a script whose local name shadows
+// a real Roblox service, causing silent runtime bugs in consumer projects.
+// ─────────────────────────────────────────────
+
+const ROBLOX_API_COLLISION_TERMS = new Set([
+    // Luau globals
+    'game', 'workspace', 'script', 'plugin', 'Enum',
+    'math', 'table', 'string', 'os', 'task', 'coroutine', 'bit32', 'utf8', 'buffer',
+    // Engine services — game:GetService(x)
+    'Players', 'Workspace', 'Lighting', 'ReplicatedStorage', 'ReplicatedFirst',
+    'ServerStorage', 'ServerScriptService', 'StarterGui', 'StarterPack',
+    'StarterPlayer', 'SoundService', 'RunService', 'TweenService', 'CollectionService',
+    'DataStoreService', 'UserInputService', 'ContextActionService', 'PhysicsService',
+    'MarketplaceService', 'BadgeService', 'GroupService', 'TextService', 'HttpService',
+    'InsertService', 'AssetService', 'PathfindingService', 'MaterialService',
+    'LocalizationService', 'AnalyticsService', 'VoiceChatService', 'AvatarEditorService',
+    // Common Instance members that shadow badly as module names
+    'Instance', 'Model', 'Part', 'BasePart', 'Script', 'LocalScript', 'ModuleScript',
+    'Humanoid', 'Player', 'Character', 'Tool', 'Folder',
+    'RemoteEvent', 'RemoteFunction', 'BindableEvent', 'BindableFunction',
+    // Common Roblox types
+    'Vector3', 'Vector2', 'CFrame', 'Color3', 'UDim2', 'TweenInfo',
+]);
+
+/**
+ * Validate a proposed module name (with or without .lua extension).
+ * Returns null if clean, or an error string if blocked.
+ */
+function checkModuleNameCollision(rawName: string): string | null {
+    const name = rawName.replace(/(\.(lua|luau))+$/i, '');
+    if (ROBLOX_API_COLLISION_TERMS.has(name)) {
+        return `Module name "${name}" collides with Roblox API term game:GetService("${name}") or Luau global. ` +
+               `Rename to e.g. "${name}Library" or "${name}Handler".`;
+    }
+    return null;
+}
 
 // ─────────────────────────────────────────────
 // ASSET GENERATION OUTPUT
@@ -27,6 +75,8 @@ export const GeneratedAssetSchema = z.object({
     agentId: z.string().uuid(),
     qualityScore: z.number().min(0).max(1),
     validationStatus: z.enum(['pending', 'validated', 'failed']),
+    // Present when a ShatterGate hit replaced LLM output with a verified fix
+    shatterCertId: z.string().optional(),
 });
 
 export const AssetGenerationResultSchema = z.object({
@@ -407,6 +457,18 @@ export class AssetGeneratorSwarm {
             a => a.physics === 'ROBLOX_LUAU'
         )?.affordances || [];
 
+        // ── LABEL GUARD ──────────────────────────────────────────────
+        // Block any module name that collides with a Roblox API term.
+        // Fail fast before any LLM call is made.
+        const collisions = luauModules
+            .map(m => ({ name: m, error: checkModuleNameCollision(m) }))
+            .filter(r => r.error !== null);
+        if (collisions.length > 0) {
+            const msgs = collisions.map(c => `  • ${c.name}: ${c.error}`).join('\n');
+            throw new Error(`[LabelGuard] Contract rejected — API name collisions detected:\n${msgs}`);
+        }
+        // ─────────────────────────────────────────────────────────────
+
         console.log(`🚀 Starting asset generation for contract ${contractId}`);
         console.log(`📦 Modules to generate: ${luauModules.length}`);
 
@@ -483,29 +545,82 @@ export class AssetGeneratorSwarm {
         
         console.log(`🧠 Generating AI code for: ${cleanModuleName}...`);
 
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || (process.env as any).OPENAI_API_KEY });
+        // Provider selection: Anthropic > xAI > template fallback
+        // Set ANTHROPIC_API_KEY or XAI_API_KEY in .env
+        const systemPrompt = `You are a Senior Roblox Luau Developer. Generate a high-quality ModuleScript for a: ${cleanModuleName}.
+The game concept is: ${prompt}.
+The agent persona working on this is: ${agent.role || agent.label} (Goal: ${agent.goal || 'General development'}).
+Follow standard Roblox Luau practices.
+Return ONLY the raw Luau code, no markdown backticks, no comments outside the code.`;
+        const userMessage = `Write the implementation for the ${cleanModuleName} module including functions, state management, and clear comments.`;
 
         let content: string;
+        let qualityScore = 0.9;
+        let shatterCertId: string | undefined;
+
         try {
-            const response = await openai.chat.completions.create({
-                model: "gpt-4o",
-                messages: [
-                    { 
-                        role: "system", 
-                        content: `You are a Senior Roblox Luau Developer. Generate a high-quality ModuleScript for a: ${cleanModuleName}.
-                        The game concept is: ${prompt}.
-                        The agent persona working on this is: ${agent.role || agent.label} (Goal: ${agent.goal || 'General development'}).
-                        Follow standard Roblox Luau practices. 
-                        Return ONLY the raw Luau code, no markdown backticks, no comments outside the code.` 
-                    },
-                    { role: "user", content: `Write the implementation for the ${cleanModuleName} module including functions, state management, and clear comments.` }
-                ]
-            });
-            content = response.choices[0].message.content || this.generateGenericModule(cleanModuleName, contractId);
+            if (process.env.ANTHROPIC_API_KEY) {
+                try {
+                    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+                    const response = await anthropic.messages.create({
+                        model: 'claude-sonnet-4-6',
+                        max_tokens: 2048,
+                        system: systemPrompt,
+                        messages: [{ role: 'user', content: userMessage }],
+                    });
+                    const block = response.content[0];
+                    content = (block.type === 'text' ? block.text : null) || this.generateGenericModule(cleanModuleName, contractId);
+                } catch (anthropicErr) {
+                    console.warn(`Anthropic failed for ${cleanModuleName}, trying XAI fallback:`, (anthropicErr as Error).message);
+                    if (process.env.XAI_API_KEY) {
+                        const xai = new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: 'https://api.x.ai/v1' });
+                        const response = await xai.chat.completions.create({
+                            model: 'grok-3',
+                            messages: [
+                                { role: 'system', content: systemPrompt },
+                                { role: 'user', content: userMessage },
+                            ],
+                        });
+                        content = response.choices[0].message.content || this.generateGenericModule(cleanModuleName, contractId);
+                    } else {
+                        throw anthropicErr;
+                    }
+                }
+            } else if (process.env.XAI_API_KEY) {
+                const xai = new OpenAI({ apiKey: process.env.XAI_API_KEY, baseURL: 'https://api.x.ai/v1' });
+                const response = await xai.chat.completions.create({
+                    model: 'grok-3',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userMessage },
+                    ],
+                });
+                content = response.choices[0].message.content || this.generateGenericModule(cleanModuleName, contractId);
+            } else {
+                throw new Error('No AI provider configured — set ANTHROPIC_API_KEY or XAI_API_KEY');
+            }
         } catch (err) {
             console.error(`AI Generation failed for ${cleanModuleName}, falling back to template`, err);
             content = this.generateGenericModule(cleanModuleName, contractId);
         }
+
+        // ── SHATTER PRE-FILTER ──────────────────────────────────────────
+        // Scan LLM output against known fracture fingerprints.
+        // If cosine ≥ 0.98 → the generated code matches a known-bad pattern.
+        // Swap in the verified fix immediately — no broken code ships.
+        try {
+            const shatterResult = await shatterLibrary.preFilterBug(content);
+            if (shatterResult) {
+                console.log(`⚡ [ShatterGate] ${cleanModuleName} matched cert ${shatterResult.certId} (sim=${shatterResult.similarity.toFixed(4)}) — applying verified fix`);
+                content = shatterResult.fix;
+                qualityScore = 1.0;  // cert-verified Diamond-Stable output
+                shatterCertId = shatterResult.certId;
+            }
+        } catch (shatterErr) {
+            // Non-fatal — Ollama may be offline. Log and continue with LLM output.
+            console.warn(`⚠️ [ShatterGate] Pre-filter unavailable for ${cleanModuleName}: ${shatterErr instanceof Error ? shatterErr.message : shatterErr}`);
+        }
+        // ───────────────────────────────────────────────────────────────
 
         return {
             assetId: crypto.randomUUID(),
@@ -516,8 +631,9 @@ export class AssetGeneratorSwarm {
             contractRef: contractId as any,
             generatedAt: new Date().toISOString(),
             agentId: agent.id,
-            qualityScore: 0.9,
-            validationStatus: 'validated',
+            qualityScore,
+            validationStatus: 'validated' as const,
+            shatterCertId,
         };
     }
 
@@ -573,6 +689,24 @@ return ${moduleName}
         }
 
         return dependencies;
+    }
+
+    /**
+     * Log a successful repair to the ShatterLibrary.
+     * Call this after downstream validation confirms a fix works.
+     * Grows the recognition corpus — future identical fractures bypass the LLM.
+     */
+    async certifyRepair(params: {
+        brokenCode:     string;
+        verifiedFix:    string;
+        moduleName:     string;
+        errorSignature: string;
+    }): Promise<void> {
+        try {
+            await shatterLibrary.logRepair(params);
+        } catch (err) {
+            console.warn(`⚠️ [ShatterGate] logRepair failed for ${params.moduleName}: ${err instanceof Error ? err.message : err}`);
+        }
     }
 
     /**

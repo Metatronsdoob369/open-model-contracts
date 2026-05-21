@@ -248,7 +248,7 @@ export const GAME_TEMPLATES: Record<string, z.infer<typeof GameTemplateSchema>> 
         luauModules: [
             'StructureGenerator.lua',
             'AtmosphereManager.lua',
-            'MaterialService.lua',
+            'MaterialLibrary.lua',  // was MaterialService — API collision with game:GetService("MaterialService")
             'AssetLibrary.lua',
         ],
     },
@@ -277,7 +277,7 @@ export const GAME_TEMPLATES: Record<string, z.infer<typeof GameTemplateSchema>> 
             'MegastructureCore.lua',
             'GlobalAtmosphere.lua',
             'LevelDirector.lua',
-            'MaterialService.lua',
+            'MaterialLibrary.lua',  // was MaterialService — API collision with game:GetService("MaterialService")
         ],
     },
     city_scale: {
