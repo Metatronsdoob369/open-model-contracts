@@ -1,39 +1,43 @@
-// Minimal Policy Engine
-// Governance decision logic
+/**
+ * Policy engine — delegates to shared gate evaluation (no parallel presence-only logic).
+ */
+
+import {
+  evaluateGate,
+  type AuthorizationFields,
+  type GateEvaluationResult,
+} from "./gate-evaluation.js";
 
 export interface PolicyDecision {
-  route: 'SAFE' | 'ARMED' | 'DENY';
+  route: "SAFE" | "ARMED" | "DENY";
   reason: string;
+  allowed: boolean;
 }
 
 export class PolicyEngine {
-  static evaluateContract(contract: any): PolicyDecision {
-    // Check if operation is reversible
-    if (contract.reversible) {
-      return {
-        route: 'SAFE',
-        reason: 'Reversible operation - SAFE mode approved'
-      };
-    }
-
-    // Irreversible operations require ARMED
-    if (!contract.reversible) {
-      if (contract.gate === 'ARMED' && contract.scope && contract.expiry && contract.owner) {
-        return {
-          route: 'ARMED',
-          reason: 'Irreversible operation with full ARMED requirements met'
-        };
-      }
-
-      return {
-        route: 'DENY',
-        reason: 'Irreversible operation missing ARMED requirements (scope, expiry, owner)'
-      };
-    }
-
+  static evaluateAuthorization(input: {
+    authorization: AuthorizationFields;
+    action: string;
+    stateChanging?: boolean;
+    now?: Date;
+  }): PolicyDecision {
+    const result: GateEvaluationResult = evaluateGate(input);
     return {
-      route: 'SAFE',
-      reason: 'Default SAFE mode'
+      route: result.route,
+      reason: result.reason,
+      allowed: result.allowed,
     };
+  }
+
+  /**
+   * @deprecated Use evaluateAuthorization with action/stateChanging.
+   * Kept for transitional callers; treats missing action as empty (will fail ARMED scope match).
+   */
+  static evaluateContract(contract: AuthorizationFields): PolicyDecision {
+    return this.evaluateAuthorization({
+      authorization: contract,
+      action: contract.scope ?? "",
+      stateChanging: contract.gate === "ARMED",
+    });
   }
 }

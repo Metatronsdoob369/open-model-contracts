@@ -5,7 +5,7 @@
     "lib": ["ES2022", "DOM"],
     "moduleResolution": "Node16",
     "outDir": "./dist",
-    "rootDir": "./server/src",
+    "rootDir": ".",
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -15,6 +15,9 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true
   },
-  "include": ["server/src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "server/src/**/*",
+    "spec/contracts/v3/execution-authorization.ts"
+  ],
+  "exclude": ["node_modules", "dist", "server/src/**/*.test.ts"]
 }

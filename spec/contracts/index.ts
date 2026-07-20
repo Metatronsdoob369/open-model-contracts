@@ -21,6 +21,7 @@ import { AMEM, ResearchInference } from "./v3/amem-payload.js";
 import { SkillManifestSchema } from "./v3/skill.js";
 import { PhysicsThresholdSchema } from "./v3/physics-threshold.js";
 import { EveV2Schema } from "./v3/eve-v2.js";
+import { ExecutionAuthorizationSchema } from "./v3/execution-authorization.js";
 
 // ─── Registry Entry Type ──────────────────────────────────────────────────────
 
@@ -115,6 +116,14 @@ export const OMC_REGISTRY: Record<string, ContractEntry> = {
     description:
       "Canonical schema for the Eve_v2 SpectralGAT brain. Governs spectral thresholds, Roblox Luau admission rules, and Circadian pruning cycles.",
     capabilities: ["read", "validate", "learn", "prune"],
+  },
+  "omc.v3.execution-authorization": {
+    id: "omc.v3.execution-authorization",
+    version: "3.0.0",
+    schema: ExecutionAuthorizationSchema,
+    description:
+      "Canonical SAFE/ARMED authorization envelope for mediated execution. Requires scope, expiry, owner, and structured approval when ARMED.",
+    capabilities: ["read", "validate", "execute"],
   },
 } as const;
 

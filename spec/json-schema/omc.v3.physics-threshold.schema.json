@@ -29,6 +29,12 @@
           "maximum": 1,
           "minimum": 0,
           "type": "number"
+        },
+        "resonanceThreshold": {
+          "default": 0.35,
+          "description": "Maximum allowed semantic heat (resonance) before triggering a topological audit (3072-D)",
+          "minimum": 0,
+          "type": "number"
         }
       },
       "required": [
