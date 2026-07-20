@@ -1,0 +1,92 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.execution-authorization.schema.json",
+  "$ref": "#/definitions/omc.v3.execution-authorization",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.execution-authorization": {
+      "additionalProperties": false,
+      "description": "OMC mediated execution authorization envelope",
+      "properties": {
+        "approval": {
+          "additionalProperties": false,
+          "description": "Structured human approval; required when ARMED",
+          "properties": {
+            "approvalId": {
+              "description": "Opaque approval identifier",
+              "minLength": 1,
+              "type": "string"
+            },
+            "approvedAt": {
+              "description": "ISO-8601 approval timestamp",
+              "format": "date-time",
+              "type": "string"
+            },
+            "approvedBy": {
+              "description": "Human or authority identity string",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "approvedBy",
+            "approvedAt",
+            "approvalId"
+          ],
+          "type": "object"
+        },
+        "expiry": {
+          "description": "ISO-8601 expiry; ARMED must be in the future",
+          "format": "date-time",
+          "type": "string"
+        },
+        "gate": {
+          "description": "Execution gate",
+          "enum": [
+            "SAFE",
+            "ARMED"
+          ],
+          "type": "string"
+        },
+        "input": {
+          "additionalProperties": {},
+          "default": {},
+          "description": "Execution input payload",
+          "type": "object"
+        },
+        "name": {
+          "description": "Authorization / contract name",
+          "minLength": 1,
+          "type": "string"
+        },
+        "owner": {
+          "description": "Accountable owner; required when ARMED",
+          "minLength": 1,
+          "type": "string"
+        },
+        "reversible": {
+          "description": "Whether effects are reversible",
+          "type": "boolean"
+        },
+        "scope": {
+          "description": "Exact action id permitted when ARMED",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "gate",
+        "reversible"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Canonical SAFE/ARMED authorization envelope for mediated execution. Requires scope, expiry, owner, and structured approval when ARMED.",
+  "title": "omc.v3.execution-authorization",
+  "x-omc-capabilities": [
+    "read",
+    "validate",
+    "execute"
+  ],
+  "x-omc-version": "3.0.0"
+}
