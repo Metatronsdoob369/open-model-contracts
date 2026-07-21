@@ -1,0 +1,66 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.action-catalog-entry.schema.json",
+  "$ref": "#/definitions/omc.v3.action-catalog-entry",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.action-catalog-entry": {
+      "additionalProperties": false,
+      "description": "Action catalog entry declaration shape",
+      "properties": {
+        "actionId": {
+          "description": "Stable action identifier",
+          "minLength": 1,
+          "type": "string"
+        },
+        "adapterId": {
+          "description": "Adapter / jurisdiction identity for this entry",
+          "minLength": 1,
+          "type": "string"
+        },
+        "admitted": {
+          "description": "Whether this catalog entry is currently admitted/enabled",
+          "type": "boolean"
+        },
+        "declaredResourceTypes": {
+          "description": "Resource types this action may target (exact membership)",
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "effectClass": {
+          "description": "Catalog-declared effect class; execute callers must not supply or override",
+          "enum": [
+            "READ_ONLY",
+            "STATE_CHANGE",
+            "IRREVERSIBLE"
+          ],
+          "type": "string"
+        },
+        "version": {
+          "description": "Action declaration version",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "actionId",
+        "adapterId",
+        "version",
+        "effectClass",
+        "declaredResourceTypes",
+        "admitted"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Action catalog entry shape (effectClass, declared resource types, admission flag). Becomes execution authority only after trusted catalog resolution by actionId — schema alone does not prove provenance.",
+  "title": "omc.v3.action-catalog-entry",
+  "x-omc-capabilities": [
+    "read",
+    "validate"
+  ],
+  "x-omc-version": "3.0.0"
+}
