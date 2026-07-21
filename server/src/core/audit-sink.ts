@@ -1,23 +1,31 @@
 /**
  * Durable JSONL audit sink for the mediated execution spine.
  * Pattern inspired by Bridge audit logging; does not import Bridge.
+ *
+ * Local file-backed append only — not production evidence custody.
  */
 
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import type { EffectClass, ResourceRef } from "./action-catalog.js";
 
 export interface SpineAuditRecord {
   timestamp: string;
   decision: "ALLOW" | "DENY";
   gate: "SAFE" | "ARMED";
-  action?: string;
+  actionId?: string;
+  actionVersion?: string;
+  adapterId?: string;
+  effectClass?: EffectClass;
+  stateChanging?: boolean;
+  reversible?: boolean | null;
+  resourceRef?: ResourceRef;
   authorizationName: string;
   reason: string;
   receiptId: string;
   duration_ms: number;
   mediated: true;
-  stateChanging?: boolean;
   worldMutated: false;
 }
 

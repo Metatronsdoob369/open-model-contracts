@@ -1,7 +1,15 @@
 /**
  * Shared SAFE/ARMED gate evaluation for the mediated execution spine.
- * Uses Law shape from ExecutionAuthorization (parsed). Does not call Bridge/LawCRON.
+ * Uses Law shape from ExecutionAuthorization (parsed) plus catalog-resolved
+ * effect facts. Does not call Bridge/LawCRON. Does not dispatch adapters.
  */
+
+import type {
+  ActionCatalogEntry,
+  DerivedEffectFacts,
+  ResourceRef,
+} from "./action-catalog.js";
+import { resourceRefsEqual } from "./action-catalog.js";
 
 export type GateMode = "SAFE" | "ARMED";
 
@@ -11,11 +19,12 @@ export interface ApprovalFields {
   approvalId: string;
 }
 
+/** Parsed authorization fields (post Zod). */
 export interface AuthorizationFields {
   name: string;
   gate: GateMode;
-  reversible: boolean;
-  scope?: string;
+  actionId: string;
+  resourceRef: ResourceRef;
   expiry?: string;
   owner?: string;
   approval?: ApprovalFields;
@@ -23,8 +32,12 @@ export interface AuthorizationFields {
 
 export interface GateEvaluationInput {
   authorization: AuthorizationFields;
-  action: string;
-  stateChanging?: boolean;
+  /** Requested actionId (must match authorization.actionId and catalog). */
+  actionId: string;
+  /** Requested resource (must exactly match authorization.resourceRef). */
+  resourceRef: ResourceRef;
+  /** Catalog resolution for actionId; undefined = unknown. */
+  catalogAction: { entry: ActionCatalogEntry; effect: DerivedEffectFacts } | undefined;
   now?: Date;
 }
 
@@ -50,20 +63,88 @@ function isValidApproval(approval: ApprovalFields | undefined): boolean {
 
 /**
  * Evaluate whether a mediated execute request may proceed.
- * Exact scope match only (action === scope). No wildcards.
+ * Effect classification comes only from catalog-resolved effectClass.
+ * Exact actionId + exact resourceRef match only (no wildcards).
  */
 export function evaluateGate(input: GateEvaluationInput): GateEvaluationResult {
-  const { authorization, action, stateChanging = false } = input;
+  const { authorization, actionId, resourceRef, catalogAction } = input;
   const now = input.now ?? new Date();
 
-  if (authorization.gate === "SAFE") {
-    if (stateChanging) {
+  if (!catalogAction) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Unknown action '${actionId}'`,
+    };
+  }
+
+  const { entry, effect } = catalogAction;
+
+  if (!entry.admitted) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Action '${actionId}' is disabled / not admitted`,
+    };
+  }
+
+  if (authorization.actionId !== actionId) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Action mismatch: request '${actionId}' ≠ authorization '${authorization.actionId}'`,
+    };
+  }
+
+  if (entry.actionId !== actionId) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Catalog actionId mismatch for '${actionId}'`,
+    };
+  }
+
+  // Exact auth↔request bind before catalog type membership (distinct denial reasons).
+  if (!resourceRefsEqual(authorization.resourceRef, resourceRef)) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Resource mismatch: request ${resourceRef.resourceType}/${resourceRef.resourceId} ≠ authorization ${authorization.resourceRef.resourceType}/${authorization.resourceRef.resourceId}`,
+    };
+  }
+
+  if (!entry.declaredResourceTypes.includes(resourceRef.resourceType)) {
+    return {
+      allowed: false,
+      route: "DENY",
+      reason: `Resource type '${resourceRef.resourceType}' is not declared for action '${actionId}'`,
+    };
+  }
+
+  // Catalog-derived mutation classification — never caller-supplied.
+  if (!effect.stateChanging) {
+    // READ_ONLY: SAFE or ARMED observation path; never a mutating path.
+    if (authorization.gate === "SAFE") {
+      return {
+        allowed: true,
+        route: "SAFE",
+        reason: "READ_ONLY action with SAFE observation approved",
+      };
+    }
+    // ARMED + READ_ONLY is allowed if ARMED structural/expiry checks pass
+    // (observation under an ARMED envelope is not a mutation).
+  } else {
+    // STATE_CHANGE or IRREVERSIBLE
+    if (authorization.gate === "SAFE") {
       return {
         allowed: false,
         route: "DENY",
-        reason: "SAFE gate forbids state-changing intent",
+        reason: `SAFE gate forbids state-changing effectClass '${entry.effectClass}'`,
       };
     }
+  }
+
+  if (authorization.gate === "SAFE") {
     return {
       allowed: true,
       route: "SAFE",
@@ -71,14 +152,8 @@ export function evaluateGate(input: GateEvaluationInput): GateEvaluationResult {
     };
   }
 
-  // ARMED
-  if (!hasNonEmpty(authorization.scope)) {
-    return {
-      allowed: false,
-      route: "DENY",
-      reason: "ARMED requires scope",
-    };
-  }
+  // ARMED — structural completeness is Zod's job; runtime still checks expiry
+  // and defense-in-depth for owner/approval when present.
   if (!hasNonEmpty(authorization.expiry)) {
     return {
       allowed: false,
@@ -97,7 +172,8 @@ export function evaluateGate(input: GateEvaluationInput): GateEvaluationResult {
     return {
       allowed: false,
       route: "DENY",
-      reason: "ARMED requires structured approval (approvedBy, approvedAt, approvalId)",
+      reason:
+        "ARMED requires structured approval (approvedBy, approvedAt, approvalId)",
     };
   }
 
@@ -117,17 +193,11 @@ export function evaluateGate(input: GateEvaluationInput): GateEvaluationResult {
     };
   }
 
-  if (action !== authorization.scope) {
-    return {
-      allowed: false,
-      route: "DENY",
-      reason: `Action '${action}' is outside ARMED scope '${authorization.scope}'`,
-    };
-  }
-
   return {
     allowed: true,
     route: "ARMED",
-    reason: "ARMED authorization satisfied (expiry, scope, owner, approval)",
+    reason: effect.stateChanging
+      ? `ARMED authorization satisfied for effectClass '${entry.effectClass}'`
+      : "ARMED authorization satisfied (READ_ONLY under ARMED envelope)",
   };
 }

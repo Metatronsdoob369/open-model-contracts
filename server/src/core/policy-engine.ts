@@ -7,6 +7,11 @@ import {
   type AuthorizationFields,
   type GateEvaluationResult,
 } from "./gate-evaluation.js";
+import type {
+  ActionCatalogEntry,
+  DerivedEffectFacts,
+  ResourceRef,
+} from "./action-catalog.js";
 
 export interface PolicyDecision {
   route: "SAFE" | "ARMED" | "DENY";
@@ -17,8 +22,11 @@ export interface PolicyDecision {
 export class PolicyEngine {
   static evaluateAuthorization(input: {
     authorization: AuthorizationFields;
-    action: string;
-    stateChanging?: boolean;
+    actionId: string;
+    resourceRef: ResourceRef;
+    catalogAction:
+      | { entry: ActionCatalogEntry; effect: DerivedEffectFacts }
+      | undefined;
     now?: Date;
   }): PolicyDecision {
     const result: GateEvaluationResult = evaluateGate(input);
@@ -27,17 +35,5 @@ export class PolicyEngine {
       reason: result.reason,
       allowed: result.allowed,
     };
-  }
-
-  /**
-   * @deprecated Use evaluateAuthorization with action/stateChanging.
-   * Kept for transitional callers; treats missing action as empty (will fail ARMED scope match).
-   */
-  static evaluateContract(contract: AuthorizationFields): PolicyDecision {
-    return this.evaluateAuthorization({
-      authorization: contract,
-      action: contract.scope ?? "",
-      stateChanging: contract.gate === "ARMED",
-    });
   }
 }

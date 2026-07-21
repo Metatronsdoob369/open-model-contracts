@@ -2,19 +2,28 @@
  * In-process receipt log for the mediated spine (plus durable sink elsewhere).
  */
 
+import type { EffectClass, ResourceRef } from "./action-catalog.js";
+
 export interface SpineReceipt {
   receiptId: string;
   timestamp: string;
   decision: "ALLOW" | "DENY";
   gate: "SAFE" | "ARMED";
   route: "SAFE" | "ARMED" | "DENY";
-  action: string;
+  actionId: string;
+  actionVersion?: string;
+  adapterId?: string;
+  effectClass?: EffectClass;
+  /** Catalog-derived; only meaningful when stateChanging === true. */
+  stateChanging?: boolean;
+  /** Catalog-derived; null when not applicable (READ_ONLY). */
+  reversible?: boolean | null;
+  resourceRef?: ResourceRef;
   authorizationName: string;
   reason: string;
   success: boolean;
   mediated: true;
   worldMutated: false;
-  stateChanging?: boolean;
   duration_ms: number;
 }
 
@@ -47,7 +56,7 @@ export class AuditLogger {
       decision: event.success ? "ALLOW" : "DENY",
       gate: event.gate,
       route: event.success ? event.gate : "DENY",
-      action: "",
+      actionId: "",
       authorizationName: event.contract,
       reason: event.error ?? (event.success ? "legacy allow" : "legacy deny"),
       success: event.success,

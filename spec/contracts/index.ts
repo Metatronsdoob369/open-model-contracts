@@ -22,6 +22,7 @@ import { SkillManifestSchema } from "./v3/skill.js";
 import { PhysicsThresholdSchema } from "./v3/physics-threshold.js";
 import { EveV2Schema } from "./v3/eve-v2.js";
 import { ExecutionAuthorizationSchema } from "./v3/execution-authorization.js";
+import { ActionCatalogEntrySchema } from "./v3/admitted-action.js";
 
 // ─── Registry Entry Type ──────────────────────────────────────────────────────
 
@@ -119,11 +120,19 @@ export const OMC_REGISTRY: Record<string, ContractEntry> = {
   },
   "omc.v3.execution-authorization": {
     id: "omc.v3.execution-authorization",
-    version: "3.0.0",
+    version: "3.1.0",
     schema: ExecutionAuthorizationSchema,
     description:
-      "Canonical SAFE/ARMED authorization envelope for mediated execution. Requires scope, expiry, owner, and structured approval when ARMED.",
+      "Canonical SAFE/ARMED authorization envelope (v3.1.0). Discriminated strict forms: both require actionId + exact resourceRef; ARMED structurally requires expiry, owner, and structured approval. Effect facts are not on this envelope — they come from catalog lookup.",
     capabilities: ["read", "validate", "execute"],
+  },
+  "omc.v3.action-catalog-entry": {
+    id: "omc.v3.action-catalog-entry",
+    version: "3.0.0",
+    schema: ActionCatalogEntrySchema,
+    description:
+      "Action catalog entry shape (effectClass, declared resource types, admission flag). Becomes execution authority only after trusted catalog resolution by actionId — schema alone does not prove provenance.",
+    capabilities: ["read", "validate"],
   },
 } as const;
 

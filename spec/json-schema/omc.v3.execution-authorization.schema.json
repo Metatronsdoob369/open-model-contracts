@@ -4,89 +4,167 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "omc.v3.execution-authorization": {
-      "additionalProperties": false,
-      "description": "OMC mediated execution authorization envelope",
-      "properties": {
-        "approval": {
-          "additionalProperties": false,
-          "description": "Structured human approval; required when ARMED",
+      "anyOf": [
+        {
+          "type": "object",
           "properties": {
-            "approvalId": {
-              "description": "Opaque approval identifier",
+            "name": {
+              "type": "string",
               "minLength": 1,
-              "type": "string"
+              "description": "Authorization / contract name"
             },
-            "approvedAt": {
-              "description": "ISO-8601 approval timestamp",
-              "format": "date-time",
-              "type": "string"
+            "gate": {
+              "type": "string",
+              "const": "SAFE",
+              "description": "SAFE observation gate"
             },
-            "approvedBy": {
-              "description": "Human or authority identity string",
+            "actionId": {
+              "type": "string",
               "minLength": 1,
-              "type": "string"
+              "description": "Exact action id being observed"
+            },
+            "resourceRef": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Exact resource type identifier"
+                },
+                "resourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Exact resource instance identifier"
+                }
+              },
+              "required": [
+                "resourceType",
+                "resourceId"
+              ],
+              "additionalProperties": false,
+              "description": "Exact resource under observation"
+            },
+            "input": {
+              "type": "object",
+              "additionalProperties": {},
+              "default": {},
+              "description": "Execution input payload"
             }
           },
           "required": [
-            "approvedBy",
-            "approvedAt",
-            "approvalId"
+            "name",
+            "gate",
+            "actionId",
+            "resourceRef"
           ],
-          "type": "object"
+          "additionalProperties": false,
+          "description": "SAFE mediated execution authorization"
         },
-        "expiry": {
-          "description": "ISO-8601 expiry; ARMED must be in the future",
-          "format": "date-time",
-          "type": "string"
-        },
-        "gate": {
-          "description": "Execution gate",
-          "enum": [
-            "SAFE",
-            "ARMED"
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Authorization / contract name"
+            },
+            "gate": {
+              "type": "string",
+              "const": "ARMED",
+              "description": "ARMED execution gate"
+            },
+            "actionId": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Exact action id permitted when ARMED"
+            },
+            "resourceRef": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Exact resource type identifier"
+                },
+                "resourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Exact resource instance identifier"
+                }
+              },
+              "required": [
+                "resourceType",
+                "resourceId"
+              ],
+              "additionalProperties": false,
+              "description": "Exact resource permitted when ARMED"
+            },
+            "expiry": {
+              "type": "string",
+              "format": "date-time",
+              "description": "ISO-8601 expiry; must be in the future at evaluation"
+            },
+            "owner": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Accountable owner"
+            },
+            "approval": {
+              "type": "object",
+              "properties": {
+                "approvedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Human or authority identity string"
+                },
+                "approvedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "ISO-8601 approval timestamp"
+                },
+                "approvalId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Opaque approval identifier"
+                }
+              },
+              "required": [
+                "approvedBy",
+                "approvedAt",
+                "approvalId"
+              ],
+              "additionalProperties": false,
+              "description": "Structured human approval metadata (not cryptographic identity)"
+            },
+            "input": {
+              "type": "object",
+              "additionalProperties": {},
+              "default": {},
+              "description": "Execution input payload"
+            }
+          },
+          "required": [
+            "name",
+            "gate",
+            "actionId",
+            "resourceRef",
+            "expiry",
+            "owner",
+            "approval"
           ],
-          "type": "string"
-        },
-        "input": {
-          "additionalProperties": {},
-          "default": {},
-          "description": "Execution input payload",
-          "type": "object"
-        },
-        "name": {
-          "description": "Authorization / contract name",
-          "minLength": 1,
-          "type": "string"
-        },
-        "owner": {
-          "description": "Accountable owner; required when ARMED",
-          "minLength": 1,
-          "type": "string"
-        },
-        "reversible": {
-          "description": "Whether effects are reversible",
-          "type": "boolean"
-        },
-        "scope": {
-          "description": "Exact action id permitted when ARMED",
-          "minLength": 1,
-          "type": "string"
+          "additionalProperties": false,
+          "description": "ARMED mediated execution authorization"
         }
-      },
-      "required": [
-        "name",
-        "gate",
-        "reversible"
       ],
-      "type": "object"
+      "description": "OMC mediated execution authorization envelope (v3.1.0)"
     }
   },
-  "description": "Canonical SAFE/ARMED authorization envelope for mediated execution. Requires scope, expiry, owner, and structured approval when ARMED.",
+  "description": "Canonical SAFE/ARMED authorization envelope (v3.1.0). Discriminated strict forms: both require actionId + exact resourceRef; ARMED structurally requires expiry, owner, and structured approval. Effect facts are not on this envelope — they come from catalog lookup.",
   "title": "omc.v3.execution-authorization",
   "x-omc-capabilities": [
     "read",
     "validate",
     "execute"
   ],
-  "x-omc-version": "3.0.0"
+  "x-omc-version": "3.1.0"
 }
