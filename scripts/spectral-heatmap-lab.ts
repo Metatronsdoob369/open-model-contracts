@@ -221,14 +221,14 @@ async function main() {
     const vec = vectors[i];
     // Heat: Manhattan resonance (L1 distance from centroid, normalized)
     let manhattan = 0;
-    for (let d = 0; d < DIMS; d++) manhattan += Math.abs(vec[d] - centroid[d]);
+    for (let d = 0; d < DIMS; d++) manhattan += Math.abs(vec[d] - centroidNorm[d]);
     const heat = manhattan / DIMS;
 
     // Shatter: Euclidean distance from centroid
-    const shatter = l2(vecSub(vec, centroid));
+    const shatter = l2(vecSub(vec, centroidNorm));
 
     // Sector scores
-    const sectors = sectorScores(vec, centroid);
+    const sectors = sectorScores(vec, centroidNorm);
 
     // Nearest canonical
     let bestSim = -1, bestIdx = 0;
@@ -341,7 +341,7 @@ async function main() {
   // Store graph-level metadata as a separate point (id=100)
   const graphPoint = {
     id: 100,
-    vector: centroid,
+    vector: centroidNorm,
     payload: {
       kind: 'graph_metadata',
       adjacencyMatrix: W,
