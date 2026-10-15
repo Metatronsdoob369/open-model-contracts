@@ -1,0 +1,223 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.specialist.schema.json",
+  "$ref": "#/definitions/omc.v3.specialist",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.specialist": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "default": "Complete protocol defining the query and mandatory feedback loop representing a Specialist Agent.",
+          "type": "string"
+        },
+        "feedback": {
+          "additionalProperties": false,
+          "properties": {
+            "caller": {
+              "description": "The system reporting the outcome.",
+              "type": "string"
+            },
+            "observedAt": {
+              "description": "When the outcome was realized in production.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "outcome": {
+              "description": "Drives EMA delta. Success amplifies chunks, failure suppresses, partial decays to neutral.",
+              "enum": [
+                "success",
+                "failure",
+                "partial"
+              ],
+              "type": "string"
+            },
+            "queryId": {
+              "description": "The targeted query to apply circadian weight adjustments to.",
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "required": [
+            "queryId",
+            "outcome",
+            "caller",
+            "observedAt"
+          ],
+          "type": "object"
+        },
+        "query": {
+          "additionalProperties": false,
+          "properties": {
+            "caller": {
+              "description": "The identity of the calling agent, pipeline, or system.",
+              "type": "string"
+            },
+            "context": {
+              "description": "Task or conversational context surrounding the query.",
+              "type": "string"
+            },
+            "expiry": {
+              "description": "ISO datetime when the current gate authorization expires.",
+              "format": "date-time",
+              "type": "string"
+            },
+            "gate": {
+              "description": "Gate state: SAFE (read-only) or ARMED (drives execution).",
+              "enum": [
+                "SAFE",
+                "ARMED"
+              ],
+              "type": "string"
+            },
+            "owner": {
+              "description": "Must be provided if gate is ARMED, signifying accountability.",
+              "type": "string"
+            },
+            "question": {
+              "description": "The natural language query from the client.",
+              "type": "string"
+            },
+            "topK": {
+              "default": 5,
+              "description": "Maximum number of corpus chunks to retrieve.",
+              "maximum": 20,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "question",
+            "caller",
+            "gate",
+            "expiry"
+          ],
+          "type": "object"
+        },
+        "response": {
+          "additionalProperties": false,
+          "properties": {
+            "answer": {
+              "description": "Synthesized domain expert response.",
+              "type": "string"
+            },
+            "chunks": {
+              "description": "Every answer MUST cite at least one source chunk. Hallucination control is mandatory.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "excerpt": {
+                    "description": "The raw text chunk matched.",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "URI or identifier of the source material.",
+                    "type": "string"
+                  },
+                  "weight": {
+                    "description": "The current Circadian EMA weight of the chunk at the time of query.",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "source",
+                  "excerpt",
+                  "weight"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "confidence": {
+              "description": "Weighted average confidence of retrieved chunks. 0 if synthesis fails.",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "number"
+            },
+            "domain": {
+              "description": "The specific knowledge domain of the Specialist (e.g., 'ue5-specialist').",
+              "type": "string"
+            },
+            "execution_metadata": {
+              "additionalProperties": false,
+              "properties": {
+                "chunks_retrieved": {
+                  "type": "integer"
+                },
+                "circadian_weights_applied": {
+                  "description": "Proves the agent is actively self-learning and scaling weights.",
+                  "type": "boolean"
+                },
+                "completed_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "corpus_size_at_query": {
+                  "type": "integer"
+                },
+                "duration_ms": {
+                  "type": "integer"
+                },
+                "started_at": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "started_at",
+                "completed_at",
+                "duration_ms",
+                "chunks_retrieved",
+                "corpus_size_at_query",
+                "circadian_weights_applied"
+              ],
+              "type": "object"
+            },
+            "gate_used": {
+              "enum": [
+                "SAFE",
+                "ARMED"
+              ],
+              "type": "string"
+            },
+            "queryId": {
+              "description": "Unique tracking ID required for the Circadian Feedback loop.",
+              "format": "uuid",
+              "type": "string"
+            },
+            "reasoning": {
+              "description": "Transparent reasoning explaining why chunks were chosen and how they formed the answer.",
+              "minLength": 50,
+              "type": "string"
+            }
+          },
+          "required": [
+            "queryId",
+            "domain",
+            "answer",
+            "confidence",
+            "chunks",
+            "gate_used",
+            "reasoning",
+            "execution_metadata"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "query",
+        "response",
+        "feedback"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A self-learning RAG API architecture required for all Specialist Agents. Governs query, response, and the mandatory Circadian feedback loop.",
+  "title": "omc.v3.specialist",
+  "x-omc-capabilities": [
+    "read",
+    "validate",
+    "learn"
+  ],
+  "x-omc-version": "3.0.0"
+}

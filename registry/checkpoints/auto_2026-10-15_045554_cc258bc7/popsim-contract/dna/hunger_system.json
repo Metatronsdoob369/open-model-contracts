@@ -1,0 +1,25 @@
+{
+  "name": "Survival_HUD",
+  "type": "SystemNode",
+  "robloxClass": "ScreenGui",
+  "service": "StarterGui",
+  "children": [
+    {
+      "name": "HungerBar",
+      "type": "Frame",
+      "properties": { "Size": "{0.2, 0}, {0.05, 0}", "Position": "{0.4, 0}, {0.9, 0}", "BackgroundColor3": "#8B4513" }
+    },
+    {
+      "name": "DrainLogic",
+      "type": "LocalScript",
+      "properties": {
+        "Source": "while task.wait(5) do local hunger = script.Parent:GetAttribute('Hunger') or 100 script.Parent:SetAttribute('Hunger', math.max(0, hunger - 1)) end"
+      }
+    }
+  ],
+  "capabilityMapping": {
+    "feature": "State Management",
+    "enabledBy": "LocalScript",
+    "service": "StarterGui"
+  }
+}

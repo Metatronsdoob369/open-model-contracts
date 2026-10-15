@@ -1,0 +1,56 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.script-audit.schema.json",
+  "$ref": "#/definitions/omc.v3.script-audit",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.script-audit": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "description": "The raw Luau source from Superbullet",
+          "type": "string"
+        },
+        "expectedSlots": {
+          "description": "The Diamond Memory slots the script claims to use",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "Unique drop identifier",
+          "format": "uuid",
+          "type": "string"
+        },
+        "targetEnvironment": {
+          "description": "Execution boundaries",
+          "enum": [
+            "Server",
+            "Client",
+            "Shared"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "const": "script",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "code",
+        "targetEnvironment",
+        "expectedSlots"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "A strict validator schema running luaparse for testing raw drops against Diamond Stable logic rules.",
+  "title": "omc.v3.script-audit",
+  "x-omc-capabilities": [
+    "read",
+    "validate"
+  ],
+  "x-omc-version": "3.0.0"
+}

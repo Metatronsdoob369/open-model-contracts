@@ -1,0 +1,30 @@
+{
+  "name": "Speed_Boost_Orb",
+  "type": "SystemNode",
+  "robloxClass": "Model",
+  "service": "Workspace",
+  "children": [
+    {
+      "name": "Orb",
+      "type": "Part",
+      "properties": {
+        "Shape": "Ball",
+        "Material": "Neon",
+        "Color": "#00FF00",
+        "Size": "{4, 4, 4}",
+        "Anchored": true,
+        "CanCollide": false
+      }
+    },
+    {
+      "name": "ActivationEvent",
+      "type": "RemoteEvent",
+      "service": "ReplicatedStorage"
+    }
+  ],
+  "capabilityMapping": {
+    "feature": "Speed Modification",
+    "enabledBy": "RemoteEvent",
+    "service": "ReplicatedStorage"
+  }
+}

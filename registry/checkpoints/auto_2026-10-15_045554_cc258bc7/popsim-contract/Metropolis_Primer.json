@@ -1,0 +1,37 @@
+{
+  "contractId": "72ff90e9-a3fa-4012-8a07-bbb65e76f16f",
+  "levelName": "Chaos Metropolis Alpha",
+  "theme": {
+    "genre": "Cyber-Gothic",
+    "primaryColor": [0, 255, 255],
+    "secondaryColor": [150, 0, 255],
+    "accentColor": [255, 180, 0],
+    "material": "SmoothPlastic",
+    "transparency": 0.4
+  },
+  "atmosphere": {
+    "clockTime": 3,
+    "moonSize": 25,
+    "ambientFill": [25, 25, 55],
+    "outdoorAmbient": [20, 20, 40],
+    "bloomIntensity": 1.5,
+    "fogEnd": 2500
+  },
+  "mechanics": {
+    "dashEnabled": true,
+    "doubleJumpEnabled": true,
+    "tagGameActive": true,
+    "trafficDensity": 45,
+    "trafficSpeed": 140
+  },
+  "audio": {
+    "backgroundMusicId": 1837879082,
+    "dashSfxId": 1347631165,
+    "reverbType": "StoneCorridor"
+  },
+  "manifest": {
+    "skyscrapers": 36,
+    "cathedralArches": 9,
+    "streetGridSize": 1200
+  }
+}

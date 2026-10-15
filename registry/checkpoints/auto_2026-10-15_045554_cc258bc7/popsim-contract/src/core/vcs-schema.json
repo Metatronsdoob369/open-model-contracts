@@ -1,0 +1,46 @@
+{
+  "id": "vcs-generator-schema",
+  "name": "Visual Contract Spec Generator",
+  "version": "1.1.0",
+  "description": "The deterministic compilation layer between visual intent and Roblox engine objects.",
+  "structure": {
+    "visualContract": {
+      "intent": "string",
+      "aesthetic": "string",
+      "targetResolution": "string"
+    },
+    "structuralSpec": {
+      "root": "string",
+      "hierarchy": {
+        "type": "object",
+        "description": "Exact folder and instance tree for Roblox Workspace."
+      }
+    },
+    "propertyAudit": {
+      "items": {
+        "type": "array",
+        "items": {
+          "component": "string",
+          "property": "string",
+          "value": "any",
+          "reason": "string"
+        }
+      }
+    },
+    "capabilityMapping": {
+      "mappings": {
+        "type": "array",
+        "items": {
+          "feature": "string",
+          "enabledBy": "string",
+          "service": "string"
+        }
+      }
+    },
+    "validationStatus": {
+      "status": ["Buildable", "Partial", "Blocked"],
+      "errors": "array",
+      "warnings": "array"
+    }
+  }
+}

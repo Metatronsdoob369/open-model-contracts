@@ -1,0 +1,6 @@
+# SAFE allowlist (read-only / descriptive)
+list_skills
+search_skills
+describe_skill
+render_prompt
+plan_skill

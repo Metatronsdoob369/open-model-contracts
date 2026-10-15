@@ -1,0 +1,239 @@
+{
+  "$ref": "#/definitions/VisualContractSpecV2",
+  "definitions": {
+    "VisualContractSpecV2": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "targetEngine": {
+              "type": "string",
+              "const": "Roblox"
+            },
+            "targetPlatforms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Desktop",
+                  "Mobile",
+                  "Console"
+                ]
+              },
+              "default": [
+                "Desktop"
+              ]
+            },
+            "createdBy": {
+              "type": "string"
+            },
+            "hash": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "version",
+            "targetEngine"
+          ],
+          "additionalProperties": false
+        },
+        "visualContract": {
+          "type": "object",
+          "properties": {
+            "intent": {
+              "type": "string"
+            },
+            "aesthetic": {
+              "type": "string"
+            },
+            "cameraView": {
+              "type": "string"
+            },
+            "targetResolution": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "intent",
+            "aesthetic",
+            "cameraView"
+          ],
+          "additionalProperties": false
+        },
+        "structuralSpec": {
+          "type": "object",
+          "properties": {
+            "root": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": {},
+                  "default": {}
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/VisualContractSpecV2/properties/structuralSpec/properties/root"
+                  },
+                  "default": []
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "root"
+          ],
+          "additionalProperties": false
+        },
+        "propertyAudit": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "componentId": {
+                    "type": "string"
+                  },
+                  "propertyPath": {
+                    "type": "string"
+                  },
+                  "expectedValue": {},
+                  "reason": {
+                    "type": "string"
+                  },
+                  "visualFeature": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "componentId",
+                  "propertyPath",
+                  "reason",
+                  "visualFeature"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "additionalProperties": false
+        },
+        "capabilityMapping": {
+          "type": "object",
+          "properties": {
+            "mappings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "feature": {
+                    "type": "string"
+                  },
+                  "enabledByComponentId": {
+                    "type": "string"
+                  },
+                  "requiredService": {
+                    "type": "string"
+                  },
+                  "constraints": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "default": []
+                  }
+                },
+                "required": [
+                  "feature",
+                  "enabledByComponentId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "mappings"
+          ],
+          "additionalProperties": false
+        },
+        "validationStatus": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "Buildable",
+                "Partial",
+                "Blocked"
+              ]
+            },
+            "errors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "status",
+            "errors",
+            "warnings"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "metadata",
+        "visualContract",
+        "structuralSpec",
+        "propertyAudit",
+        "capabilityMapping",
+        "validationStatus"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

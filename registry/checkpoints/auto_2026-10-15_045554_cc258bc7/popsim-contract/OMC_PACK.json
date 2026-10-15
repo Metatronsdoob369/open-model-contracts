@@ -1,0 +1,28 @@
+{
+  "pack_id": "popsim-contract",
+  "version": "1.0.0",
+  "description": "Sovereign metropolis governance and agent population simulation.",
+  "entrypoints": {
+    "contracts_index": "spec/index.ts",
+    "examples_dir": "examples"
+  },
+  "capabilities": [
+    "autonomous_manifestation",
+    "audit_required",
+    "spectral_analysis_gate"
+  ],
+  "checkpoint_required_paths": [
+    "spec/**",
+    "src/**"
+  ],
+  "mcp": {
+    "server_name": "popsim-informant",
+    "tools": [
+      "list_contracts",
+      "validate_payload",
+      "recall_checkpoint"
+    ]
+  },
+  "author": "Antigravity AI (Director-01 Swarm)",
+  "status": "Diamond-Stable"
+}

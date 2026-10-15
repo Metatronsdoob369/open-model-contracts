@@ -1,0 +1,27 @@
+{
+  "name": "Lava_Floor_Hazard",
+  "type": "SystemNode",
+  "robloxClass": "Part",
+  "service": "Workspace",
+  "properties": {
+    "Material": "Neon",
+    "Color": "#FF4500",
+    "Transparency": 0.2,
+    "Anchored": true,
+    "CanCollide": true
+  },
+  "children": [
+    {
+      "name": "DamageScript",
+      "type": "Script",
+      "properties": {
+        "Source": "script.Parent.Touched:Connect(function(hit) local hum = hit.Parent:FindFirstChild('Humanoid') if hum then hum:TakeDamage(10) end end)"
+      }
+    }
+  ],
+  "capabilityMapping": {
+    "feature": "Lava Damage",
+    "enabledBy": "Touched Event",
+    "service": "Workspace"
+  }
+}

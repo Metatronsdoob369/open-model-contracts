@@ -1,0 +1,74 @@
+[
+  {
+    "id": "MEV_ASSEMBLY",
+    "encounters": 3,
+    "aborts": 3,
+    "abortRate": 1,
+    "avgHeat": 0.8312499999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "MEV",
+    "encounters": 3,
+    "aborts": 3,
+    "abortRate": 1,
+    "avgHeat": 0.8312499999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "MEV_SELECTOR",
+    "encounters": 2,
+    "aborts": 2,
+    "abortRate": 1,
+    "avgHeat": 0.7124999999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "SELECTOR",
+    "encounters": 2,
+    "aborts": 2,
+    "abortRate": 1,
+    "avgHeat": 0.7124999999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "DRAIN_LOOP",
+    "encounters": 3,
+    "aborts": 3,
+    "abortRate": 1,
+    "avgHeat": 0.8312499999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "DRAIN",
+    "encounters": 3,
+    "aborts": 3,
+    "abortRate": 1,
+    "avgHeat": 0.8312499999999999,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "FLASH_CHAIN",
+    "encounters": 1,
+    "aborts": 1,
+    "abortRate": 1,
+    "avgHeat": 0.475,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "FLASH",
+    "encounters": 1,
+    "aborts": 1,
+    "abortRate": 1,
+    "avgHeat": 0.475,
+    "heatMultiplier": 3
+  },
+  {
+    "id": "UNKNOWN",
+    "encounters": 1,
+    "aborts": 1,
+    "abortRate": 1,
+    "avgHeat": 0.5,
+    "heatMultiplier": 3
+  }
+]

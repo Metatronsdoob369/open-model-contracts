@@ -1,0 +1,91 @@
+{
+  "$id": "https://open-model-contracts.dev/schemas/omc.v3.agent.schema.json",
+  "$ref": "#/definitions/omc.v3.agent",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "omc.v3.agent": {
+      "additionalProperties": false,
+      "properties": {
+        "auditRequired": {
+          "default": true,
+          "description": "Whether this agent's actions require audit logging",
+          "type": "boolean"
+        },
+        "capabilities": {
+          "description": "Explicit list of permitted capabilities",
+          "items": {
+            "enum": [
+              "read",
+              "write",
+              "execute",
+              "validate",
+              "checkpoint",
+              "spawn"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "domainScope": {
+          "default": [],
+          "description": "Domains this agent may operate in (empty = all)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "gate": {
+          "default": "SAFE",
+          "description": "Execution gate — ARMED requires explicit approval",
+          "enum": [
+            "SAFE",
+            "ARMED"
+          ],
+          "type": "string"
+        },
+        "id": {
+          "description": "Stable unique identifier for this agent",
+          "format": "uuid",
+          "type": "string"
+        },
+        "name": {
+          "description": "Agent display name",
+          "maxLength": 80,
+          "minLength": 1,
+          "type": "string"
+        },
+        "registeredAt": {
+          "description": "ISO-8601 registration timestamp",
+          "format": "date-time",
+          "type": "string"
+        },
+        "role": {
+          "description": "Agent's functional role within OMC",
+          "enum": [
+            "director",
+            "specialist",
+            "observer",
+            "validator"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "role",
+        "capabilities",
+        "registeredAt"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "Canonical schema for an autonomous agent participating in OMC.",
+  "title": "omc.v3.agent",
+  "x-omc-capabilities": [
+    "read",
+    "validate",
+    "checkpoint"
+  ],
+  "x-omc-version": "3.0.0"
+}
