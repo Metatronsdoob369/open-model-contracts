@@ -144,14 +144,6 @@ export function evaluateGate(input: GateEvaluationInput): GateEvaluationResult {
     }
   }
 
-  if (authorization.gate === "SAFE") {
-    return {
-      allowed: true,
-      route: "SAFE",
-      reason: "SAFE observation / non-mutating mediation approved",
-    };
-  }
-
   // ARMED — structural completeness is Zod's job; runtime still checks expiry
   // and defense-in-depth for owner/approval when present.
   if (!hasNonEmpty(authorization.expiry)) {
